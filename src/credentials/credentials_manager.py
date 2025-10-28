@@ -1,15 +1,13 @@
 from dataclasses import dataclass
+from validation_checks import *
 
 FIRST_NAME_MAX_SIZE = 32
 FIRST_NAME_MIN_SIZE = 2
 LAST_NAME_MAX_SIZE = 32
 LAST_NAME_MIN_SIZE = 2
-
-def check_field_size(input, max_size, min_size):
-    if len(input) > max_size:
-        raise ValueError("too long")
-    if len(input) < min_size:
-        raise ValueError("too short")
+LOCATIONS_LIST = ["United States", "Japan", "Germany", "Brazil", "South Africa"]
+DEPARTMENTS_LIST = ["Sales", "Information Technology", "Legal", "HR"]
+TITLES_LIST = ["Manager", "Aide", "Developer", "Sales Agent"]
 
 @dataclass
 class UserCredentials:
@@ -20,22 +18,45 @@ class UserCredentials:
     department: str
     title: str
 
+    """This class handles the credentials for a user, including their department and title."""
+
     def validate(self):
+        """Checks all of the information entered for a user for validity. Will return an error if any of the fields are too long, too short, or have invalid characters."""
         field_name = ""
         try:
             field_name = "First name"
+            check_data_type(self.first_name, str, "a string")
+            self.first_name = self.first_name.strip()
             check_field_size(self.first_name, FIRST_NAME_MAX_SIZE, FIRST_NAME_MIN_SIZE)
+            is_alpha_or_hyphen(self.first_name)
+
+            field_name = "Last name"
+            check_data_type(self.last_name, str, "a string")
+            self.last_name = self.last_name.strip()
+            check_field_size(self.last_name, LAST_NAME_MAX_SIZE, LAST_NAME_MIN_SIZE)
+            is_alpha_or_hyphen(self.last_name)
+
+            field_name = "Employee ID number"
+            check_data_type(self.id, int, "an int")
+            check_id_number(self.id)
+
+            field_name = "Location"
+            check_data_type(self.location, str, "a string")
+            self.location = self.location.strip()
+            list_check(self.location, LOCATIONS_LIST)
+
+
         except Exception as e:
             raise Exception(field_name + " " + e.args[0])
     
     def name(self):
-        return self.first_name + " " + self.last_name
+        return f"{self.first_name} {self.last_name}"
     
 def main():
     test_data = [
         (
-            658,
-            "Joleenhjflkds;gnfklewgnrewklsw;gnwfdlk;ghweor;gwh",
+            263,
+            "Ava'); DROP TABLE Employee; --",
             "Fishbie",
             "Japan",
             "Legal",
@@ -44,10 +65,18 @@ def main():
         (
             264,
             "Amélie",
-            "Garçon",
-            "Germany",
+            "Garçon-Beaumont",
+            "France",
             "Sales",
             "Sales Agent"
+        ),
+        (
+            265,
+            "Jens",
+            "van der Meer",
+            "Germany",
+            "Information Technology",
+            "Developer"
         )
     ]
     users = []
@@ -58,7 +87,7 @@ def main():
             users.append(new_user)
             print(f"{new_user.name()} added successfully")
         except Exception as e:
-            print(e)
+            print(f"Cannot add {new_user.name()}: {e.args[0]}")
     print("List of users:")
     for user in users:
         print(user.name())

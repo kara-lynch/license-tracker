@@ -1,13 +1,21 @@
 from dataclasses import dataclass
 from src.validation.validation_checks import *
+from src.logger import log
 
-FIRST_NAME_MAX_SIZE = 32
-FIRST_NAME_MIN_SIZE = 2
-LAST_NAME_MAX_SIZE = 32
-LAST_NAME_MIN_SIZE = 2
-LOCATIONS_LIST = ["United States", "Japan", "Germany", "Brazil", "South Africa"]
-DEPARTMENTS_LIST = ["Sales", "Information Technology", "Legal", "HR"]
-TITLES_LIST = ["Manager", "Aide", "Developer", "Sales Agent"]
+import json
+
+config_dict = {}
+
+def get_configs():
+    
+    config_path = "./src/config/credentials.json"
+
+    with open(config_path, "r") as file:
+        config_json = json.load(file)
+
+    log.log("INFO", "Credentials manager configs loaded successfully")
+    
+    return config_json
 
 @dataclass
 class UserCredentials:
@@ -17,7 +25,7 @@ class UserCredentials:
     Methods:
 
     id(), first_name(), last_name(), location(), department(), title(): Will return the respective info field.
-    
+
     name(): Will return the user's first and last name.
 
     is_manager(): Will return True if the user's title is "Manager", False otherwise.
@@ -32,22 +40,24 @@ class UserCredentials:
     _department: str
     _title: str
 
-    
-
     def validate(self):
         """Checks all of the information entered for a user for validity. Will return an error if any of the fields are too long, too short, or have invalid characters."""
+        global config_dict
+        if len(config_dict.keys()) == 0:
+            config_dict = get_configs()
+            
         _field_name = ""
         try:
             _field_name = "First name"
             check_data_type(self._first_name, str, "a string")
             self._first_name = self._first_name.strip()
-            check_field_size(self._first_name, FIRST_NAME_MAX_SIZE, FIRST_NAME_MIN_SIZE)
+            check_field_size(self._first_name, config_dict["FIRST_NAME_MAX_SIZE"], config_dict["FIRST_NAME_MIN_SIZE"])
             is_alpha_or_hyphen(self._first_name)
 
             _field_name = "Last name"
             check_data_type(self._last_name, str, "a string")
             self._last_name = self._last_name.strip()
-            check_field_size(self._last_name, LAST_NAME_MAX_SIZE, LAST_NAME_MIN_SIZE)
+            check_field_size(self._last_name, config_dict["LAST_NAME_MAX_SIZE"], config_dict["LAST_NAME_MIN_SIZE"])
             is_alpha_or_hyphen(self._last_name)
 
             _field_name = "Employee ID number"
@@ -57,21 +67,23 @@ class UserCredentials:
             _field_name = "Location"
             check_data_type(self._location, str, "a string")
             self._location = self._location.strip()
-            list_check(self._location, LOCATIONS_LIST)
+            list_check(self._location, config_dict["LOCATIONS_LIST"])
 
             _field_name = "Department"
             check_data_type(self._department, str, "a string")
             self._department = self._department.strip()
-            list_check(self._department, DEPARTMENTS_LIST)
+            list_check(self._department, config_dict["DEPARTMENTS_LIST"])
 
             _field_name = "Job title"
             check_data_type(self._title, str, "a string")
             self._title = self._title.strip()
-            list_check(self._title, TITLES_LIST)
+            list_check(self._title, config_dict["TITLES_LIST"])
 
 
         except Exception as e:
-            raise Exception(_field_name + " " + e.args[0])
+            error_msg = _field_name + " " + e.args[0]
+            log.log("WARNING", f"Credentials validation failed for {self.name()}: {error_msg}")
+            raise Exception(error_msg)
     
     def name(self):
         return f"{self._first_name} {self._last_name}"

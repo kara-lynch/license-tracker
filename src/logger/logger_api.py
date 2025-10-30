@@ -4,6 +4,7 @@ import json
 
 from enum import Enum
 from inspect import getframeinfo, stack
+from src.config.settings import Settings
 
 """
 Enum for storing logger levels, in order of increasing severity.
@@ -21,7 +22,7 @@ class _Logger(object):
     Constructor. Loads logger settings JSON file from config folder to initialize logger.
     """
     def __init__(self) -> None:
-        config_path = "./src/config/logger.json"
+        config_path = Settings.logger_config_file()
 
         with open(config_path, "r") as file:
             config_json = json.load(file)

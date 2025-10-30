@@ -15,7 +15,7 @@ if __name__ == "__main__":
         log.log("INFO", "Ping successful; server is up.")
     else:
         log.log("ERROR", "Ping failed, server is down.")
-        exit(1)
+        exit(1)    
     
     print("Ping successful, continuing test.")
     test_user = {

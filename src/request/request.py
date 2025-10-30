@@ -5,6 +5,15 @@ from src.validation import validation_checks
 from src.validation import validate_field
 
 class Request(ABC):
+    """
+    This class manages the sanitization and storage of user defined request data.
+    An abstract class is used for validation, which is implemented in request-type specific subclasses.
+    Methods:
+    __init__(json): calls the subclass specific validate_data function to automatically validate on instantiation.
+    set_...(new_field): group of functions that call field specific validation and then set the class's internal variable for that field if valid.
+    add_clean_data_field(new_key, new_field): takes in a value and key and maps them to the class's dictionary of clean data.
+    get_clean_data_dict(): returns the object's clean data dictionary generated in validation; this is the proper way of externally accessing object data
+    """
     lic_data:dict
     clean_data:dict
 

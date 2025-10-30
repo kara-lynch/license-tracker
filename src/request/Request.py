@@ -103,33 +103,40 @@ class AddLicReq(Request):
     def validate_data(self):
         if not self.field_exists(self.lic_name_key) or not self.field_exists(self.lic_version_key) or not self.field_exists(self.lic_type_key):
             raise ValueError("Missing one or more required field")
-        self.set_lic_name(self.lic_data[self.lic_name_key])
-        self.set_lic_version(self.lic_data[self.lic_version_key])
-        self.set_lic_type(self.lic_data[self.lic_type_key])
-        if self.field_exists(self.lic_cost_key):
-            self.set_lic_cost(self.lic_data[self.lic_cost_key])
-        if self.field_exists(self.lic_curr_key):
-            self.set_lic_curr(self.lic_data[self.lic_curr_key])
-        if self.field_exists(self.lic_pay_period_key):
-            self.set_lic_pay_period(self.lic_data[self.lic_pay_period_key])
-        if self.field_exists(self.lic_date_of_renewal_key):
-            self.set_lic_date_of_renewal(self.lic_data[self.lic_date_of_renewal_key])
-        if self.field_exists(self.lic_date_of_expiration_key):
-            self.set_lic_date_of_expiration(self.lic_data[self.lic_date_of_expiration_key])
-        if self.field_exists(self.lic_restrictions_key):
-            self.set_lic_restrictions(self.lic_data[self.lic_restrictions_key])
+        else:
+            self.set_lic_name(self.lic_data[self.lic_name_key])
+            self.set_lic_version(self.lic_data[self.lic_version_key])
+            self.set_lic_type(self.lic_data[self.lic_type_key])
+            if self.field_exists(self.lic_cost_key):
+                self.set_lic_cost(self.lic_data[self.lic_cost_key])
+            if self.field_exists(self.lic_curr_key):
+                self.set_lic_curr(self.lic_data[self.lic_curr_key])
+            if self.field_exists(self.lic_pay_period_key):
+                self.set_lic_pay_period(self.lic_data[self.lic_pay_period_key])
+            if self.field_exists(self.lic_date_of_renewal_key):
+                self.set_lic_date_of_renewal(self.lic_data[self.lic_date_of_renewal_key])
+            if self.field_exists(self.lic_date_of_expiration_key):
+                self.set_lic_date_of_expiration(self.lic_data[self.lic_date_of_expiration_key])
+            if self.field_exists(self.lic_restrictions_key):
+                self.set_lic_restrictions(self.lic_data[self.lic_restrictions_key])
+
 
 class AssignLicense(Request):
+    is_employee_assign:bool
+
     def validate_data(self):
         if not self.field_exists(self.lic_id_key) or (not self.field_exists(self.lic_employee_id_key) and not self.field_exists(self.lic_computer_id_key)):
             raise ValueError("Missing one or more required field")
         elif self.field_exists(self.lic_employee_id_key) and self.field_exists(self.lic_computer_id_key): 
-             raise ValueError("Can't assign employee and computer at same time")
-
-class AssignLicense(Request):
-    def validate_data(self):
-        if not self.field_exists(self.lic_id_key):
-            pass
+            raise ValueError("Can't assign employee and computer at same time")
+        else:
+            self.set_lic_id(self.lic_data[self.lic_id_key])
+            if self.field_exists(self.lic_data[self.lic_employee_id_key]):
+                self.set_lic_employee_id(self.lic_data[self.lic_employee_id_key])
+                self.is_employee_assign = True
+            else:
+                self.set_lic_computer_id(self.lic_data[self.lic_computer_id_key])
+                self.is_employee_assign = False
 
 
 def testFunc():

@@ -6,6 +6,7 @@ from src.validation import validate_field
 
 class Request(ABC):
     lic_data:dict
+    clean_data:dict
 
     lic_name_key = "name"
     lic_version_key = "ver"
@@ -46,52 +47,60 @@ class Request(ABC):
     
 
     def set_lic_name(self, new_field):
-            validate_field.validate_lic_name(str(new_field))
-            self.lic_name = new_field
+        validate_field.validate_lic_name(str(new_field))
+        self.lic_name = new_field
     
     def set_lic_version(self, new_field):
-            validate_field.validate_lic_version(str(new_field)) 
-            self.lic_name = new_field
+        validate_field.validate_lic_version(str(new_field)) 
+        self.lic_name = new_field
 
     def set_lic_type(self, new_field):
-            validate_field.validate_lic_type(str(new_field))
-            self.lic_name = new_field
+        validate_field.validate_lic_type(str(new_field))
+        self.lic_name = new_field
     
     def set_lic_cost(self, new_field):
-            validate_field.validate_lic_cost(str(new_field))
-            self.lic_name = new_field
+        validate_field.validate_lic_cost(str(new_field))
+        self.lic_name = new_field
     
     def set_lic_curr(self, new_field):
-            validate_field.validate_lic_curr(str(new_field))
-            self.lic_name = new_field
+        validate_field.validate_lic_curr(str(new_field))
+        self.lic_name = new_field
     
     def set_lic_pay_period(self, new_field):
-            validate_field.validate_lic_pay_period(str(new_field))
-            self.lic_name = new_field
+        validate_field.validate_lic_pay_period(str(new_field))
+        self.lic_name = new_field
     
     def set_lic_date_of_renewal(self, new_field):
-            validate_field.validate_lic_date_of_renewal(str(new_field))
-            self.lic_name = new_field
+        validate_field.validate_lic_date_of_renewal(str(new_field))
+        self.lic_name = new_field
     
     def set_lic_date_of_expiration(self, new_field):
-            validate_field.validate_lic_date_of_expiration(str(new_field))
-            self.lic_name = new_field
+        validate_field.validate_lic_date_of_expiration(str(new_field))
+        self.lic_name = new_field
     
     def set_lic_restrictions(self, new_field):
-            validate_field.validate_lic_restrictions(str(new_field))
-            self.lic_name = new_field
+        validate_field.validate_lic_restrictions(str(new_field))
+        self.lic_name = new_field
     
     def set_lic_id(self, new_field):
-            validate_field.validate_lic_id(str(new_field))
-            self.lic_name = new_field
+        validate_field.validate_lic_id(str(new_field))
+        self.lic_name = new_field
     
     def set_lic_employee_id(self, new_field):
-            validate_field.validate_lic_employee_id(str(new_field))
-            self.lic_name = new_field
+        validate_field.validate_lic_employee_id(str(new_field))
+        self.lic_name = new_field
     
     def set_lic_computer_id(self, new_field):
-            validate_field.validate_lic_computer_id(str(new_field))
-            self.lic_name = new_field
+        validate_field.validate_lic_computer_id(str(new_field))
+        self.lic_name = new_field
+
+    def add_clean_data_field(self, new_key, new_field):
+        self.clean_data[new_key, new_field]
+
+    def get_clean_data_dict(self):
+        if self.clean_data == None:
+            self.clean_data = {}
+        return self.clean_data
 
 
     @abstractmethod

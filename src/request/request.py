@@ -5,7 +5,7 @@ from src.validation import validation_checks
 from src.validation import validate_field
 
 class Request(ABC):
-    lic_data = None
+    lic_data:dict
 
     lic_name_key = "name"
     lic_version_key = "ver"
@@ -122,8 +122,6 @@ class AddLicReq(Request):
 
 
 class AssignLicense(Request):
-    is_employee_assign:bool
-
     def validate_data(self):
         if not self.field_exists(self.lic_id_key) or (not self.field_exists(self.lic_employee_id_key) and not self.field_exists(self.lic_computer_id_key)):
             raise ValueError("Missing one or more required field")
@@ -133,11 +131,46 @@ class AssignLicense(Request):
             self.set_lic_id(self.lic_data[self.lic_id_key])
             if self.field_exists(self.lic_data[self.lic_employee_id_key]):
                 self.set_lic_employee_id(self.lic_data[self.lic_employee_id_key])
-                self.is_employee_assign = True
             else:
                 self.set_lic_computer_id(self.lic_data[self.lic_computer_id_key])
-                self.is_employee_assign = False
 
+
+class UpdateLicReq(Request):
+    def validate_data(self):
+        if not self.field_exists(self.lic_id_key):
+            raise ValueError("Missing license ID")
+        else:
+            if self.field_exists(self.lic_name_key):
+                self.set_lic_name(self.lic_data[self.lic_name_key])
+            if self.field_exists(self.lic_version_key):
+                self.set_lic_version(self.lic_data[self.lic_version_key])
+            if self.field_exists(self.lic_type_key):
+                self.set_lic_type(self.lic_data[self.lic_type_key])
+            if self.field_exists(self.lic_cost_key):
+                self.set_lic_cost(self.lic_data[self.lic_cost_key])
+            if self.field_exists(self.lic_curr_key):
+                self.set_lic_curr(self.lic_data[self.lic_curr_key])
+            if self.field_exists(self.lic_pay_period_key):
+                self.set_lic_pay_period(self.lic_data[self.lic_pay_period_key])
+            if self.field_exists(self.lic_date_of_renewal_key):
+                self.set_lic_date_of_renewal(self.lic_data[self.lic_date_of_renewal_key])
+            if self.field_exists(self.lic_date_of_expiration_key):
+                self.set_lic_date_of_expiration(self.lic_data[self.lic_date_of_expiration_key])
+            if self.field_exists(self.lic_restrictions_key):
+                self.set_lic_restrictions(self.lic_data[self.lic_restrictions_key])
+
+
+class QueryLicReq(Request):
+    def validate_data(self):
+        if (len(self.lic_data.keys()) > 1):
+             raise ValueError("Query by multiple fields not currently supported")
+        else:
+            if self.field_exists(self.lic_name_key):
+                self.set_lic_name(self.lic_data[self.lic_name_key])
+            if self.field_exists(self.lic_type_key):
+                self.set_lic_type(self.lic_data[self.lic_type_key])
+            if self.field_exists(self.lic_id_key):
+                self.set_lic_type(self.lic_data[self.lic_id_key])               
 
 def testFunc():
     request_obj = AddLicReq('{"name":"softwareeeeeeeeeee","ver":"4.0","type":"enterprise"}')

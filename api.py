@@ -50,6 +50,6 @@ def filteredView():
 
 # Error handlers
 
-@app.errorhandler(401)
-def handle_401():
-    return f'ERROR: Unable to authenticate user.', 401
+# @app.errorhandler(401)
+# def handle_401():
+#     return f'ERROR: Unable to authenticate user.', 401

@@ -3,15 +3,22 @@ import json
 
 API_URL = "http://127.0.0.1:5000/addLicense/"
 
+TEST_BODY = {
+    "licenseName": "Windows 10",
+    "ver": "10.9.83",
+    "type": "Enterprise"
+}
+
 # Test 1: Sending a valid token.
 def test1() -> bool:
     print("TEST 1: Valid token.")
-    valid_token = "eyJhbGciOiJIUzI1NiJ9.eyJsYXN0X25hbWUiOiJGaWxpcGN6eW5za2kiLCJsb2NhdGlvbiI6Ikdlcm1hbnkiLCJpZCI6MTksImRlcGFydG1lbnQiOiJJbmZvcm1hdGlvbiBUZWNobm9sb2d5IiwidGl0bGUiOiJEZXZlbG9wZXIiLCJmaXJzdF9uYW1lIjoiTWFyZ2l0Iiwic3ViIjoiTWFyZ2l0IEZpbGlwY3p5bnNraSIsImlhdCI6MTc2MTg1OTc5MywiZXhwIjoxNzYxODYzMzkzfQ.ZH591xebUnjRAfxXEQjcb0g_4lnvDOMJeV9pfCkYSLQ"
+    valid_token = "eyJhbGciOiJIUzI1NiJ9.eyJsYXN0X25hbWUiOiJGaWxpcGN6eW5za2kiLCJsb2NhdGlvbiI6Ikdlcm1hbnkiLCJpZCI6MTksImRlcGFydG1lbnQiOiJJbmZvcm1hdGlvbiBUZWNobm9sb2d5IiwidGl0bGUiOiJEZXZlbG9wZXIiLCJmaXJzdF9uYW1lIjoiTWFyZ2l0Iiwic3ViIjoiTWFyZ2l0IEZpbGlwY3p5bnNraSIsImlhdCI6MTc2MTk0MTM0MiwiZXhwIjoxNzYxOTQ0OTQyfQ.Amxnx-uGkdrTGdNQjnJ6oSDHldR0iJrQMKLdinyUnRE"
 
-    valid_response = requests.post(API_URL, headers={"Bearer": valid_token})
+    valid_response = requests.post(API_URL, headers={"Bearer": valid_token}, json=TEST_BODY)
     if valid_response.status_code == 200:
         print("TEST SUCCEEDED")
-        print(json.dumps(json.loads(valid_response.text), indent=4))
+        # print(json.dumps(json.loads(valid_response.text), indent=4))
+        print(valid_response.text)
     else:
         print("ERROR: TEST 1 FAILED!")
         print(valid_response.text)
@@ -23,7 +30,7 @@ def test2() -> bool:
     print("TEST 2: Sending a token that is expired.")
     expired_token = "eyJhbGciOiJIUzI1NiJ9.eyJsYXN0X25hbWUiOiJGdXJwaHkiLCJsb2NhdGlvbiI6IkJyYXppbCIsImlkIjoxMywiZGVwYXJ0bWVudCI6IkxlZ2FsIiwidGl0bGUiOiJBaWRlIiwiZmlyc3RfbmFtZSI6IlRoZW9kb3JhIiwic3ViIjoiVGhlb2RvcmEgRnVycGh5IiwiaWF0IjoxNzYxNzc2MzIzLCJleHAiOjE3NjE3Nzk5MjN9.rydmmASGiVMB2pCTuqTxJ5OLqwIEmZfeuIIZceapGMU"
 
-    expired_response = requests.post(API_URL, headers={"Bearer": expired_token})
+    expired_response = requests.post(API_URL, headers={"Bearer": expired_token}, json=TEST_BODY)
     if expired_response.status_code == 401:
         print("TEST SUCCEEDED")
     else:
@@ -40,7 +47,7 @@ def test3() -> bool:
         long_token += "AAAAA"
     print(f'Length of long token: {len(long_token)}')
 
-    long_response = requests.post(API_URL, headers={"Bearer": long_token})
+    long_response = requests.post(API_URL, headers={"Bearer": long_token}, json=TEST_BODY)
     if long_response.status_code == 401:
         print("TEST SUCCEEDED")
     else:
@@ -57,7 +64,7 @@ def test4() -> bool:
         short_token += "AAAAA"
     print(f'Length of long token: {len(short_token)}')
 
-    short_response = requests.post(API_URL, headers={"Bearer": short_token})
+    short_response = requests.post(API_URL, headers={"Bearer": short_token}, json=TEST_BODY)
     if short_response.status_code == 401:
         print("TEST SUCCEEDED")
     else:
@@ -71,7 +78,7 @@ def test5() -> bool:
     print("TEST 5: Sending empty with request.")
     empty_token = ""
 
-    empty_response = requests.post(API_URL, headers={"Bearer": empty_token})
+    empty_response = requests.post(API_URL, headers={"Bearer": empty_token}, json=TEST_BODY)
     if empty_response.status_code == 401:
         print("TEST SUCCEEDED")
     else:
@@ -83,7 +90,7 @@ def test5() -> bool:
 # Test 6: Sending no Bearer header along with request.
 def test6() -> bool:
     print("Sending no Bearer header along with request.")
-    no_token_response = requests.post(API_URL)
+    no_token_response = requests.post(API_URL, json=TEST_BODY)
     if no_token_response.status_code == 401:
         print("TEST SUCCEEDED")
     else:

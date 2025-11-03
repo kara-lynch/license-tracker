@@ -42,6 +42,24 @@ class Request(ABC):
             return False
         else:
             return True
+        
+    def has_cost(self):
+        if self.clean_data.get(self.lic_cost_key) == None:
+            return False
+        else:
+            return True
+    
+    def has_expiration(self):
+        if self.clean_data.get(self.lic_date_of_expiration_key) == None:
+            return False
+        else:
+            return True
+    
+    def has_restrictions(self):
+        if self.clean_data.get(self.lic_restrictions_key) == None:
+            return False
+        else:
+            return True
     
 
     def set_lic_name(self, new_field):
@@ -97,6 +115,9 @@ class Request(ABC):
         if self.clean_data == None:
             self.clean_data = {}
         return self.clean_data
+    
+    def get_clean_data_json(self):
+        return json.dumps(self.get_clean_data_dict())
 
 
     @abstractmethod
@@ -115,13 +136,17 @@ class AddLicReq(Request):
             self.set_lic_version(self.lic_data[self.lic_version_key])
             self.set_lic_type(self.lic_data[self.lic_type_key])
             if self.field_exists(self.lic_cost_key):
-                self.set_lic_cost(self.lic_data[self.lic_cost_key])
-            if self.field_exists(self.lic_curr_key):
-                self.set_lic_curr(self.lic_data[self.lic_curr_key])
-            if self.field_exists(self.lic_pay_period_key):
-                self.set_lic_pay_period(self.lic_data[self.lic_pay_period_key])
-            if self.field_exists(self.lic_date_of_renewal_key):
-                self.set_lic_date_of_renewal(self.lic_data[self.lic_date_of_renewal_key])
+                if self.field_exists(self.lic_curr_key):
+                    self.set_lic_curr(self.lic_data[self.lic_curr_key])
+                    self.set_lic_cost(self.lic_data[self.lic_cost_key])
+                    if self.field_exists(self.lic_pay_period_key):
+                        self.set_lic_pay_period(self.lic_data[self.lic_pay_period_key])
+                    if self.field_exists(self.lic_date_of_renewal_key):
+                        self.set_lic_date_of_renewal(self.lic_data[self.lic_date_of_renewal_key])
+                else:
+                    raise ValueError("cost must have currency")
+            elif self.field_exists(self.lic_curr_key) or self.field_exists(self.lic_date_of_renewal_key) or self.field_exists(self.lic_pay_period_key):
+                raise ValueError("cost based field entered but not cost")
             if self.field_exists(self.lic_date_of_expiration_key):
                 self.set_lic_date_of_expiration(self.lic_data[self.lic_date_of_expiration_key])
             if self.field_exists(self.lic_restrictions_key):
@@ -196,6 +221,7 @@ class QueryLicReq(Request):
             if self.field_exists(self.lic_id_key):
                 self.set_lic_type(self.lic_data[self.lic_id_key])        
 
+#here for testing purposes
 class QueryReturn(Request):
     def validate_data(self):
         log.log("INFO", "returned table  begin validation")

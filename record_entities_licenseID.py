@@ -1,3 +1,4 @@
+import unittest
 """ 
  This represents a License object 
  From the License Tracking database:
@@ -404,5 +405,21 @@ class Restrictions(object):
             self.__restrict = restrict
 
     def __restrict_str__(self):
-        output = "License ID: L{0}  Geographic Restrictions: {1}".format(self.__lid, self.__restrict)
+        output = "License ID: L{0}       Geographic Restrictions: {1}".format(self.__lid, self.__restrict)
         return output
+    
+
+
+
+
+
+
+
+
+if __name__ == "__main__":
+    
+    e = Expiration(22234,"2023-12-11")
+    print(e.__exp_str__())
+    
+    #unittest.main()
+

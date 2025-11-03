@@ -82,7 +82,7 @@ def validate_lic_restrictions(data):
     
 def validate_lic_id(data):
     if field_exists(data):
-        validation_checks.check_field_size(str(data), 10, 2)
+        validation_checks.check_field_size(str(data), 10, 1)
         validation_checks.check_data_type(data, int)
         log.log("INFO", "license id validated")
     else:
@@ -90,7 +90,7 @@ def validate_lic_id(data):
     
 def validate_lic_employee_id(data):
     if field_exists(data):
-        validation_checks.check_field_size(str(data), 10, 2)
+        validation_checks.check_field_size(str(data), 10, 1)
         validation_checks.check_data_type(data, int)
         log.log("INFO", "employee id validated")
     else:
@@ -98,7 +98,7 @@ def validate_lic_employee_id(data):
     
 def validate_lic_computer_id(data):
     if field_exists(data):
-        validation_checks.check_field_size(str(data), 10, 2)
+        validation_checks.check_field_size(str(data), 10, 1)
         validation_checks.check_data_type(data, int)
         log.log("INFO", "computer id validated")
     else:

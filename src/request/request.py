@@ -57,7 +57,7 @@ class Request(ABC):
         self.clean_data[self.lic_type_key] = new_field
     
     def set_lic_cost(self, new_field):
-        validate_field.validate_lic_cost(str(new_field))
+        validate_field.validate_lic_cost(int(new_field))
         self.clean_data[self.lic_cost_key] = new_field
     
     def set_lic_curr(self, new_field):
@@ -81,15 +81,15 @@ class Request(ABC):
         self.clean_data[self.lic_restrictions_key] = new_field
     
     def set_lic_id(self, new_field):
-        validate_field.validate_lic_id(str(new_field))
+        validate_field.validate_lic_id(int(new_field))
         self.clean_data[self.lic_id_key] = new_field
     
     def set_lic_employee_id(self, new_field):
-        validate_field.validate_lic_employee_id(str(new_field))
+        validate_field.validate_lic_employee_id(int(new_field))
         self.clean_data[self.lic_employee_id_key] = new_field
     
     def set_lic_computer_id(self, new_field):
-        validate_field.validate_lic_computer_id(str(new_field))
+        validate_field.validate_lic_computer_id(int(new_field))
         self.clean_data[self.lic_computer_id_key] = new_field
 
 
@@ -184,8 +184,28 @@ class QueryLicReq(Request):
             if self.field_exists(self.lic_type_key):
                 self.set_lic_type(self.lic_data[self.lic_type_key])
             if self.field_exists(self.lic_id_key):
-                self.set_lic_type(self.lic_data[self.lic_id_key])               
+                self.set_lic_type(self.lic_data[self.lic_id_key])        
 
-def testFunc():
-    request_obj = AddLicReq('{"name":"softwareeeeeeeeeee","ver":"4.0","type":"enterprise"}')
-    print("all good")
+class QueryReturn(Request):
+    def validate_data(self):
+        log.log("INFO", "returned table  begin validation")
+        if not self.field_exists(self.lic_name_key) or not self.field_exists(self.lic_version_key) or not self.field_exists(self.lic_type_key):
+            log.log("ERROR", "one or more components required for licenses are missing; terminating program")
+            raise ValueError("Missing one or more required field")
+        else:
+            self.set_lic_id(self.lic_data[self.lic_id_key])
+            self.set_lic_name(self.lic_data[self.lic_name_key])
+            self.set_lic_version(self.lic_data[self.lic_version_key])
+            self.set_lic_type(self.lic_data[self.lic_type_key])
+            if self.field_exists(self.lic_cost_key):
+                self.set_lic_cost(self.lic_data[self.lic_cost_key])
+            if self.field_exists(self.lic_curr_key):
+                self.set_lic_curr(self.lic_data[self.lic_curr_key])
+            if self.field_exists(self.lic_pay_period_key):
+                self.set_lic_pay_period(self.lic_data[self.lic_pay_period_key])
+            if self.field_exists(self.lic_date_of_renewal_key):
+                self.set_lic_date_of_renewal(self.lic_data[self.lic_date_of_renewal_key])
+            if self.field_exists(self.lic_date_of_expiration_key):
+                self.set_lic_date_of_expiration(self.lic_data[self.lic_date_of_expiration_key])
+            if self.field_exists(self.lic_restrictions_key):
+                self.set_lic_restrictions(self.lic_data[self.lic_restrictions_key])

@@ -12,82 +12,94 @@ def validate_lic_name(data):
     if field_exists(data):
         validation_checks.check_field_size(str(data), 40, 2)
         validation_checks.check_data_type(data, str)
+        log.log("INFO", "license name validated")
     else:
-        log.log("WARN", "license name empty")
+        log.log("DEBUG", "license name empty")
     
 def validate_lic_version(data):
     if field_exists(data):
         validation_checks.check_field_size(str(data), 8, 1)
-        validation_checks.check_data_type(data, str) 
+        validation_checks.check_data_type(data, str)
+        log.log("INFO", "license version validated") 
     else:
-        log.log("WARN", "license version empty")
+        log.log("DEBUG", "license version empty")
 
 def validate_lic_type(data):
     if field_exists(data):
         validation_checks.check_field_size(str(data), 20, 2)
         validation_checks.check_data_type(data, str)
+        log.log("INFO", "license type validated")
     else:
-        log.log("WARN", "license type empty")
+        log.log("DEBUG", "license type empty")
     
 def validate_lic_cost(data):
     if field_exists(data):
         validation_checks.check_field_size(str(data), 15, 2)
         validation_checks.check_data_type(data, float)
+        log.log("INFO", "license cost validated")
     else:
-        log.log("WARN", "license cost empty")
+        log.log("DEBUG", "license cost empty")
     
 def validate_lic_curr(data):
     if field_exists(data):
         validation_checks.check_field_size(str(data), 3, 3)
         validation_checks.check_data_type(data, str)
+        log.log("INFO", "license currency validated")
     else:
-        log.log("WARN", "license currency empty")
+        log.log("DEBUG", "license currency empty")
     
 def validate_lic_pay_period(data):
     if field_exists(data):
         validation_checks.check_field_size(str(data), 12, 2)
         validation_checks.check_data_type(data, str)
+        log.log("INFO", "license pay period validated")
     else:
-        log.log("WARN", "license pay period empty")
+        log.log("DEBUG", "license pay period empty")
     
 def validate_lic_date_of_renewal(data):
     if field_exists(data):
         validation_checks.check_field_size(str(data), 10, 2)
         validation_checks.check_data_type(data, str)
+        log.log("INFO", "license date of renewal validated")
     else:
-        log.log("WARN", "license date of renewal empty")
+        log.log("DEBUG", "license date of renewal empty")
     
 def validate_lic_date_of_expiration(data):
     if field_exists(data):
         validation_checks.check_field_size(str(data), 10, 2)
         validation_checks.check_data_type(data, str)
+        log.log("INFO", "license id validated")
     else:
-        log.log("WARN", "license date of expiration empty")
+        log.log("DEBUG", "license date of expiration empty")
     
 def validate_lic_restrictions(data):
     if field_exists(data):
         validation_checks.check_field_size(str(data), 100, 2)
         validation_checks.check_data_type(data, str)
+        log.log("INFO", "license id validated")
     else:
-        log.log("WARN", "license restrictions empty")
+        log.log("DEBUG", "license restrictions empty")
     
 def validate_lic_id(data):
     if field_exists(data):
         validation_checks.check_field_size(str(data), 10, 2)
         validation_checks.check_data_type(data, int)
+        log.log("INFO", "license id validated")
     else:
-        log.log("WARN", "license id empty")
+        log.log("DEBUG", "license id empty")
     
 def validate_lic_employee_id(data):
     if field_exists(data):
         validation_checks.check_field_size(str(data), 10, 2)
         validation_checks.check_data_type(data, int)
+        log.log("INFO", "employee id validated")
     else:
-        log.log("WARN", "employee ID empty")
+        log.log("DEBUG", "employee id empty")
     
 def validate_lic_computer_id(data):
     if field_exists(data):
         validation_checks.check_field_size(str(data), 10, 2)
         validation_checks.check_data_type(data, int)
+        log.log("INFO", "computer id validated")
     else:
-        log.log("WARN", "computer id empty")
+        log.log("DEBUG", "computer id empty")

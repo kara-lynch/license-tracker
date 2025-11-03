@@ -57,7 +57,7 @@ class Request(ABC):
         self.clean_data[self.lic_type_key] = new_field
     
     def set_lic_cost(self, new_field):
-        validate_field.validate_lic_cost(int(new_field))
+        validate_field.validate_lic_cost(float(new_field))
         self.clean_data[self.lic_cost_key] = new_field
     
     def set_lic_curr(self, new_field):
@@ -126,6 +126,16 @@ class AddLicReq(Request):
                 self.set_lic_date_of_expiration(self.lic_data[self.lic_date_of_expiration_key])
             if self.field_exists(self.lic_restrictions_key):
                 self.set_lic_restrictions(self.lic_data[self.lic_restrictions_key])
+
+
+class DelLicReq(Request):
+    def validate_data(self):
+        log.log("INFO", "delete license request begin validation")
+        if not self.field_exists(self.lic_id_key):
+            log.log("ERROR", "license ID missing, required for delete; terminating program")
+            raise ValueError("Missing license ID")
+        else:
+            self.set_lic_id(self.lic_data[self.lic_id_key])
 
 
 class AssignLicense(Request):

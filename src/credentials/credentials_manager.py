@@ -21,16 +21,6 @@ def get_configs():
 class UserCredentials:
     """
     This class handles the credentials for a user, including their department and title.
-    
-    Methods:
-
-    id(), first_name(), last_name(), location(), department(), title(): Will return the respective info field.
-
-    name(): Will return the user's first and last name.
-
-    is_manager(): Will return True if the user's title is "Manager", False otherwise.
-
-    validate(): Checks each of the user info fields to ensure its validity. Will throw an exception if any are invalid.
     """
 
     _id: int
@@ -41,7 +31,12 @@ class UserCredentials:
     _title: str
 
     def validate(self):
-        """Checks all of the information entered for a user for validity. Will return an error if any of the fields are too long, too short, or have invalid characters."""
+        """
+        Checks all of the information entered for a user for validity. Will return an error if any of the fields are too long, too short, or have invalid entries.
+        
+        :raise Exception: If one of the fields is invalid. 
+        
+        """
         global config_dict
         if len(config_dict.keys()) == 0:
             config_dict = get_configs()
@@ -49,39 +44,38 @@ class UserCredentials:
         _field_name = ""
         try:
             _field_name = "First name"
-            check_data_type(self._first_name, str, "a string")
+            check_data_type(self._first_name, str)
             self._first_name = self._first_name.strip()
             check_field_size(self._first_name, config_dict["FIRST_NAME_MAX_SIZE"], config_dict["FIRST_NAME_MIN_SIZE"])
-            is_alpha_or_hyphen(self._first_name)
 
             _field_name = "Last name"
-            check_data_type(self._last_name, str, "a string")
+            check_data_type(self._last_name, str)
             self._last_name = self._last_name.strip()
             check_field_size(self._last_name, config_dict["LAST_NAME_MAX_SIZE"], config_dict["LAST_NAME_MIN_SIZE"])
-            is_alpha_or_hyphen(self._last_name)
 
             _field_name = "Employee ID number"
-            check_data_type(self._id, int, "an int")
+            check_data_type(self._id, int)
             is_positive(self._id)
 
             _field_name = "Location"
-            check_data_type(self._location, str, "a string")
+            check_data_type(self._location, str)
             self._location = self._location.strip()
             list_check(self._location, config_dict["LOCATIONS_LIST"])
 
             _field_name = "Department"
-            check_data_type(self._department, str, "a string")
+            check_data_type(self._department, str)
             self._department = self._department.strip()
             list_check(self._department, config_dict["DEPARTMENTS_LIST"])
 
             _field_name = "Job title"
-            check_data_type(self._title, str, "a string")
+            check_data_type(self._title, str)
             self._title = self._title.strip()
             list_check(self._title, config_dict["TITLES_LIST"])
 
 
         except Exception as e:
             error_msg = _field_name + " " + e.args[0]
+            print(f"Credentials validation failed for {self.name()}: {error_msg}")
             log.log("WARNING", f"Credentials validation failed for {self.name()}: {error_msg}")
             raise Exception(error_msg)
     

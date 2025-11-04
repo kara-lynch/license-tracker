@@ -2,25 +2,29 @@
 
 def check_data_type(data_to_check, input_type, type_name: str=None):
     """
-    Checks if the input is of the specified type. Will return an exception if it isn't.
+    Checks if the input is of the specified type. Will raise an exception if it isn't.
     
-    Input 1: The data to run a check on.
-    Input 2: The data type to check input 1 against.
-    Input 3 (optional): A short description of input 2, such as "a string" or "an int", to be included in the error message if the check fails.
+    :param data_to_check: The data to run a check on.
+    :param input_type: The data type to be checked against.
+    :param type_name: Deprecated. Does nothing.
+    :raise TypeError: If the input is not of the specified type.
+    :return: None
     """
     if type(data_to_check) != input_type:
-        if type_name == None:
-            raise TypeError("is of the incorrect type")
-        else: 
-            raise TypeError(f"must be {type_name}")
+        raise TypeError(f"must be {str(input_type)}")
 
 def check_field_size(input_str: str, max_size: int, min_size: int):
     """
-    Checks if the input string is within the specified size limits. Will return an exception if it isn't.
+    Checks if the input string is within the specified size limits. Will raise an exception if it isn't.
     
-    Input 1: The string to be checked.
-    Input 2: The upper size limit.
-    Input 3: The lower size limit.
+    :param input_str: The string to be checked.
+    :type input_str: str
+    :param max_size: The upper size limit.
+    :type max_size: int
+    :param min_size: The lower size limit.
+    :type min_size: int
+    :raise ValueError: If the input is outside the specified range.
+    :return: None
     """
     if len(input_str) > max_size:
         raise ValueError(f"must be at most {max_size} characters long")
@@ -29,9 +33,14 @@ def check_field_size(input_str: str, max_size: int, min_size: int):
 
 def is_alpha_or_hyphen(input_str: str):
     """
+    :deprecated:
+
     Checks if the input consists of only letters and up to one hyphen. Will return an exception otherwise. Used to validate the name of a person.
     
-    Input: The string to be checked.
+    :param input_str: The string to be checked.
+    :type input_str: str
+    :raise ValueError: If invalid characters are found in the input string.
+    :return: None
     """
     if input_str.isalpha():
         return
@@ -47,21 +56,25 @@ def is_alpha_or_hyphen(input_str: str):
         elif not char.isalpha():
             raise ValueError("must contain only letters, spaces, and up to one hyphen")
 
-def list_check(input_str, input_list: list):
+def list_check(input_obj, input_list: list):
     """
     Checks if the input object is in the input list. Will raise an exception if it isn't.
-    
-    Input 1: The data to be checked.
-    Input 2: The list that input 1 is checked against.
+
+    :param input_obj: The data to be checked.
+    :param input_list: The list to be checked against.
+    :type input_list: list or tuple
+    :raise ValueError: If the input object isn't in the input list.
+    :return: None
     """
-    if input_str not in input_list:
+    if input_obj not in input_list:
         raise ValueError("not found")
     
 def is_positive(input_num: int):
     """
     Checks if the input number is positive. Will raise an exception if it isn't. Intended for ID numbers and other ints, but should be usable with floats as well.
     
-    Input: The number to be checked.
+    :param input_num: The number to be checked.
+    :type input_num: int or float
     """
     if input_num <= 0:
         raise ValueError("cannot be zero or negative")

@@ -1,7 +1,10 @@
 from flask import Flask, request, abort
 from src.logger import log
 from src.util import authentication 
-# from src.validation
+from src.request.user_request import *
+from src.validation import *
+
+import json
 
 log.log("INFO", "REST API started.")
 
@@ -21,6 +24,8 @@ def help():
 """
 User expected to provide a JSON object in the body includin the fields of the license being added.
 
+If user fails to include the JSON object in the request body, a 415 error is returned.
+
 Required: 
     - "name": str
     - "ver": str
@@ -38,7 +43,7 @@ def addLicense():
     try:
         log.log("INFO", "Request to add license received.")
         license_request = request.json
-        # CREATE REQUEST OBJECT
+        user_req = AddLicReq(json.dumps(license_request))
         success, auth_response = authentication.authorize(request.headers)
         if success:
             # INTEGRATION:

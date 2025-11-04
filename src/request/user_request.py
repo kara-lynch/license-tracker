@@ -143,20 +143,20 @@ class AddLicReq(Request):
             self.validate_field(self.config_dict["type"]["key"])
             if self.field_exists(self.config_dict["cost"]["key"]):
                 if self.field_exists(self.config_dict["curr"]["key"]):
-                    self.validate_field(self.lic_data[self.config_dict["curr"]["key"]])
-                    self.validate_field(self.lic_data[self.config_dict["cost"]["key"]])
+                    self.validate_field(self.config_dict["curr"]["key"])
+                    self.validate_field(self.config_dict["cost"]["key"])
                     if self.field_exists(self.config_dict["period"]["key"]):
-                        self.validate_field(self.lic_data[self.config_dict["period"]["key"]])
+                        self.validate_field(self.config_dict["period"]["key"])
                     if self.field_exists(self.config_dict["date_of_renewal"]["key"]):
-                        self.validate_field(self.lic_data[self.config_dict["date_of_renewal"]["key"]])
+                        self.validate_field(self.config_dict["date_of_renewal"]["key"])
                 else:
                     raise ValueError("cost must have currency")
             elif self.field_exists(self.config_dict["curr"]["key"]) or self.field_exists(self.config_dict["date_of_renewal"]["key"]) or self.field_exists(self.config_dict["period"]["key"]):
                 raise ValueError("cost based field entered but not cost")
-            if self.field_exists(self.config_dict["date_of_expiration"]["key"]):
-                self.validate_field(self.lic_data[self.config_dict["date_of_expiration"]["key"]])
+            if self.field_exists(self.config_dict["expiration_date"]["key"]):
+                self.validate_field(self.config_dict["expiration_date"]["key"])
             if self.field_exists(self.config_dict["restrictions"]["key"]):
-                self.validate_field(self.lic_data[self.config_dict["restrictions"]["key"]])
+                self.validate_field(self.config_dict["restrictions"]["key"])
 
 
 class DelLicReq(Request):
@@ -166,7 +166,7 @@ class DelLicReq(Request):
             log.log("ERROR", "license ID missing, required for delete; terminating program")
             raise ValueError("Missing license ID")
         else:
-            self.validate_field(self.lic_data[self.config_dict["licenseID"]["key"]])
+            self.validate_field(self.config_dict["licenseID"]["key"])
 
 class QueryLicReq(Request):
     def validate_data(self):
@@ -176,11 +176,11 @@ class QueryLicReq(Request):
              raise ValueError("Query by multiple fields not currently supported")
         else:
             if self.field_exists(self.config_dict["name"]["key"]):
-                self.validate_field(self.lic_data[self.config_dict["name"]["key"]])
+                self.validate_field(self.config_dict["name"]["key"])
             if self.field_exists(self.config_dict["type"]["key"]):
-                self.validate_field(self.lic_data[self.config_dict["type"]["key"]])
+                self.validate_field(self.config_dict["type"]["key"])
             if self.field_exists(self.config_dict["licenseID"]["key"]):
-                self.validate_field(self.lic_data[self.config_dict["licenseID"]["key"]])        
+                self.validate_field(self.config_dict["licenseID"]["key"])        
 
 
 """

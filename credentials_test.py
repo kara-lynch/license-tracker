@@ -2,15 +2,15 @@ from src.credentials.credentials_manager import *
 
 def main():
     test_data = [
-        { #test 1
+        { #test 1: too long first name
             "id": 263,
-            "fName": "Ava'); DROP TABLE Employee; --",
+            "fName": "Aveline'); DROP TABLE Employee; --",
             "lName": "Fishbie",
             "loc": "Japan",
             "dept": "Legal",
             "title": "Manager"
         },
-        { #test 2
+        { #test 2: special characters. should pass
             "id": 264,
             "fName": "Amélie",
             "lName": "Garçon-Beaumont",
@@ -18,7 +18,7 @@ def main():
             "dept": "Sales",
             "title": "Sales Agent"
         },
-        { #test 3
+        { #test 3: spaces in name. should pass
             "id": 265,
             "fName": "Jens",
             "lName": "van der Meer",
@@ -26,8 +26,8 @@ def main():
             "dept": "Information Technology",
             "title": "Developer"
         },
-        {}, #test 4
-        { #test 5
+        {}, #test 4: no input
+        { #test 5: wrong field name
             "id": 266,
             "first_name": "Kara",
             "lName": "Lynch",
@@ -35,12 +35,20 @@ def main():
             "dept": "Information Technology",
             "title": "Developer"
         },
-        { #test 6
+        { #test 6: missing title field
             "id": 267,
             "fName": "Noelle",
             "lName": "Stark",
             "loc": "United States",
             "dept": "Information Technology"
+        },
+        { #test 7: case sensitivity
+            "id": 268,
+            "fName": "Frederick",
+            "lname": "Bumgarner",
+            "loc": "United States",
+            "dept": "Information Technology",
+            "title": "Manager"
         }
     ]
     users = []

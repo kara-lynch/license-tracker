@@ -63,7 +63,24 @@ class LicenseDAO:
             print(f"Expiration Date: {col[8]}")
             print(f"Geographic Restriction: {col[9]}")
             print(f"\n")
-    
+
+        Licenses = [] 
+        for col in results:
+          license_dict = {
+            "licenseID": col[0],
+            "name": col[1],
+            "ver": col[2],
+            "type": col[3],
+            "cost": col[4], 
+            "curr": col[5],
+            "period": col[6],
+            "date_of_renewal": col[7],
+            "expiration_date": col[8],
+            "restrictions": col[9],
+         }
+        Licenses.append(license_dict)
+        return license_dict
+
     def AddLicense(self, licenseID, licenseName, version, licenseType, price, currency, period, renewalDate, endDate, restriction, dateAdded, uploaderID):
      try:  
         license_query = ''' INSERT INTO License (licenseName, version, licenseType, dateAdded, uploaderID)
@@ -537,6 +554,12 @@ class Restrictions(object):
 
 
 
+
+if __name__ == "__main__":
+    # Create an instance of the DAO
+    dao = LicenseDAO()
+    dao.init_creds()
+    dao.seeLicenses()
 
 
 

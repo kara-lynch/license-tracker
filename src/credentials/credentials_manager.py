@@ -25,7 +25,7 @@ class UserCredentials:
     """
     Stores information about the current user.
     
-    :param user_dict: The dict that the object will pull its information from. It must have the following keys: ``id``, ``fName``, ``lName``, ``loc``, ``dept``, and ``title``.
+    :param _user_dict: The dict that the object will pull its information from. It must have the following keys: ``id``, ``fName``, ``lName``, ``loc``, ``dept``, and ``title``.
     :type user_dict: dict
     """
     _user_dict: dict        

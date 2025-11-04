@@ -52,34 +52,54 @@ class LicenseDAO:
         self.cursor.execute(query) 
         results = self.cursor.fetchall()
 
-        for col in results:
-            print(f"License ID: {col[0]}")
-            print(f"Name: {col[1]}")
-            print(f"Version: {col[2]}")
-            print(f"Type: {col[3]}")
-            print(f"Cost: {col[4]} {col[5]}")
-            print(f"Period: {col[6]}")
-            print(f"Renewal Date: {col[7]}")
-            print(f"Expiration Date: {col[8]}")
-            print(f"Geographic Restriction: {col[9]}")
-            print(f"\n")
+        # for col in results:
+        #     print(f"License ID: {col[0]}")
+        #     print(f"Name: {col[1]}")
+        #     print(f"Version: {col[2]}")
+        #     print(f"Type: {col[3]}")
+        #     print(f"Cost: {col[4]} {col[5]}")
+        #     print(f"Period: {col[6]}")
+        #     print(f"Renewal Date: {col[7]}")
+        #     print(f"Expiration Date: {col[8]}")
+        #     print(f"Geographic Restriction: {col[9]}")
+        #     print(f"\n")
 
-        Licenses = [] 
+        records = {}
         for col in results:
-          license_dict = {
-            "licenseID": col[0],
-            "name": col[1],
-            "ver": col[2],
-            "type": col[3],
-            "cost": col[4], 
-            "curr": col[5],
-            "period": col[6],
-            "date_of_renewal": col[7],
-            "expiration_date": col[8],
-            "restrictions": col[9],
-         }
-        Licenses.append(license_dict)
-        return license_dict
+            # records[f"{col[0]}"] = {
+            #     "name": col[1],
+            #     "ver": col[2],
+            #     "type": col[3],
+            #     "cost": None, 
+            #     "curr": col[5],
+            #     "period": col[6],
+            #     "date_of_renewal": col[7].strftime("%Y-/%m-/%d"),
+            #     "expiration_date": col[8],
+            #     "restrictions": col[9]
+            # }
+
+            records[f"{col[0]}"] = {}
+            records[f"{col[0]}"]["name"] = col[1]
+            records[f"{col[0]}"]["ver"] = col[2]
+            records[f"{col[0]}"]["type"] = col[3]
+            if col[4] is None:
+                records[f"{col[0]}"]["cost"] = None
+            else:
+                records[f"{col[0]}"]["cost"] = float(col[4])
+            records[f"{col[0]}"]["curr"] = col[5]
+            records[f"{col[0]}"]["period"] = col[6]
+            if col[7] is None:
+                records[f"{col[0]}"]["date_of_renewal"] = None
+            else:
+                records[f"{col[0]}"]["date_of_renewal"] = col[7].strftime("%Y-%m-%d")
+            if col[8] is None:
+                records[f"{col[0]}"]["expiration_date"] = None
+            else:
+                records[f"{col[0]}"]["expiration_date"] = col[8].strftime("%Y-%m-%d")
+            records[f"{col[0]}"]["restrictions"] = col[9]
+
+
+        return records
 
     def AddLicense(self, licenseID, licenseName, version, licenseType, price, currency, period, renewalDate, endDate, restriction, dateAdded, uploaderID):
      try:  
@@ -550,16 +570,6 @@ class Restrictions(object):
     def __restrict_str__(self):
         output = "License ID: L{0}       Geographic Restrictions: {1}".format(self.__lid, self.__restrict)
         return output
-
-
-
-
-
-if __name__ == "__main__":
-    # Create an instance of the DAO
-    dao = LicenseDAO()
-    dao.init_creds()
-    dao.seeLicenses()
 
 
 

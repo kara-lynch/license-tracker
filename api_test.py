@@ -9,10 +9,12 @@ TEST_BODY = {
     "type": "Enterprise"
 }
 
+ACCEP_TOKEN = "eyJhbGciOiJIUzI1NiJ9.eyJsYXN0X25hbWUiOiJGaWxpcGN6eW5za2kiLCJsb2NhdGlvbiI6Ikdlcm1hbnkiLCJpZCI6MTksImRlcGFydG1lbnQiOiJJbmZvcm1hdGlvbiBUZWNobm9sb2d5IiwidGl0bGUiOiJEZXZlbG9wZXIiLCJmaXJzdF9uYW1lIjoiTWFyZ2l0Iiwic3ViIjoiTWFyZ2l0IEZpbGlwY3p5bnNraSIsImlhdCI6MTc2MTk0MTM0MiwiZXhwIjoxNzYxOTQ0OTQyfQ.Amxnx-uGkdrTGdNQjnJ6oSDHldR0iJrQMKLdinyUnRE"
+
 # Test 1: Sending a valid token.
 def test1() -> bool:
     print("TEST 1: Valid token.")
-    valid_token = "eyJhbGciOiJIUzI1NiJ9.eyJsYXN0X25hbWUiOiJGaWxpcGN6eW5za2kiLCJsb2NhdGlvbiI6Ikdlcm1hbnkiLCJpZCI6MTksImRlcGFydG1lbnQiOiJJbmZvcm1hdGlvbiBUZWNobm9sb2d5IiwidGl0bGUiOiJEZXZlbG9wZXIiLCJmaXJzdF9uYW1lIjoiTWFyZ2l0Iiwic3ViIjoiTWFyZ2l0IEZpbGlwY3p5bnNraSIsImlhdCI6MTc2MTk0MTM0MiwiZXhwIjoxNzYxOTQ0OTQyfQ.Amxnx-uGkdrTGdNQjnJ6oSDHldR0iJrQMKLdinyUnRE"
+    valid_token = ACCEP_TOKEN
 
     valid_response = requests.post(API_URL, headers={"Bearer": valid_token}, json=TEST_BODY)
     if valid_response.status_code == 200:
@@ -99,6 +101,19 @@ def test6() -> bool:
         print(no_token_response.status_code)
 
 
+# Test 7: Sending no JSON body along with request.
+def test7() -> bool:
+    print("Sending request with no JSON body.")
+
+    no_json_response = requests.post(API_URL, headers={"Bearer": ACCEP_TOKEN})
+    if no_json_response.status_code == 400:
+        print("TEST SUCCEEDED")
+    else:
+        print("TEST FAILED")
+        print(no_json_response.text)
+        print(no_json_response.status_code)
+
+
 if __name__ == "__main__":
     # Test 1: Sending a valid token.
     test1()
@@ -122,4 +137,8 @@ if __name__ == "__main__":
 
     # Test 6: Sending no Bearer header along with request.
     test6()
+    print("\n")
+
+    # Test 7: Sending no JSON body along with request.
+    test7()
     print("\n")

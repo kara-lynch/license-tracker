@@ -1,6 +1,10 @@
 from flask import Flask, request, abort
 from src.logger import log
 from src.util import authentication 
+from src.request.user_request import *
+from src.validation import *
+
+import json
 
 log.log("INFO", "REST API started.")
 
@@ -20,6 +24,8 @@ def help():
 """
 User expected to provide a JSON object in the body includin the fields of the license being added.
 
+If user fails to include the JSON object in the request body, a 415 error is returned.
+
 Required: 
     - "name": str
     - "ver": str
@@ -34,18 +40,24 @@ Optional fields:
 """
 @app.post("/addLicense/")
 def addLicense():
-    log.log("INFO", "Request to add license received.")
-    success, auth_response = authentication.authorize(request.headers)
-    if success:
+    try:
+        log.log("INFO", "Request to add license received.")
         license_request = request.json
-        # INTEGRATION: Call backend function
-        # credentials = Credentials(auth_response)
-        # check user is a manager and IT/Legal
-        # request_info = AddLicReq(auth_response)
-        # LicenseDatabase.addLicense(request_info, credentials)
-        return f'<p>License added<p>'
-    else:
-        abort(401)
+        user_req = AddLicReq(json.dumps(license_request))
+        success, auth_response = authentication.authorize(request.headers)
+        if success:
+            # INTEGRATION:
+            # credentials = Credentials(auth_response)
+            # check user is a manager and IT/Legal
+            # request_info = AddLicReq(auth_response)
+            # LicenseDatabase.addLicense(request_info, credentials)
+            return f'<p>License added<p>'
+        else:
+            abort(401)
+    # CHECK FOR THE EXCEPT FROM USER CRED CLASS
+    except:
+        # If the code ends up here, it was probably the user's fault
+        abort(400)
 
 """
 User expected to provide a JSON object in the body includin the fields of the license being added.
@@ -77,18 +89,25 @@ Alternative URI for getting the API documentation.
 def help_screen():
     return f'NOT YET IMPLEMENTED'
 
-@app.get("/seeAllLicenses/")
-def seeAllLicenses():
-    log.log("INFO", "Request to see all licenses received..")
-    success, auth_response = authentication.authorize(request.headers)
-    if success:
-        # license_request = request.json
-        # INTEGRATION: Call backend function
-        # credentials = Credentials(auth_response)
-        # LicenseDatabase.viewLicenses(request_info, credentials)
-        return f'<p>License added<p>'
-    else:
-        abort(401)
+@app.get("/seeLicenses/")
+def seeLicenses():
+    try:
+        log.log("INFO", "Request to see all licenses received.")
+        license_request = request.json
+        # CREATE REQUEST OBJECT
+        success, auth_response = authentication.authorize(request.headers)
+        if success:
+            # INTEGRATION:
+            # credentials = Credentials(auth_response)
+            # request_info = AddLicReq(auth_response)
+            # LicenseDatabase.addLicense(request_info, credentials)
+            return f'<p>License added<p>'
+        else:
+            abort(401)
+    # CHECK FOR THE EXCEPT FROM USER CRED CLASS
+    except:
+        # If the code ends up here, it was probably the user's fault
+        abort(400)
 
 @app.get("/filteredView/")
 def filteredView():

@@ -16,13 +16,12 @@ class Request(ABC):
     :type user_req_json: str
     """
 
-    lic_data:dict
-    clean_data:dict = {}
-    config_dict = {}
-
     def __init__(self, user_req_json):
         """constructor"""
         log.log("INFO", "starting request data validation")
+        self.lic_data:dict = {}
+        self.clean_data:dict = {}
+        self.config_dict = {}
         self.lic_data = json.loads(user_req_json)
         self.config_dict = self.get_configs()
         self.validate_data()

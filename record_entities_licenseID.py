@@ -1,4 +1,130 @@
 import unittest
+import mysql.connector
+import json
+
+from src.config.settings import Settings
+
+
+class LicenseDAO:
+    conn = None
+    cursor = None
+
+    def __init__(self):
+
+        config_path = Settings.db_config_file()
+        with open(config_path, "r") as file:
+            creds = json.load(file)
+
+        LicenseDAO.conn = mysql.connector.connect(
+            host = creds["host"],
+            port = creds["port"],
+            user = creds["username"],
+            password = creds["password"],
+            database = creds["database"]
+        )  
+        LicenseDAO.cursor = LicenseDAO.conn.cursor()
+        self.cursor = LicenseDAO.cursor
+
+    def load_license_by_id(self, license_obj, id):
+        query = 'SELECT * FROM License WHERE lid = %s'
+        self.cursor.execute (query, (id,))
+        result = self.cursor.fetchone()
+
+        if result:
+            license_obj.LicenseID = result['id']
+            license_obj.Name = result['licenseName']
+            license_obj.Version = result['version']
+            license_obj.DateAdded = result['dateAdded']
+            license_obj.Type = result['licenseType']
+            license_obj.UploaderID = result['uploaderID']
+        else:
+            raise ValueError(f"No license found with ID {id}")
+        
+
+    def seeLicenses(self):
+        query = ''' 
+            SELECT License.id, License.licenseName, License.version, License.licenseType, Cost.price, Cost.currency, Cost.period, Cost.renewalDate, ExpirationDate.endDate, GeogRestriction.restriction
+            FROM License
+            LEFT JOIN Cost ON License.id = Cost.licenseID
+            LEFT JOIN ExpirationDate ON License.id = ExpirationDate.licenseID
+            LEFT JOIN GeogRestriction ON License.id = GeogRestriction.licenseID
+            '''
+        self.cursor.execute(query) 
+        results = self.cursor.fetchall()
+
+        for col in results:
+            print(f"License ID: {col[0]}")
+            print(f"Name: {col[1]}")
+            print(f"Version: {col[2]}")
+            print(f"Type: {col[3]}")
+            print(f"Cost: {col[4]} {col[5]}")
+            print(f"Period: {col[6]}")
+            print(f"Renewal Date: {col[7]}")
+            print(f"Expiration Date: {col[8]}")
+            print(f"Geographic Restriction: {col[9]}")
+            print(f"\n")
+    
+    def AddLicense(self, licenseID, licenseName, version, licenseType, price, currency, period, renewalDate, endDate, restriction, dateAdded, uploaderID):
+     try:  
+        license_query = ''' INSERT INTO License (licenseName, version, licenseType, dateAdded, uploaderID)
+        Values(%s, %s, %s, %s, CURRENT_DATE)
+        '''
+        self.cursor.execute(license_query,(licenseName,version, licenseType, dateAdded, uploaderID))
+
+        cost_query = ''' INSERT INTO Cost (licenseID, price, currency, period, renewalDate)
+        VALUES(%s, %s, %s, %s, %s)
+        '''
+        self.cursor.execute(cost_query, (licenseID, price, currency, period, renewalDate))
+
+        geo_query = ''' INSERT INTO GeogRestriction (licenseID, restriction)
+        VALUES(%s, %s)
+        '''
+        self.cursor.execute(geo_query, (licenseID, restriction))
+
+        expiration_query = ''' INSERT INTO ExpirationDate (licenseID, endDate)
+        VALUES(%s, %s)
+        '''
+        self.cursor.execute(expiration_query, (licenseID, endDate))
+
+        #commit all inserts to the tables
+        self.conn.commit()
+
+     except mysql.connector.Error as err:
+          print(f"Error: {err}")
+          self.conn.rollback()
+
+    
+    def DeleteLicense(self, licenseID):
+        try: 
+            ''' 
+            Deleting license record by ID from all child tables before deleting from License table to avoid 
+            foreign key constraint errors 
+            '''
+            self.cursor.execute('DELETE FROM Cost WHERE licenseID = %s', (licenseID,))
+            self.cursor.execute('DELETE FROM GeogRestriction WHERE licenseID = %s', (licenseID,))
+            self.cursor.execute('DELETE FROM ExpirationDate WHERE licenseID = %s', (licenseID,))
+            self.cursor.execute('DELETE FROM CompAssign WHERE licenseID = %s', (licenseID,))
+            self.cursor.execute('DELETE FROM EmployeeAssign WHERE licenseID = %s', (licenseID,))
+            
+            # Now delete from parent table
+            self.cursor.execute('DELETE FROM License WHERE licenseID = %s', (licenseID,))
+
+            # Commit license deletion from all tables
+            self.conn.commit()
+            print(f"License ID {licenseID} and all related records have been deleted.")
+        
+        except mysql.connector.Error as err:
+                print(f"Error deleting license {licenseID}: {err}")
+                self.conn.rollback()
+
+
+    def close(self):
+        self.cursor.close()
+        self.conn.close()
+
+    
+
+
 """ 
  This represents a License object 
  From the License Tracking database:
@@ -360,7 +486,7 @@ class Expiration(object):
             self.__date = date
 
     def __exp_str__(self):
-        output = "License ID: L{0} Date: {1}".format(self.__lid, self.__date)
+        output = "License ID: L{0}    Date: {1}".format(self.__lid, self.__date)
         return output
     
 
@@ -407,7 +533,6 @@ class Restrictions(object):
     def __restrict_str__(self):
         output = "License ID: L{0}       Geographic Restrictions: {1}".format(self.__lid, self.__restrict)
         return output
-    
 
 
 
@@ -415,11 +540,4 @@ class Restrictions(object):
 
 
 
-
-if __name__ == "__main__":
-    
-    e = Expiration(22234,"2023-12-11")
-    print(e.__exp_str__())
-    
-    #unittest.main()
 

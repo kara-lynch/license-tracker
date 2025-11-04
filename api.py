@@ -3,10 +3,13 @@ from src.logger import log
 from src.util import authentication 
 from src.request.user_request import *
 from src.validation import *
+from record_entities_licenseID import *
+from src.credentials.credentials_manager import *
 
 import json
 
 log.log("INFO", "REST API started.")
+db = LicenseDAO()
 
 app = Flask(__name__)
 
@@ -40,24 +43,29 @@ Optional fields:
 """
 @app.post("/addLicense/")
 def addLicense():
+    # Extract infor from request, create request object 
     try:
         log.log("INFO", "Request to add license received.")
         license_request = request.json
         user_req = AddLicReq(json.dumps(license_request))
-        success, auth_response = authentication.authorize(request.headers)
-        if success:
-            # INTEGRATION:
-            # credentials = Credentials(auth_response)
-            # check user is a manager and IT/Legal
-            # request_info = AddLicReq(auth_response)
-            # LicenseDatabase.addLicense(request_info, credentials)
-            return f'<p>License added<p>'
-        else:
-            abort(401)
-    # CHECK FOR THE EXCEPT FROM USER CRED CLASS
     except:
         # If the code ends up here, it was probably the user's fault
         abort(400)
+
+    # Verify credentials received from authentication server.
+    try:
+        success, auth_response = authentication.authorize(request.headers)
+        if not success:
+            abort(401)
+        credentials = UserCredentials(json.loads(auth_response))
+        credentials.validate()
+        # check user is a manager and IT/Legal
+    except:
+        abort(401)
+    
+    # Call database to add license.
+    # LicenseDatabase.addLicense(request_info, credentials)
+    return f'<p>License added<p>'
 
 """
 User expected to provide a JSON object in the body includin the fields of the license being added.
@@ -93,16 +101,15 @@ def help_screen():
 def seeLicenses():
     try:
         log.log("INFO", "Request to see all licenses received.")
-        license_request = request.json
-        # CREATE REQUEST OBJECT
         success, auth_response = authentication.authorize(request.headers)
         if success:
-            # INTEGRATION:
-            # credentials = Credentials(auth_response)
-            # request_info = AddLicReq(auth_response)
+            credentials = UserCredentials(json.loads(auth_response))
+            credentials.validate()
             # LicenseDatabase.addLicense(request_info, credentials)
-            return f'<p>License added<p>'
+            records = db.seeLicenses()
+            return records
         else:
+            print("ERR")
             abort(401)
     # CHECK FOR THE EXCEPT FROM USER CRED CLASS
     except:

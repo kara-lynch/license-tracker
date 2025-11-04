@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from src.validation.validation_checks import *
-from src.logger import log
+#from src.logger import log
 
 import json
 
@@ -13,22 +13,26 @@ def get_configs():
     with open(config_path, "r") as file:
         config_json = json.load(file)
 
-    log.log("INFO", "Credentials manager configs loaded successfully")
+    #log.log("INFO", "Credentials manager configs loaded successfully")
     
     return config_json
 
-@dataclass
 class UserCredentials:
     """
     This class handles the credentials for a user, including their department and title.
     """
-
-    _id: int
-    _first_name: str
-    _last_name: str
-    _location: str
-    _department: str
-    _title: str
+    def __init__(self, user_dict):
+        if len(user_dict.keys()) == 0:
+            raise KeyError("Input cannot be empty")
+        try:
+            self._id = user_dict["id"]
+            self._first_name = user_dict["fName"]
+            self._last_name = user_dict["lName"]
+            self._location = user_dict["loc"]
+            self._department = user_dict["dept"]
+            self._title = user_dict["title"]
+        except KeyError as e:
+            raise KeyError(f"Key '{e.args[0]}' not found in input")
 
     def validate(self):
         """
@@ -76,7 +80,7 @@ class UserCredentials:
         except Exception as e:
             error_msg = _field_name + " " + e.args[0]
             print(f"Credentials validation failed for {self.name()}: {error_msg}")
-            log.log("WARNING", f"Credentials validation failed for {self.name()}: {error_msg}")
+            #log.log("WARNING", f"Credentials validation failed for {self.name()}: {error_msg}")
             raise Exception(error_msg)
     
     def name(self):

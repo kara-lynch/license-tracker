@@ -1,6 +1,6 @@
 import requests
 
-from src.logger import log
+from logger import log
 
 if __name__ == "__main__":
     print("Beginning authorization test.")
@@ -25,7 +25,7 @@ if __name__ == "__main__":
     "last_Name": "Fishbie",
     "department": "Legal",
     "title": "Manager",
-    "token": "eyJhbGciOiJIUzI1NiJ9.eyJsYXN0X25hbWUiOiJGaWxpcGN6eW5za2kiLCJsb2NhdGlvbiI6Ikdlcm1hbnkiLCJpZCI6MTksImRlcGFydG1lbnQiOiJJbmZvcm1hdGlvbiBUZWNobm9sb2d5IiwidGl0bGUiOiJEZXZlbG9wZXIiLCJmaXJzdF9uYW1lIjoiTWFyZ2l0Iiwic3ViIjoiTWFyZ2l0IEZpbGlwY3p5bnNraSIsImlhdCI6MTc2MTg1OTEyMywiZXhwIjoxNzYxODYyNzIzfQ._tdhgRBwgO5qJs2Ipb1TDxNVvorUQUlMaNG361Q8p7I"
+    "token": "eyJhbGciOiJIUzI1NiJ9.eyJsYXN0X25hbWUiOiJGaXNoYmllIiwibG9jYXRpb24iOiJKYXBhbiIsImlkIjo2NTgsImRlcGFydG1lbnQiOiJMZWdhbCIsInRpdGxlIjoiTWFuYWdlciIsImZpcnN0X25hbWUiOiJKb2xlZW4iLCJzdWIiOiJKb2xlZW4gRmlzaGJpZSIsImlhdCI6MTc2MTI1MDAyOSwiZXhwIjoxNzYxMjUzNjI5fQ.SpM_ibDp4GcOB7c2nC5_bd_IRMS3UcVUIf5X0cTU-ks"
     }
     token = test_user["token"]
 

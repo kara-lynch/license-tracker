@@ -1,0 +1,93 @@
+from src.validation import validation_checks
+from src.logger import log
+
+def field_exists(field):
+        if field == None:
+            return False
+        else:
+            return True
+        
+
+def validate_lic_name(data):
+    if field_exists(data):
+        validation_checks.check_field_size(str(data), 40, 2)
+        validation_checks.check_data_type(data, str)
+    else:
+        log.log("WARN", "license name empty")
+    
+def validate_lic_version(data):
+    if field_exists(data):
+        validation_checks.check_field_size(str(data), 8, 1)
+        validation_checks.check_data_type(data, str) 
+    else:
+        log.log("WARN", "license version empty")
+
+def validate_lic_type(data):
+    if field_exists(data):
+        validation_checks.check_field_size(str(data), 20, 2)
+        validation_checks.check_data_type(data, str)
+    else:
+        log.log("WARN", "license type empty")
+    
+def validate_lic_cost(data):
+    if field_exists(data):
+        validation_checks.check_field_size(str(data), 15, 2)
+        validation_checks.check_data_type(data, float)
+    else:
+        log.log("WARN", "license cost empty")
+    
+def validate_lic_curr(data):
+    if field_exists(data):
+        validation_checks.check_field_size(str(data), 3, 3)
+        validation_checks.check_data_type(data, str)
+    else:
+        log.log("WARN", "license currency empty")
+    
+def validate_lic_pay_period(data):
+    if field_exists(data):
+        validation_checks.check_field_size(str(data), 12, 2)
+        validation_checks.check_data_type(data, str)
+    else:
+        log.log("WARN", "license pay period empty")
+    
+def validate_lic_date_of_renewal(data):
+    if field_exists(data):
+        validation_checks.check_field_size(str(data), 10, 2)
+        validation_checks.check_data_type(data, str)
+    else:
+        log.log("WARN", "license date of renewal empty")
+    
+def validate_lic_date_of_expiration(data):
+    if field_exists(data):
+        validation_checks.check_field_size(str(data), 10, 2)
+        validation_checks.check_data_type(data, str)
+    else:
+        log.log("WARN", "license date of expiration empty")
+    
+def validate_lic_restrictions(data):
+    if field_exists(data):
+        validation_checks.check_field_size(str(data), 100, 2)
+        validation_checks.check_data_type(data, str)
+    else:
+        log.log("WARN", "license restrictions empty")
+    
+def validate_lic_id(data):
+    if field_exists(data):
+        validation_checks.check_field_size(str(data), 10, 2)
+        validation_checks.check_data_type(data, int)
+    else:
+        log.log("WARN", "license id empty")
+    
+def validate_lic_employee_id(data):
+    if field_exists(data):
+        validation_checks.check_field_size(str(data), 10, 2)
+        validation_checks.check_data_type(data, int)
+    else:
+        log.log("WARN", "employee ID empty")
+    
+def validate_lic_computer_id(data):
+    if field_exists(data):
+        validation_checks.check_field_size(str(data), 10, 2)
+        validation_checks.check_data_type(data, int)
+    else:
+        log.log("WARN", "computer id empty")

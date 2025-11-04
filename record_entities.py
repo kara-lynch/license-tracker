@@ -138,7 +138,7 @@ class Employees(object):
              self.__loc = loc 
 
     def __emp_str__(self):
-        output = "Employee ID:{0} {1} {2}, {3}  Email:{5} , Department:{4}, Location: {7}, {6} {8}".format(self.__empid, self.__fn, self.__ln, self.__title, self.__dept, self.__email, self.__country, self.__city, self.__loc)
+        output = "Employee ID: E{0} {1} {2}, {3}  Email: {5} , Department: D{4}, Location: O{7}, {6} {8}".format(self.__empid, self.__fn, self.__ln, self.__title, self.__dept, self.__email, self.__country, self.__city, self.__loc)
         return output
 
 
@@ -222,5 +222,5 @@ class Location(object):
             self.__city = city
     
     def __loc_str__(self):
-        output = "Office ID:{0}  {2}, {4}, {3}  Phone Number:{1}".format(self.__offid, self.__phone, self.__street, self.__country, self.__city)
+        output = "Office ID: O{0}  {2}, {4}, {3}  Phone Number: {1}".format(self.__offid, self.__phone, self.__street, self.__country, self.__city)
         return output

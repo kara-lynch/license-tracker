@@ -1,3 +1,4 @@
+import unittest
 """ 
  This represents a License object 
  From the License Tracking database:
@@ -94,7 +95,7 @@ class License(object):
             self.__uid = uid    
 
     def __license_str__(self):
-        output = "License ID: {0}, {1}, {2}, Date Added:{3}, Type:{4}, Uploader ID:{5}".format(self.__lid, self.__name, self.__version, self.__dateadded, self.__type, self.__uid)
+        output = "License ID: L{0}, {1}, {2}, Date Added:{3}, Type: {4}, Uploader ID: U{5}".format(self.__lid, self.__name, self.__version, self.__dateadded, self.__type, self.__uid)
         return output
 
     
@@ -161,7 +162,7 @@ class ELA(object):
             self.__assignid = assignid
 
     def __ela_str__(self):
-        output = "License ID:{0} Employee ID:{1} Assigner ID:{2}".format(self.__lid, self.__empid, self.__assignid)
+        output = "License ID: L{0} Employee ID: E{1} Assigner ID: A{2}".format(self.__lid, self.__empid, self.__assignid)
         return output
 
 
@@ -227,7 +228,7 @@ class CLA(object):
             self.__aid = aid
 
     def __cla_str__(self):
-        output = "License ID:{0} Computer ID:{1} Assigner ID:{2}".format(self.__lid, self.__cid, self.__aid)
+        output = "License ID: L{0} Computer ID: C{1} Assigner ID: A{2}".format(self.__lid, self.__cid, self.__aid)
         return output
     
 
@@ -314,7 +315,7 @@ class Cost(object):
         else:
             self.__dateRen = dateRen
     def __cost_str__(self):
-        output = "License ID:{0} Cost:{2}{1}  Period:{3} Date of Renewal:{4}".format(self.__lid, self.__cost, self.__curr, self.__period, self.__dateRen)
+        output = "License ID: L{0} Cost: {2}{1}  Period: {3} Date of Renewal: {4}".format(self.__lid, self.__cost, self.__curr, self.__period, self.__dateRen)
         return output
 
 
@@ -359,7 +360,7 @@ class Expiration(object):
             self.__date = date
 
     def __exp_str__(self):
-        output = "License ID:{0} Date:{1}".format(self.__lid, self.__date)
+        output = "License ID: L{0} Date: {1}".format(self.__lid, self.__date)
         return output
     
 
@@ -404,5 +405,21 @@ class Restrictions(object):
             self.__restrict = restrict
 
     def __restrict_str__(self):
-        output = "License ID:{0}  Geographic Restrictions:{1}".format(self.__lid, self.__restrict)
+        output = "License ID: L{0}       Geographic Restrictions: {1}".format(self.__lid, self.__restrict)
         return output
+    
+
+
+
+
+
+
+
+
+if __name__ == "__main__":
+    
+    e = Expiration(22234,"2023-12-11")
+    print(e.__exp_str__())
+    
+    #unittest.main()
+

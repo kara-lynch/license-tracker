@@ -3,14 +3,20 @@ import mysql.connector
 from tabulate import tabulate
 import json
 
+from src.config.settings import Settings
+
 
 class LicenseDAO:
     #config_dict = {}
 
     def init_creds():
-        config_path = "./src/config/db_credentials.json"
+        # config_path = "./src/config/db_credentials.json"
 
-        creds = json.load("./src/db_credentials.json")
+        # creds = json.load("./src/db_credentials.json")
+
+        config_path = Settings.db_config_file()
+        with open(config_path, "r") as file:
+            creds = json.load(file)
         #with open(config_path, )
 
         mydb = mysql.connector.connect(

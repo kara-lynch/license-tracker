@@ -43,7 +43,7 @@ Optional fields:
 """
 @app.post("/addLicense/")
 def addLicense():
-    # Extract infor from request, create request object 
+    # Extract info from request, create request object 
     try:
         log.log("INFO", "Request to add license received.")
         license_request = request.json
@@ -99,22 +99,18 @@ def help_screen():
 
 @app.get("/seeLicenses/")
 def seeLicenses():
+    # Extract token from request.
     try:
         log.log("INFO", "Request to see all licenses received.")
         success, auth_response = authentication.authorize(request.headers)
         if success:
             credentials = UserCredentials(json.loads(auth_response))
             credentials.validate()
-            # LicenseDatabase.addLicense(request_info, credentials)
             records = db.seeLicenses()
             return records
-        else:
-            print("ERR")
-            abort(401)
-    # CHECK FOR THE EXCEPT FROM USER CRED CLASS
     except:
         # If the code ends up here, it was probably the user's fault
-        abort(400)
+        abort(401)
 
 @app.get("/filteredView/")
 def filteredView():

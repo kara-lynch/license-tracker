@@ -91,7 +91,7 @@ class UserCredentials:
         :return: The user's first and last name, e.g. "Kara Lynch".
         :rtype: str
         """
-        return f"{self._user_dict["fName"]} {self._user_dict["lName"]}"
+        return f"{self._user_dict['fName']} {self._user_dict['lName']}"
     
     def first_name(self):
         """

@@ -6,10 +6,11 @@ from enum import Enum
 from inspect import getframeinfo, stack
 from src.config.settings import Settings
 
-"""
-Enum for storing logger levels, in order of increasing severity.
-"""
+
 class Level(Enum):
+    """
+    Enum for storing logger levels, in order of increasing severity.
+    """
     DEBUG = 0
     INFO = 1
     WARNING = 2
@@ -17,11 +18,14 @@ class Level(Enum):
     CRITICAL = 4
 
 class _Logger(object):
-
     """
-    Constructor. Loads logger settings JSON file from config folder to initialize logger.
+    The class that handles logging.
     """
+    
     def __init__(self) -> None:
+        """
+        Constructor. Loads logger settings JSON file from config folder to initialize logger.
+        """
         config_path = Settings.logger_config_file()
 
         with open(config_path, "r") as file:
@@ -29,26 +33,32 @@ class _Logger(object):
 
         logging.config.dictConfig(config_json)
 
+        
         self.logger = logging.getLogger()
 
-    """
-    Method for writing to logs. 
-
-    Log levels are (in order of increasing severity):
-        DEBUG
-        INFO
-        WARNING
-        ERROR
-        CRITICAL
-
-    Levels stored in Level enum. Default level is INFO.
-
-    :param level: Level of the input log
-    :param msg: The message to display in the log.
-    :type msg: str
-    :return: None
-    """
+    
     def log(self, level: Level, msg: str) -> None:
+        """
+        Method for writing to logs. 
+
+        Log levels are (in order of increasing severity):
+            DEBUG
+
+            INFO
+
+            WARNING
+
+            ERROR
+
+            CRITICAL
+
+        Levels stored in Level enum. Default level is INFO.
+
+        :param level: Level of the input log
+        :param msg: The message to display in the log.
+        :type msg: str
+        :return: None
+        """
         # GET FRAME INFO? ASK LATER
         # FRAME INFO USED TO DISPLAY WHERE IN CODE LOG COMES FROM
         caller = getframeinfo(stack()[1][0]) # The path in the project where the call came from

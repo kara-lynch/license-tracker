@@ -34,4 +34,5 @@ Contents
    usage
    credentials
    validation
+   logger
    api

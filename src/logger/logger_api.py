@@ -44,7 +44,8 @@ class _Logger(object):
     Levels stored in Level enum. Default level is INFO.
 
     :param level: Level of the input log
-    :param msg: The message to display in the log
+    :param msg: The message to display in the log.
+    :type msg: str
     :return: None
     """
     def log(self, level: Level, msg: str) -> None:

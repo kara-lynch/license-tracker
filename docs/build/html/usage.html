@@ -13,7 +13,7 @@
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="API" href="api.html" />
+    <link rel="next" title="User Credentials" href="credentials.html" />
     <link rel="prev" title="Welcome to SALTS’s documentation!" href="index.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
@@ -37,126 +37,6 @@
 <h2>Installation<a class="headerlink" href="#installation" title="Link to this heading">¶</a></h2>
 <p>Deployment notes go here</p>
 </section>
-<section id="user-credentials">
-<h2>User Credentials<a class="headerlink" href="#user-credentials" title="Link to this heading">¶</a></h2>
-<p>SALTS has an object class, <code class="docutils literal notranslate"><span class="pre">UserCredentials</span></code>, that handles the information for the current user.</p>
-<dl class="py class" id="module-src.credentials.credentials_manager">
-<dt class="sig sig-object py" id="src.credentials.credentials_manager.UserCredentials">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.credentials.credentials_manager.</span></span><span class="sig-name descname"><span class="pre">UserCredentials</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_first_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_last_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_location</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_department</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_title</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.credentials.credentials_manager.UserCredentials" title="Link to this definition">¶</a></dt>
-<dd><p>This class handles the credentials for a user, including their department and title.</p>
-<p>Methods:</p>
-<p>id(), first_name(), last_name(), location(), department(), title(): Will return the respective info field.</p>
-<p>name(): Will return the user’s first and last name.</p>
-<p>is_manager(): Will return True if the user’s title is “Manager”, False otherwise.</p>
-<p>validate(): Checks each of the user info fields to ensure its validity. Will throw an exception if any are invalid.</p>
-<dl class="py method">
-<dt class="sig sig-object py" id="src.credentials.credentials_manager.UserCredentials.validate">
-<span class="sig-name descname"><span class="pre">validate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.credentials.credentials_manager.UserCredentials.validate" title="Link to this definition">¶</a></dt>
-<dd><p>Checks all of the information entered for a user for validity. Will return an error if any of the fields are too long, too short, or have invalid characters.</p>
-</dd></dl>
-
-</dd></dl>
-
-</section>
-<section id="validation-checks">
-<h2>Validation Checks<a class="headerlink" href="#validation-checks" title="Link to this heading">¶</a></h2>
-<p>SALTS has several built-in validation checks to ensure that the data passed into it is valid. For example, the <code class="docutils literal notranslate"><span class="pre">check_field_size</span></code> function will raise a <code class="docutils literal notranslate"><span class="pre">ValueError</span></code> if its input is outside the specified bounds.</p>
-<p id="module-src.validation.validation_checks">This module includes a series of checks you can run to validate data. All of them should be run in a try-except block as they will throw exceptions if any of them fail.</p>
-<dl class="py function">
-<dt class="sig sig-object py" id="src.validation.validation_checks.check_data_type">
-<span class="sig-prename descclassname"><span class="pre">src.validation.validation_checks.</span></span><span class="sig-name descname"><span class="pre">check_data_type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_to_check</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.validation.validation_checks.check_data_type" title="Link to this definition">¶</a></dt>
-<dd><p>Checks if the input is of the specified type. Will raise an exception if it isn’t.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>data_to_check</strong> – The data to run a check on.</p></li>
-<li><p><strong>input_type</strong> – The data type to be checked against.</p></li>
-<li><p><strong>type_name</strong> – Deprecated. Does nothing.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>TypeError</strong> – If the input is not of the specified type.</p>
-</dd>
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>None</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="src.validation.validation_checks.check_field_size">
-<span class="sig-prename descclassname"><span class="pre">src.validation.validation_checks.</span></span><span class="sig-name descname"><span class="pre">check_field_size</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_str</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.validation.validation_checks.check_field_size" title="Link to this definition">¶</a></dt>
-<dd><p>Checks if the input string is within the specified size limits. Will raise an exception if it isn’t.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>input_str</strong> (<em>str</em>) – The string to be checked.</p></li>
-<li><p><strong>max_size</strong> (<em>int</em>) – The upper size limit.</p></li>
-<li><p><strong>min_size</strong> (<em>int</em>) – The lower size limit.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>ValueError</strong> – If the input is outside the specified range.</p>
-</dd>
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>None</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="src.validation.validation_checks.is_alpha_or_hyphen">
-<span class="sig-prename descclassname"><span class="pre">src.validation.validation_checks.</span></span><span class="sig-name descname"><span class="pre">is_alpha_or_hyphen</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_str</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.validation.validation_checks.is_alpha_or_hyphen" title="Link to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Deprecated<span class="colon">:</span></dt>
-<dd class="field-odd"><p></p></dd>
-</dl>
-<p>Checks if the input consists of only letters and up to one hyphen. Will return an exception otherwise. Used to validate the name of a person.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>input_str</strong> (<em>str</em>) – The string to be checked.</p>
-</dd>
-<dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>ValueError</strong> – If invalid characters are found in the input string.</p>
-</dd>
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>None</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="src.validation.validation_checks.is_positive">
-<span class="sig-prename descclassname"><span class="pre">src.validation.validation_checks.</span></span><span class="sig-name descname"><span class="pre">is_positive</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_num</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.validation.validation_checks.is_positive" title="Link to this definition">¶</a></dt>
-<dd><p>Checks if the input number is positive. Will raise an exception if it isn’t. Intended for ID numbers and other ints, but should be usable with floats as well.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>input_num</strong> (<em>int</em><em> or </em><em>float</em>) – The number to be checked.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="src.validation.validation_checks.list_check">
-<span class="sig-prename descclassname"><span class="pre">src.validation.validation_checks.</span></span><span class="sig-name descname"><span class="pre">list_check</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_obj</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_list</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.validation.validation_checks.list_check" title="Link to this definition">¶</a></dt>
-<dd><p>Checks if the input object is in the input list. Will raise an exception if it isn’t.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>input_obj</strong> – The data to be checked.</p></li>
-<li><p><strong>input_list</strong> (<em>list</em><em> or </em><em>tuple</em>) – The list to be checked against.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>ValueError</strong> – If the input object isn’t in the input list.</p>
-</dd>
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>None</p>
-</dd>
-</dl>
-</dd></dl>
-
-</section>
 </section>
 
 
@@ -179,23 +59,9 @@
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Usage</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#installation">Installation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#user-credentials">User Credentials</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#src.credentials.credentials_manager.UserCredentials"><code class="docutils literal notranslate"><span class="pre">UserCredentials</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#src.credentials.credentials_manager.UserCredentials.validate"><code class="docutils literal notranslate"><span class="pre">UserCredentials.validate()</span></code></a></li>
 </ul>
 </li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="#validation-checks">Validation Checks</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#src.validation.validation_checks.check_data_type"><code class="docutils literal notranslate"><span class="pre">check_data_type()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#src.validation.validation_checks.check_field_size"><code class="docutils literal notranslate"><span class="pre">check_field_size()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#src.validation.validation_checks.is_alpha_or_hyphen"><code class="docutils literal notranslate"><span class="pre">is_alpha_or_hyphen()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#src.validation.validation_checks.is_positive"><code class="docutils literal notranslate"><span class="pre">is_positive()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#src.validation.validation_checks.list_check"><code class="docutils literal notranslate"><span class="pre">list_check()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="credentials.html">User Credentials</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api.html">API</a></li>
 </ul>
 
@@ -204,7 +70,7 @@
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
       <li>Previous: <a href="index.html" title="previous chapter">Welcome to SALTS’s documentation!</a></li>
-      <li>Next: <a href="api.html" title="next chapter">API</a></li>
+      <li>Next: <a href="credentials.html" title="next chapter">User Credentials</a></li>
   </ul></li>
 </ul>
 </div>

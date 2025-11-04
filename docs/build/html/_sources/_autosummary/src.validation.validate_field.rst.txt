@@ -1,0 +1,41 @@
+src.validation.validate\_field
+==============================
+
+.. automodule:: src.validation.validate_field
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      field_exists
+      validate_lic_computer_id
+      validate_lic_cost
+      validate_lic_curr
+      validate_lic_date_of_expiration
+      validate_lic_date_of_renewal
+      validate_lic_employee_id
+      validate_lic_id
+      validate_lic_name
+      validate_lic_pay_period
+      validate_lic_restrictions
+      validate_lic_type
+      validate_lic_version
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+

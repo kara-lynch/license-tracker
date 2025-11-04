@@ -32,4 +32,6 @@ Contents
 .. toctree::
 
    usage
+   credentials
+   validation
    api

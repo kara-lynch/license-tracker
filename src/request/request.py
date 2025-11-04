@@ -17,6 +17,18 @@ class Request(ABC):
     """
     lic_data:dict
     clean_data:dict = {}
+    config_dict = {}
+
+    def get_configs():
+    
+        config_path = "./src/config/request_fields.json"
+
+        with open(config_path, "r") as file:
+            config_json = json.load(file)
+
+        log.log("INFO", "Credentials manager configs loaded successfully")
+    
+        return config_json
 
     lic_name_key = "name"
     lic_version_key = "ver"
@@ -35,6 +47,7 @@ class Request(ABC):
     def __init__(self, user_req_json):
         log.log("INFO", "starting request data validation")
         self.lic_data = json.loads(user_req_json)
+        self.config_dict = self.get_configs()
         self.validate_data()
     
     def field_exists(self, field_name):
@@ -109,6 +122,14 @@ class Request(ABC):
     def set_lic_computer_id(self, new_field):
         validate_field.validate_lic_computer_id(int(new_field))
         self.clean_data[self.lic_computer_id_key] = new_field
+
+    def validate_field(self, field_key):
+        if self.field_exists(self.lic_data[field_key]):
+            validation_checks.check_field_size(str(self.lic_data[field_key]), 100, 2)
+            validation_checks.check_data_type(self.lic_data[field_key], str)
+            log.log("INFO", "license {field_key} validated")
+        else:
+            log.log("DEBUG", "license {field_key} empty")
 
 
     def get_clean_data_dict(self):
@@ -245,3 +266,4 @@ class QueryReturn(Request):
                 self.set_lic_date_of_expiration(self.lic_data[self.lic_date_of_expiration_key])
             if self.field_exists(self.lic_restrictions_key):
                 self.set_lic_restrictions(self.lic_data[self.lic_restrictions_key])
+

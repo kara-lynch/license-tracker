@@ -20,8 +20,6 @@ def get_configs():
 
 @dataclass(frozen=True)
 class UserCredentials:
-
-    
     """
     Stores information about the current user.
     
@@ -32,11 +30,11 @@ class UserCredentials:
 
     def validate(self):
         """
-        Checks all of the information entered for a user for validity. Will return an error if any of the fields are too long, too short, or have invalid entries.
+        Checks all of the information entered for a user for validity.
 
         More information on the checks can be found on the :doc:`validation` page.
         
-        :raise Exception: If one of the fields is invalid. 
+        :raise Exception: If one of the fields is invalid or missing, or if there are too many fields provided. 
         
         """
         global config_dict
@@ -91,54 +89,63 @@ class UserCredentials:
     def name(self):
         """
         :return: The user's first and last name, e.g. "Kara Lynch".
+        :rtype: str
         """
         return f"{self._user_dict["fName"]} {self._user_dict["lName"]}"
     
     def first_name(self):
         """
         :return: The user's first name, e.g. "Kara".
+        :rtype: str
         """
         return self._user_dict["fName"]
     
     def last_name(self):
         """
         :return: The user's last name, e.g. "Lynch".
+        :rtype: str
         """
         return self._user_dict["lName"]
     
     def employee_id(self):
         """
         :return: The user's employee ID number, e.g. 263.
+        :rtype: int
         """
         return self._user_dict["id"]
     
     def location(self):
         """
         :return: The user's country of residence, e.g. "United States".
+        :rtype: str
         """
         return self._user_dict["loc"]
     
     def department(self):
         """
         :return: The department the user works in, e.g. "Legal".
+        :rtype: str
         """
         return self._user_dict["dept"]
     
     def title(self):
         """
         :return: The user's job title, e.g. "Aide".
+        :rtype: str
         """
         return self._user_dict["title"]
     
     def is_manager(self):
         """
         :return: True if the user is a manager, False otherwise.
+        :rtype: bool
         """
         return self._user_dict["title"] == "Manager"
     
     def has_license_auth(self):
         """
         :return: True if the user is a manager of IT or Legal (i.e. the user has the authority to edit license records), False otherwise.
+        :rtype: bool
         """
         return (self._user_dict["title"] == "Manager" and self._user_dict["dept"] in ["Legal", "Information Technology"])
     

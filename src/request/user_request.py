@@ -8,10 +8,11 @@ from src.logger import log
 from pydoc import locate
 
 class Request(ABC):
-    """This class manages the sanitization and storage of user defined request data.
-    An abstract class is used for validation, which is implemented in request-type specific subclasses.
+    """
+    This class manages the sanitization and storage of user defined request data.
+    An abstract class is used for validation, which is implemented in request type-specific subclasses.
 
-    :peram user_req_json: json string object from user, to be validated and turned into a dictionary
+    :param user_req_json: JSON string object from user, to be validated and turned into a dictionary.
     :type user_req_json: str
     """
 
@@ -27,21 +28,25 @@ class Request(ABC):
         self.validate_data()
 
     def validate_field(self, field_key):
-        """validates request fields based on config file values
-        :param field_key: key to use for accessing and submitting data to dictionaries
+        """
+        Validates request fields based on config file values.
+
+        :param field_key: The name of the field to validate.
         :type field_key: str
-        :raises valueError: raises value error if field is found to be invalid
+        :raises ValueError: If the field is found to be invalid.
         """
         if self.field_exists(field_key):
             validation_checks.check_data_type(self.lic_data[field_key], locate(self.config_dict[field_key]["type"]))
             validation_checks.check_field_size(str(self.lic_data[field_key]), self.config_dict[field_key]["max_size"], self.config_dict[field_key]["min_size"])
             self.clean_data[field_key] = self.lic_data[field_key]
-            log.log("INFO", "license {field_key} validated")
+            log.log("INFO", f"license {field_key} validated")
 
     def get_configs(self):
-        """gets business rules for each field from config and returns them as a dictionary
-        :return: dictionary form of request_fields.json config file
-        :rtype: dictionary
+        """
+        Gets business rules for each field from config and returns them as a dictionary.
+
+        :return: Contents of the request_fields.json config file formatted as a dictionary.
+        :rtype: dict
         """
     
         config_path = "./src/config/request_fields.json"
@@ -54,8 +59,10 @@ class Request(ABC):
         return config_json
     
     def field_exists(self, field_name):
-        """checks to confirm if a field exists in the initial user request
-        :param field_name: the key used to access the field being verified in the request data dictionary
+        """
+        Checks to confirm if a field exists in the initial user request.
+
+        :param field_name: The name of the field being checked.
         :type field_name: str
         :rtype: boolean
         """
@@ -65,7 +72,9 @@ class Request(ABC):
             return True
         
     def has_cost(self):
-        """checks to confirm if the cost field exists in clean data; used as a flag in the database api layer
+        """
+        Checks to confirm if the cost field exists in clean data. Used as a flag in the database API layer.
+
         :rtype: boolean
         """
         if self.clean_data.get(self.config_dict["cost"]["key"]) == None:
@@ -74,7 +83,9 @@ class Request(ABC):
             return True
     
     def has_expiration(self):
-        """checks to confirm if the date of expiration field exists in clean data; used as a flag in the database api layer
+        """
+        Checks to confirm if the date of expiration field exists in clean data. Used as a flag in the database API layer.
+
         :rtype: boolean
         """
         if self.clean_data.get(self.config_dict["date_of_expiration"]["key"]) == None:
@@ -83,7 +94,9 @@ class Request(ABC):
             return True
     
     def has_restrictions(self):
-        """checks to confirm if the restrictions field exists in clean data; used as a flag in the database api layer
+        """
+        Checks to confirm if the restrictions field exists in clean data. Used as a flag in the database API layer.
+
         :rtype: boolean
         """
         if self.clean_data.get(self.config_dict["restrictions"]["key"]) == None:
@@ -92,17 +105,21 @@ class Request(ABC):
             return True
 
     def get_clean_data_dict(self):
-        """getter for clean data dictionary, for external use
-        :return: dictionary of validated data
-        :rtype: dictionary
+        """
+        Getter for clean data formatted as a dict.
+
+        :return: Dictionary of validated data.
+        :rtype: dict
         """
         if self.clean_data == None:
             self.clean_data = {}
         return self.clean_data
     
     def get_clean_data_json(self):
-        """getter for clean data, converted to json formatted string, for external use
-        :return: str of json formatted validated data
+        """
+        Getter method for clean data converted to a JSON-formatted string.
+
+        :return: Validated data as a JSON string object.
         :rtype: str
         """
         return json.dumps(self.get_clean_data_dict())
@@ -110,7 +127,7 @@ class Request(ABC):
 
     @abstractmethod 
     def validate_data(self):
-        """abstract method to force emplementation of data validation by request specific subclasses"""
+        """Abstract method to force implementation of data validation by request specific subclasses."""
         pass
 
 

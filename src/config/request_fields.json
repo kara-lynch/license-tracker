@@ -42,7 +42,7 @@
         "type":"str"
     },
     "date_of_expiration":{
-        "key":"date_of_expiration",
+        "key":"expiration_date",
         "max_size":10,
         "min_size":2,
         "type":"str"

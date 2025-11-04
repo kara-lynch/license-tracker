@@ -1,31 +1,29 @@
 import unittest
 import mysql.connector
-from tabulate import tabulate
 import json
 
 from src.config.settings import Settings
 
 
 class LicenseDAO:
-    #config_dict = {}
+    conn = None
+    cursor = None
 
-    def init_creds():
-        # config_path = "./src/config/db_credentials.json"
-
-        # creds = json.load("./src/db_credentials.json")
+    def __init__(self):
 
         config_path = Settings.db_config_file()
         with open(config_path, "r") as file:
             creds = json.load(file)
-        #with open(config_path, )
 
-        mydb = mysql.connector.connect(
-        host = creds.host,
-        user = creds.user,
-        password = creds.password,
-        database = creds.test
-)  
-       # print(mydb)
+        LicenseDAO.conn = mysql.connector.connect(
+            host = creds["host"],
+            port = creds["port"],
+            user = creds["username"],
+            password = creds["password"],
+            database = creds["database"]
+        )  
+        LicenseDAO.cursor = LicenseDAO.conn.cursor()
+        self.cursor = LicenseDAO.cursor
 
     def load_license_by_id(self, license_obj, id):
         query = 'SELECT * FROM License WHERE lid = %s'
@@ -55,15 +53,15 @@ class LicenseDAO:
         results = self.cursor.fetchall()
 
         for col in results:
-            print(f"License ID: {col['id']}")
-            print(f"Name: {col['licenseName']}")
-            print(f"Version: {col['version']}")
-            print(f"Type: {col['licenseType']}")
-            print(f"Cost: {col['price']} {col['currency']}")
-            print(f"Period: {col['period']}")
-            print(f"Renewal Date: {col['renewalDate']}")
-            print(f"Expiration Date: {col['endDate']}")
-            print(f"Geographic Restriction: {col['restriction']}")
+            print(f"License ID: {col[0]}")
+            print(f"Name: {col[1]}")
+            print(f"Version: {col[2]}")
+            print(f"Type: {col[3]}")
+            print(f"Cost: {col[4]} {col[5]}")
+            print(f"Period: {col[6]}")
+            print(f"Renewal Date: {col[7]}")
+            print(f"Expiration Date: {col[8]}")
+            print(f"Geographic Restriction: {col[9]}")
             print(f"\n")
     
     def AddLicense(self, licenseID, licenseName, version, licenseType, price, currency, period, renewalDate, endDate, restriction, dateAdded, uploaderID):
@@ -535,9 +533,6 @@ class Restrictions(object):
     def __restrict_str__(self):
         output = "License ID: L{0}       Geographic Restrictions: {1}".format(self.__lid, self.__restrict)
         return output
-    
-
-
 
 
 

@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from src.validation.validation_checks import *
-#from src.logger import log
+from src.logger import log
 
 import json
 
@@ -13,7 +13,7 @@ def get_configs():
     with open(config_path, "r") as file:
         config_json = json.load(file)
 
-    #log.log("INFO", "Credentials manager configs loaded successfully")
+    log.log("INFO", "Credentials manager configs loaded successfully")
     
     return config_json
 
@@ -44,11 +44,14 @@ class UserCredentials:
             config_dict = get_configs()
             
         _field_name = ""
-        for field in config_dict["FIELDS_LIST"]:
+        for field in ["fName", "lName", "id", "loc", "dept", "title"]:
             if not field in self._user_dict:
+                
+                log.log("WARNING", f"Credentials validation failed")
                 raise KeyError(f"Key '{field}' not found in input")
             
         if len(self._user_dict) > 6:
+            log.log("WARNING", "Credentials validation failed")
             raise KeyError("Too many fields provided")
         
         try:
@@ -76,11 +79,13 @@ class UserCredentials:
             check_data_type(self._user_dict[_field_name], str)
             list_check(self._user_dict[_field_name], config_dict["TITLES_LIST"])
 
+            log.log("INFO", f"Credentials validation succeeded for {self.name()}")
+
 
         except Exception as e:
             error_msg = _field_name + " " + e.args[0]
             #print(f"Credentials validation failed for {self.name()}: {error_msg}")
-            #log.log("WARNING", f"Credentials validation failed for {self.name()}: {error_msg}")
+            log.log("WARNING", f"Credentials validation failed")
             raise Exception(error_msg)
     
     def name(self):
@@ -130,4 +135,10 @@ class UserCredentials:
         :return: True if the user is a manager, False otherwise.
         """
         return self._user_dict["title"] == "Manager"
+    
+    def has_license_auth(self):
+        """
+        :return: True if the user is a manager of IT or Legal (i.e. the user has the authority to edit license records), False otherwise.
+        """
+        return (self._user_dict["title"] == "Manager" and self._user_dict["dept"] in ["Legal", "Information Technology"])
     

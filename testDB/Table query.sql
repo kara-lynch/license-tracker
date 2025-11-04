@@ -112,8 +112,7 @@ alter table License
 
 /*
 	The following query creates a table EmployeeAssign.
-    It contains info on the managers and licenses that have
-	been assigned to employees
+    It has ID and name as columns
 */
     
 create table EmployeeAssign(
@@ -122,20 +121,11 @@ create table EmployeeAssign(
     employeeID INT,
     assignerID INT,
     
-    foreign key(licenseID) references License(id),
+    foreign key(licenseID) references License(id) ON DELETE CASCADE,
     foreign key(employeeID) references Employee(id),
     foreign key(assignerID) references Employee(id)
     
 );
-
-/*
-	The following query creates a table CompAssign.
-    It contains info on licenses that have been assigned 
-	to a computer.
-
-	It also references license, computer, and employee tables
-	for their ID's 
-*/
 
 create table CompAssign(
 	ID INT AUTO_INCREMENT Primary Key,
@@ -143,17 +133,12 @@ create table CompAssign(
     computerID INT,
     assignerID INT,
     
-    foreign key(licenseID) references License(id),
+    foreign key(licenseID) references License(id) ON DELETE CASCADE,
     foreign key(computerID) references Computer(id),
     foreign key(assignerID) references Employee(id)
     
 );
 
-/*
-	The following query creates a table Cost. It is the
-	price of every license.
-
-*/
 
 create table Cost(
 	ID INT AUTO_INCREMENT Primary Key,
@@ -163,35 +148,26 @@ create table Cost(
     period VARCHAR (12),
     renewalDate date, 
     
-    foreign key(licenseID) references License(id)
+    foreign key(licenseID) references License(id) ON DELETE CASCADE
     
 );
-
-/*
-	The following query creates a table ExpirationDate.
-    It contains info on the expiration dates on each license
-*/
 
 create table ExpirationDate(
 	id INT AUTO_INCREMENT Primary Key,
 	licenseID int,
     endDate date,
     
-    foreign key(licenseID) references License(id)
+    foreign key(licenseID) references License(id) ON DELETE CASCADE
     
 );
 
-/*
-	The following query creates a table GeogRestriction.
-    It contains info on the license and where it's restricted
-*/
 
 create table GeogRestriction(
 	id INT AUTO_INCREMENT Primary Key,
 	licenseID int,
     restriction VARCHAR(100),
     
-    foreign key(licenseID) references License(id)
+    foreign key(licenseID) references License(id) ON DELETE CASCADE
     
 );
 

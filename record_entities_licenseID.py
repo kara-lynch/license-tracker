@@ -45,7 +45,7 @@ class LicenseDAO:
             LEFT JOIN ExpirationDate ON License.id = ExpirationDate.licenseID
             LEFT JOIN GeogRestriction ON License.id = GeogRestriction.licenseID
             '''
-        self.cursor.execute(query)
+        self.cursor.execute(query) 
         results = self.cursor.fetchall()
 
         for col in results:

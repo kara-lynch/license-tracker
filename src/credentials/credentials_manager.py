@@ -17,26 +17,24 @@ def get_configs():
     
     return config_json
 
+
+@dataclass(frozen=True)
 class UserCredentials:
+
+    
     """
-    This class handles the credentials for a user, including their department and title.
+    Stores information about the current user.
+    
+    :param user_dict: The dict that the object will pull its information from. It must have the following keys: ``id``, ``fName``, ``lName``, ``loc``, ``dept``, and ``title``.
+    :type user_dict: dict
     """
-    def __init__(self, user_dict):
-        if len(user_dict.keys()) == 0:
-            raise KeyError("Input cannot be empty")
-        try:
-            self._id = user_dict["id"]
-            self._first_name = user_dict["fName"]
-            self._last_name = user_dict["lName"]
-            self._location = user_dict["loc"]
-            self._department = user_dict["dept"]
-            self._title = user_dict["title"]
-        except KeyError as e:
-            raise KeyError(f"Key '{e.args[0]}' not found in input")
+    _user_dict: dict        
 
     def validate(self):
         """
         Checks all of the information entered for a user for validity. Will return an error if any of the fields are too long, too short, or have invalid entries.
+
+        More information on the checks can be found on the :doc:`validation` page.
         
         :raise Exception: If one of the fields is invalid. 
         
@@ -46,64 +44,90 @@ class UserCredentials:
             config_dict = get_configs()
             
         _field_name = ""
+        for field in config_dict["FIELDS_LIST"]:
+            if not field in self._user_dict:
+                raise KeyError(f"Key '{field}' not found in input")
+            
+        if len(self._user_dict) > 6:
+            raise KeyError("Too many fields provided")
+        
         try:
-            _field_name = "First name"
-            check_data_type(self._first_name, str)
-            self._first_name = self._first_name.strip()
-            check_field_size(self._first_name, config_dict["FIRST_NAME_MAX_SIZE"], config_dict["FIRST_NAME_MIN_SIZE"])
+            _field_name = "fName"
+            check_data_type(self._user_dict[_field_name], str)
+            check_field_size(self._user_dict[_field_name], config_dict["FIRST_NAME_MAX_SIZE"], config_dict["FIRST_NAME_MIN_SIZE"])
 
-            _field_name = "Last name"
-            check_data_type(self._last_name, str)
-            self._last_name = self._last_name.strip()
-            check_field_size(self._last_name, config_dict["LAST_NAME_MAX_SIZE"], config_dict["LAST_NAME_MIN_SIZE"])
+            _field_name = "lName"
+            check_data_type(self._user_dict[_field_name], str)
+            check_field_size(self._user_dict[_field_name], config_dict["LAST_NAME_MAX_SIZE"], config_dict["LAST_NAME_MIN_SIZE"])
 
-            _field_name = "Employee ID number"
-            check_data_type(self._id, int)
-            is_positive(self._id)
+            _field_name = "id"
+            check_data_type(self._user_dict[_field_name], int)
+            is_positive(self._user_dict[_field_name])
 
-            _field_name = "Location"
-            check_data_type(self._location, str)
-            self._location = self._location.strip()
-            list_check(self._location, config_dict["LOCATIONS_LIST"])
+            _field_name = "loc"
+            check_data_type(self._user_dict[_field_name], str)
+            list_check(self._user_dict[_field_name], config_dict["LOCATIONS_LIST"])
 
-            _field_name = "Department"
-            check_data_type(self._department, str)
-            self._department = self._department.strip()
-            list_check(self._department, config_dict["DEPARTMENTS_LIST"])
+            _field_name = "dept"
+            check_data_type(self._user_dict[_field_name], str)
+            list_check(self._user_dict[_field_name], config_dict["DEPARTMENTS_LIST"])
 
-            _field_name = "Job title"
-            check_data_type(self._title, str)
-            self._title = self._title.strip()
-            list_check(self._title, config_dict["TITLES_LIST"])
+            _field_name = "title"
+            check_data_type(self._user_dict[_field_name], str)
+            list_check(self._user_dict[_field_name], config_dict["TITLES_LIST"])
 
 
         except Exception as e:
             error_msg = _field_name + " " + e.args[0]
-            print(f"Credentials validation failed for {self.name()}: {error_msg}")
+            #print(f"Credentials validation failed for {self.name()}: {error_msg}")
             #log.log("WARNING", f"Credentials validation failed for {self.name()}: {error_msg}")
             raise Exception(error_msg)
     
     def name(self):
-        return f"{self._first_name} {self._last_name}"
+        """
+        :return: The user's first and last name, e.g. "Kara Lynch".
+        """
+        return f"{self._user_dict["fName"]} {self._user_dict["lName"]}"
     
     def first_name(self):
-        return self._first_name
+        """
+        :return: The user's first name, e.g. "Kara".
+        """
+        return self._user_dict["fName"]
     
     def last_name(self):
-        return self._last_name
+        """
+        :return: The user's last name, e.g. "Lynch".
+        """
+        return self._user_dict["lName"]
     
     def employee_id(self):
-        return self._id
+        """
+        :return: The user's employee ID number, e.g. 263.
+        """
+        return self._user_dict["id"]
     
     def location(self):
-        return self._location
+        """
+        :return: The user's country of residence, e.g. "United States".
+        """
+        return self._user_dict["loc"]
     
     def department(self):
-        return self._department
+        """
+        :return: The department the user works in, e.g. "Legal".
+        """
+        return self._user_dict["dept"]
     
     def title(self):
-        return self._title
+        """
+        :return: The user's job title, e.g. "Aide".
+        """
+        return self._user_dict["title"]
     
     def is_manager(self):
-        return self._title == "Manager"
+        """
+        :return: True if the user is a manager, False otherwise.
+        """
+        return self._user_dict["title"] == "Manager"
     

@@ -4,7 +4,7 @@ def main():
     test_data = [
         { #test 1
             "id": 263,
-            "fName": "Ava'); DROP TABLE Employee; --",
+            "fName": "Aveline'); DROP TABLE Employee; --",
             "lName": "Fishbie",
             "loc": "Japan",
             "dept": "Legal",

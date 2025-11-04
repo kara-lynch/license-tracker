@@ -1,8 +1,6 @@
-"""This module includes a series of checks you can run to validate data. All of them should be run in a try-except block as they will throw exceptions if any of them fail."""
-
 def check_data_type(data_to_check, input_type, type_name: str=None):
     """
-    Checks if the input is of the specified type. Will raise an exception if it isn't.
+    Checks if the input is of the specified type.
     
     :param data_to_check: The data to run a check on.
     :param input_type: The data type to be checked against.
@@ -15,7 +13,7 @@ def check_data_type(data_to_check, input_type, type_name: str=None):
 
 def check_field_size(input_str: str, max_size: int, min_size: int):
     """
-    Checks if the input string is within the specified size limits. Will raise an exception if it isn't.
+    Checks if the input string is within the specified size limits.
     
     :param input_str: The string to be checked.
     :type input_str: str
@@ -33,9 +31,9 @@ def check_field_size(input_str: str, max_size: int, min_size: int):
 
 def is_alpha_or_hyphen(input_str: str):
     """
-    :deprecated:
+    :deprecated: Do not use this function. It is not supported and will be removed in a future release.
 
-    Checks if the input consists of only letters and up to one hyphen. Will return an exception otherwise. Used to validate the name of a person.
+    Checks if the input consists of only letters and up to one hyphen. Used to validate the name of a person.
     
     :param input_str: The string to be checked.
     :type input_str: str
@@ -58,7 +56,7 @@ def is_alpha_or_hyphen(input_str: str):
 
 def list_check(input_obj, input_list: list):
     """
-    Checks if the input object is in the input list. Will raise an exception if it isn't.
+    Checks if the input object is in the input list.
 
     :param input_obj: The data to be checked.
     :param input_list: The list to be checked against.
@@ -69,12 +67,13 @@ def list_check(input_obj, input_list: list):
     if input_obj not in input_list:
         raise ValueError("not found")
     
-def is_positive(input_num: int):
+def is_positive(input_num):
     """
-    Checks if the input number is positive. Will raise an exception if it isn't. Intended for ID numbers and other ints, but should be usable with floats as well.
+    Checks if the input number is positive. Intended for ID numbers and other ints, but should be usable with floats as well.
     
     :param input_num: The number to be checked.
     :type input_num: int or float
+    :raise ValueError: If the value is zero or negative.
     """
     if input_num <= 0:
         raise ValueError("cannot be zero or negative")

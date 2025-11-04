@@ -1,4 +1,4 @@
-src.validation
+﻿src.validation
 ==============
 
 .. automodule:: src.validation
@@ -27,5 +27,6 @@ src.validation
    :toctree:
    :recursive:
 
+   src.validation.validate_field
    src.validation.validation_checks
 

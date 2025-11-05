@@ -23,8 +23,10 @@ class _LicenseDAO:
     (e.g., managers or admins) are permitted to perform certain operations.
 
     '''
-    conn = None
-    cursor = None
+    conn_employee = None
+    conn_manager = None
+    cursor_emp = None
+    cursor_man = None
 
     def __init__(self):  
         '''
@@ -47,17 +49,27 @@ class _LicenseDAO:
 
         config_path = Settings.db_config_file()
         with open(config_path, "r") as file:
-            creds = json.load(file)["manager-level"]
+            creds = json.load(file)
 
-        _LicenseDAO.conn = mysql.connector.connect(
-            host = creds["host"],
-            port = creds["port"],
-            user = creds["username"],
-            password = creds["password"],
-            database = creds["database"]
+        _LicenseDAO.conn_manager = mysql.connector.connect(
+            host = creds["manager-level"]["host"],
+            port = creds["manager-level"]["port"],
+            user = creds["manager-level"]["username"],
+            password = creds["manager-level"]["password"],
+            database = creds["manager-level"]["database"]
         )  
-        _LicenseDAO.cursor = _LicenseDAO.conn.cursor()
-        self.cursor = _LicenseDAO.cursor
+        _LicenseDAO.cursor_man = _LicenseDAO.conn_manager.cursor()
+        self.cursor_man = _LicenseDAO.cursor_man
+
+        _LicenseDAO.conn_employee = mysql.connector.connect(
+            host = creds["employee-level"]["host"],
+            port = creds["employee-level"]["port"],
+            user = creds["employee-level"]["username"],
+            password = creds["employee-level"]["password"],
+            database = creds["employee-level"]["database"]
+        )  
+        _LicenseDAO.cursor_emp = _LicenseDAO.conn_employee.cursor()
+        self.cursor_emp = _LicenseDAO.cursor_emp
 
     def load_license_by_id(self, license_obj, id):
         '''
@@ -79,8 +91,8 @@ class _LicenseDAO:
         '''
 
         query = 'SELECT * FROM License WHERE lid = %s'
-        self.cursor.execute (query, (id,))
-        result = self.cursor.fetchone()
+        self.cursor_emp.execute (query, (id,))
+        result = self.cursor_emp.fetchone()
 
         if result:
             license_obj.LicenseID = result['id']
@@ -126,8 +138,11 @@ class _LicenseDAO:
             LEFT JOIN ExpirationDate ON License.id = ExpirationDate.licenseID
             LEFT JOIN GeogRestriction ON License.id = GeogRestriction.licenseID
             '''
-        self.cursor.execute(query) 
-        results = self.cursor.fetchall()
+        try:
+            self.cursor_emp.execute(query) 
+            results = self.cursor_emp.fetchall()
+        except Exception as e:
+            log.log("ERROR", f'Database issue. {e.args[0]}')
        
         records = {}
         for col in results:
@@ -197,8 +212,8 @@ class _LicenseDAO:
             license_query = ''' INSERT INTO License (licenseName, version, licenseType, dateAdded, uploaderID)
             Values(%s, %s, %s, CURRENT_DATE, %s)
             '''
-            self.cursor.execute(license_query,(fields["name"], fields["ver"], fields["type"], user_credentials.employee_id()))
-            newest_id = self.cursor.lastrowid
+            self.cursor_man.execute(license_query,(fields["name"], fields["ver"], fields["type"], user_credentials.employee_id()))
+            newest_id = self.cursor_man.lastrowid
             # Remaining table inserts are optional
 
             # Cost insert:
@@ -206,24 +221,24 @@ class _LicenseDAO:
                 cost_query = ''' INSERT INTO Cost (licenseID, price, currency, period, renewalDate)
                 VALUES(%s, %s, %s, %s, %s)
                 '''
-                self.cursor.execute(cost_query, (newest_id, fields["cost"], fields["curr"], fields["period"], fields["date_of_renewal"]))
+                self.cursor_man.execute(cost_query, (newest_id, fields["cost"], fields["curr"], fields["period"], fields["date_of_renewal"]))
 
             # Geographic Restriction insert:
             if user_request.has_restrictions():
                 geo_query = ''' INSERT INTO GeogRestriction (licenseID, restriction)
                 VALUES(%s, %s)
                 '''
-                self.cursor.execute(geo_query, (newest_id, fields["restrictions"]))
+                self.cursor_man.execute(geo_query, (newest_id, fields["restrictions"]))
 
             # Expiration insert:
             if user_request.has_expiration():
                 expiration_query = ''' INSERT INTO ExpirationDate (licenseID, endDate)
                 VALUES(%s, %s)
                 '''
-                self.cursor.execute(expiration_query, (newest_id, fields["expiration_date"]))
+                self.cursor_man.execute(expiration_query, (newest_id, fields["expiration_date"]))
 
             # commit all inserts to the tables
-            self.conn.commit()
+            self.conn_manager.commit()
 
             return True
 
@@ -274,10 +289,10 @@ class _LicenseDAO:
             licenseID = user_request.get_clean_data_dict()["licenseID"]
             
             # Now delete from parent table
-            self.cursor.execute('DELETE FROM License WHERE id = %s', (licenseID,))
+            self.cursor_man.execute('DELETE FROM License WHERE id = %s', (licenseID,))
 
             # Commit license deletion from all tables
-            self.conn.commit()
+            self.conn_manager.commit()
         
             return True
 

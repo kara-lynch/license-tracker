@@ -56,15 +56,24 @@ def addLicense():
     try:
         success, auth_response = authentication.authorize(request.headers)
         if not success:
-            abort(401)
+            raise Exception
         credentials = UserCredentials(json.loads(auth_response))
         credentials.validate()
+
         # check user is a manager and IT/Legal
+        if not credentials.has_license_auth():
+            raise Exception
     except:
         abort(401)
+
+    # DB Call. If method returns false, user couldn't be authorizaed.
+    try:
+        added_record = db.AddLicense(user_req, credentials)
+    except:
+        abort(400)
+    if not added_record:
+        abort(401)
     
-    # Call database to add license.
-    # LicenseDatabase.addLicense(request_info, credentials)
     return f'<p>License added<p>'
 
 """

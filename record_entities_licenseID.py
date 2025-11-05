@@ -3,6 +3,8 @@ import mysql.connector
 import json
 
 from src.config.settings import Settings
+from src.request.user_request import *
+from src.logger import log
 
 
 class LicenseDAO:
@@ -101,36 +103,52 @@ class LicenseDAO:
 
         return records
 
-    def AddLicense(self, licenseID, licenseName, version, licenseType, price, currency, period, renewalDate, endDate, restriction, dateAdded, uploaderID):
-     try:  
-        license_query = ''' INSERT INTO License (licenseName, version, licenseType, dateAdded, uploaderID)
-        Values(%s, %s, %s, %s, CURRENT_DATE)
-        '''
-        self.cursor.execute(license_query,(licenseName,version, licenseType, dateAdded, uploaderID))
+    def AddLicense(self, user_request, user_credentials):
+        fields = user_request.get_clean_data_dict()
+        try: 
+            # Base info about license, always insert into this table
+            license_query = ''' INSERT INTO License (licenseName, version, licenseType, dateAdded, uploaderID)
+            Values(%s, %s, %s, CURRENT_DATE, %s)
+            '''
+            self.cursor.execute(license_query,(fields["name"], fields["ver"], fields["type"], user_credentials.employee_id()))
+            newest_id = self.cursor.lastrowid
+            # Remaining table inserts are optional
 
-        cost_query = ''' INSERT INTO Cost (licenseID, price, currency, period, renewalDate)
-        VALUES(%s, %s, %s, %s, %s)
-        '''
-        self.cursor.execute(cost_query, (licenseID, price, currency, period, renewalDate))
+            # Cost insert:
+            if user_request.has_cost():
+                cost_query = ''' INSERT INTO Cost (licenseID, price, currency, period, renewalDate)
+                VALUES(%s, %s, %s, %s, %s)
+                '''
+                self.cursor.execute(cost_query, (newest_id, fields["cost"], fields["curr"], fields["period"], fields["date_of_renewal"]))
 
-        geo_query = ''' INSERT INTO GeogRestriction (licenseID, restriction)
-        VALUES(%s, %s)
-        '''
-        self.cursor.execute(geo_query, (licenseID, restriction))
+            # Geographic Restriction insert:
+            if user_request.has_restrictions():
+                geo_query = ''' INSERT INTO GeogRestriction (licenseID, restriction)
+                VALUES(%s, %s)
+                '''
+                self.cursor.execute(geo_query, (newest_id, fields["restrictions"]))
 
-        expiration_query = ''' INSERT INTO ExpirationDate (licenseID, endDate)
-        VALUES(%s, %s)
-        '''
-        self.cursor.execute(expiration_query, (licenseID, endDate))
+            # Expiration insert:
+            if user_request.has_expiration():
+                expiration_query = ''' INSERT INTO ExpirationDate (licenseID, endDate)
+                VALUES(%s, %s)
+                '''
+                self.cursor.execute(expiration_query, (newest_id, fields["expiration_date"]))
 
-        #commit all inserts to the tables
-        self.conn.commit()
+            #commit all inserts to the tables
+            self.conn.commit()
 
-     except mysql.connector.Error as err:
-          print(f"Error: {err}")
-          self.conn.rollback()
+            return True
 
-    
+        except mysql.connector.Error as err:
+            print(f"Error: {err}")
+            self.conn.rollback()
+            return False
+        except Exception as e:
+            log.log("ERROR", f'Error in DB: {e.args[0]}')
+            return False
+
+
     def DeleteLicense(self, licenseID):
         try: 
             ''' 
@@ -159,13 +177,13 @@ class LicenseDAO:
         self.cursor.close()
         self.conn.close()
 
-    
 
 
-""" 
- This represents a License object 
- From the License Tracking database:
- CREATE TABLE Licenses (
+
+    """ 
+    This represents a License object 
+    From the License Tracking database:
+    CREATE TABLE Licenses (
     LicenseID INT PRIMARY KEY,
     Name VARCHAR(40) NULL,
     Version VARCHAR(8) NULL,
@@ -173,7 +191,7 @@ class LicenseDAO:
     Type VARCHAR(20) NULL,
     UploaderID INT 
     );
-"""
+    """
 class License(object):
     def __init__(self, lid=0, name=None, version=None, dateadded=None, type=None, uid=0):
         self.__lid = lid             # License Identification number for each individual license
@@ -182,11 +200,11 @@ class License(object):
         self.__dateadded = dateadded # Date the license was added to the database
         self.__type = type           # Type of License it is 
         self.__uid = uid             # Uploader ID
-    
+
     @property
     def LicenseID(self):
         return self.__lid
-    
+
     @LicenseID.setter
     def LicenseID(self, lid):
         if lid is None:
@@ -197,33 +215,33 @@ class License(object):
             raise ValueError("License ID must be 0 or Higher")
         else:
             self.__lid = lid
-    
+
     @property
     def Name(self):
         return self.__name
-    
+
     @Name.setter
     def Name(self, name):
         if name != None and len(name) > 40:
             raise ValueError("Name must be 40 characters or less in length")
         else:
             self.__name = name
-    
+
     @property
     def Version(self):
         return self.__version
-    
+
     @Version.setter
     def Version(self,version):
         if version != None and len(version) > 8:
             raise ValueError("Version must not exceed 8 characters in lenght")
         else:
             self.__version = version
-    
+
     @property
     def DateAdded(self):
         return self.__dateadded
-    
+
     @DateAdded.setter
     def DateAdded(self, dateadded):
         if dateadded != None and len(dateadded) != 10:
@@ -234,7 +252,7 @@ class License(object):
     @property
     def Type(self):
         return self.__type
-    
+
     @Type.setter
     def Type(self, type):
         if type != None and len(type) > 20:
@@ -245,7 +263,7 @@ class License(object):
     @property
     def UploaderID(self):
         return self.__uid
-    
+
     @UploaderID.setter
     def UploaderID(self, uid):
         if uid is None:
@@ -261,28 +279,28 @@ class License(object):
         output = "License ID: L{0}, {1}, {2}, Date Added:{3}, Type: {4}, Uploader ID: U{5}".format(self.__lid, self.__name, self.__version, self.__dateadded, self.__type, self.__uid)
         return output
 
-    
-""" 
- This represents a Employee License Assignments object
- From the Licenses database:
- CREATE TABLE EmployeeLicenseAssignments ( 
-     LicenseID INT PRIMARY KEY,
-     EmployeeID INT,
-     AssignerID INT
-     );
-"""
+
+    """ 
+    This represents a Employee License Assignments object
+    From the Licenses database:
+    CREATE TABLE EmployeeLicenseAssignments ( 
+        LicenseID INT PRIMARY KEY,
+        EmployeeID INT,
+        AssignerID INT
+        );
+    """
 
 class ELA(object):
- 
+
     def __init__(self, lid = 0, empid = 0, assignid = 0):
         self.__lid = lid              # License Identification number for each individual license 
         self.__empid = empid          # Employee Identification number for helping track which person(s) the license is assigned too  
         self.__assignid = assignid    # Assigner Identification number for showing which person assigned the license to other person(s) and/or device(s)
-    
+
     @property
     def LicenseID(self):
         return self.__lid
-    
+
     @LicenseID.setter
     def LicenseID(self, lid):
         if lid is None:
@@ -297,7 +315,7 @@ class ELA(object):
     @property
     def EmployeeID(self):
         return self.__empid
-    
+
     @EmployeeID.setter
     def EmployeeID(self, empid):
         if empid is None:
@@ -308,11 +326,11 @@ class ELA(object):
             raise ValueError("Employee ID must be 0 or higher")
         else:
             self.__empid = empid
-    
+
     @property
     def AssignerID(self):
         return self.__assignid
-    
+
     @AssignerID.setter
     def EmployeeID(self, assignid):
         if assignid is None:
@@ -329,26 +347,26 @@ class ELA(object):
         return output
 
 
-""" 
-This represents a Computer License Assignments object
-From the Licenses database:
+    """ 
+    This represents a Computer License Assignments object
+    From the Licenses database:
     CREATE TABLE ComputerLicenseAssignments ( 
-     LicenseID INT PRIMARY KEY,
-     ComputerID INT,
-     AssignerID INT
-     );
-"""
+        LicenseID INT PRIMARY KEY,
+        ComputerID INT,
+        AssignerID INT
+        );
+    """
 
 class CLA(object):
     def __init__(self, lid = 0, cid = 0, aid = 0):
         self.__lid = lid    # License Identification number for each individual license
         self.__cid = cid    # Computer Identification number for showing what device(s) the license is attached too
         self.__aid = aid    # Assigner Identification number for showing who assigned the license to said device(s) and person(s)
-    
+
     @property
     def LicenseID(self):
         return self.__lid
-    
+
     @LicenseID.setter
     def LicenseID(self, lid):
         if lid is None:
@@ -359,11 +377,11 @@ class CLA(object):
             raise ValueError("License ID must be 0 or Higher")
         else:
             self.__lid = lid
-    
+
     @property
     def ComputerID(self):
         return self.__cid
-    
+
     @ComputerID.setter
     def ComputerID(self, cid):
         if cid is None:
@@ -374,11 +392,11 @@ class CLA(object):
             raise ValueError("Computer ID must be 0 or Higher")
         else:
             self.__cid = cid
-    
+
     @property
     def AssignerID(self):
         return self.__aid
-    
+
     @AssignerID.setter
     def AssignerID(self, aid):
         if aid is None:
@@ -393,19 +411,19 @@ class CLA(object):
     def __cla_str__(self):
         output = "License ID: L{0} Computer ID: C{1} Assigner ID: A{2}".format(self.__lid, self.__cid, self.__aid)
         return output
-    
 
-""" 
-This represents a Cost object
-From the License Tracking database:
+
+    """ 
+    This represents a Cost object
+    From the License Tracking database:
     CREATE TABLE Cost ( 
-     LicenseID INT PRIMARY KEY,
-     Cost FLOAT,
-     Currency VARCHAR(3) NULL,
-     Period VARCHAR(12) NULL,
-     DateOfRenewal VARCHAR(10) NULL
-     );
-"""
+        LicenseID INT PRIMARY KEY,
+        Cost FLOAT,
+        Currency VARCHAR(3) NULL,
+        Period VARCHAR(12) NULL,
+        DateOfRenewal VARCHAR(10) NULL
+        );
+    """
 
 class Cost(object):
     def __init__(self, lid = 0, cost = 0.0, curr = None, period = None, dateRen = None):
@@ -418,7 +436,7 @@ class Cost(object):
     @property
     def LicenseID(self):
         return self.__lid
-    
+
     @LicenseID.setter
     def LicenseID(self, lid):
         if lid is None:
@@ -433,7 +451,7 @@ class Cost(object):
     @property
     def Cost(self):
         return self.__cost
-    
+
     @Cost.setter
     def Cost(self, cost):
         if cost is None:
@@ -444,11 +462,11 @@ class Cost(object):
             raise ValueError("Cost must be 0 or Higher")
         else:
             self.__cost = cost
-    
+
     @property
     def Currency(self):
         return self.__curr
-    
+
     @Currency.setter
     def Currency(self, curr):
         if curr != None and len(curr) > 3:
@@ -459,18 +477,18 @@ class Cost(object):
     @property
     def Period(self):
         return self.__period
-    
+
     @Period.setter
     def Period(self, period):
         if period != None and len(period) > 12:
             raise ValueError("Period must be 12 characters or less in length")
         else:
             self.__period = period
-    
+
     @property
     def DateRenewal(self):
         return self.__dateRen
-    
+
     @DateRenewal.setter
     def DateRenewal(self, dateRen):
         if dateRen != None and len(dateRen) > 10:
@@ -482,24 +500,24 @@ class Cost(object):
         return output
 
 
-""" 
-This represents a Expiration Date object
-From the License Tracking database:
+    """ 
+    This represents a Expiration Date object
+    From the License Tracking database:
     CREATE TABLE Expiration Date ( 
-     LicenseID INT PRIMARY KEY,
-     DateOfExpiration VARCHAR(10) NULL
-     );
-""" 
+        LicenseID INT PRIMARY KEY,
+        DateOfExpiration VARCHAR(10) NULL
+        );
+    """ 
 
 class Expiration(object):
     def __init__(self, lid = 0, date = None):
         self.__lid = lid       # License Identification number for each individual license
         self.__date = date     # Date the license expires
-    
+
     @property
     def LicenseID(self):
         return self.__lid
-    
+
     @LicenseID.setter
     def LicenseID(self, lid):
         if lid is None:
@@ -514,7 +532,7 @@ class Expiration(object):
     @property
     def Date(self):
         return self.__date
-    
+
     @Date.setter
     def Date(self, date):
         if date != None and len(date) > 10:
@@ -525,16 +543,16 @@ class Expiration(object):
     def __exp_str__(self):
         output = "License ID: L{0}    Date: {1}".format(self.__lid, self.__date)
         return output
-    
 
-""" 
-This represents a Geographic Restrictions object
-From the License Tracking database:
+
+    """ 
+    This represents a Geographic Restrictions object
+    From the License Tracking database:
     CREATE TABLE Geographic Restrictions ( 
-     LicenseID INT PRIMARY KEY,
-     Restrictions VARCHAR(100) NULL
-     );
-"""
+        LicenseID INT PRIMARY KEY,
+        Restrictions VARCHAR(100) NULL
+        );
+    """
 
 class Restrictions(object):
     def __init__(self, lid = 0, restrict = None):
@@ -544,7 +562,7 @@ class Restrictions(object):
     @property
     def LicenseID(self):
         return self.__lid
-    
+
     @LicenseID.setter
     def LicenseID(self, lid):
         if lid is None:
@@ -559,7 +577,7 @@ class Restrictions(object):
     @property
     def Restrictions(self):
         return self.__restrict
-    
+
     @Restrictions.setter
     def Restrictions(self, restrict):
         if restrict != None and len(restrict) > 100:

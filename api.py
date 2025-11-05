@@ -117,6 +117,8 @@ def seeLicenses():
             credentials.validate()
             records = db.seeLicenses()
             return records
+        else:
+            raise Exception
     except:
         # If the code ends up here, it was probably the user's fault
         abort(401)

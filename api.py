@@ -20,9 +20,9 @@ def hello():
 """
 When sending get request to this URI, API will respond with instructions for how to use API.
 """
-@app.get("/")
-def help():
-    return "<p>HELP SCREEN TBA<p>"
+# @app.get("/")
+# def help():
+#     return "<p>HELP SCREEN TBA<p>"
 
 """
 User expected to provide a JSON object in the body includin the fields of the license being added.
@@ -123,19 +123,12 @@ along with the fields they want to update.
 
 Any fields not provided will not be updated.
 """
-@app.post("/updateLicense/")
-def updateLicense():
-    return f'<p>NOT YET IMPLEMENTED</p>'
+# @app.post("/updateLicense/")
+# def updateLicense():
+#     return f'<p>NOT YET IMPLEMENTED</p>'
 
 
 # Query methods
-
-"""
-Alternative URI for getting the API documentation.
-"""
-@app.get("/")
-def help_screen():
-    return f'NOT YET IMPLEMENTED'
 
 @app.get("/seeLicenses/")
 def seeLicenses():
@@ -154,9 +147,9 @@ def seeLicenses():
         # If the code ends up here, it was probably the user's fault
         abort(401)
 
-@app.get("/filteredView/")
-def filteredView():
-    return f'NOT YET IMPLEMENTED'
+# @app.get("/filteredView/")
+# def filteredView():
+#     return f'NOT YET IMPLEMENTED'
 
 
 # Error handlers

@@ -1,12 +1,12 @@
-.. SALTS documentation master file, created by
-   sphinx-quickstart on Mon Nov  3 14:21:54 2025.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
-
 Welcome to SALTS's documentation!
 =================================
 
-The **Software Assignment and License Tracking System**, or **SALTS**, is a Python web application designed to track the external software licenses an organization is using, including their cost information, as well as allow the licenses to be assigned to specific users.
+.. image:: salts-logo.png
+   :scale: 50 %
+   :alt: The SALTS logo, drawn by Frederick Bumgarner.
+   :align: center
+
+The **Software Assignment and License Tracking System**, or **SALTS**, is a Python web application designed to track the external software licenses an organization is using and allow the licenses to be assigned to specific users.
 
 Check out the :doc:`usage` section for further information.
 
@@ -31,9 +31,9 @@ Contents
 --------
 .. toctree::
 
+   api
    usage
    request
    credentials
    validation
    logger
-   api

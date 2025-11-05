@@ -42,10 +42,22 @@ def test_add_type_missing():
     with pytest.raises(ValueError):
         request_obj = user_request.AddLicReq('{name:"AddedLic6","ver":"3.0"}')
 
+def test_del_valid():
+    request_obj = user_request.DelLicReq('{"licenseID":12}')
+    assert request_obj.get_clean_data_dict() == {"licenseID":12}
+
+def test_del_empty():
+    with pytest.raises(ValueError):
+        request_obj = user_request.DelLicReq('{}')
+
+def test_query_valid_empty():
+    request_obj = user_request.QueryLicReq('{}')
+    assert request_obj.get_clean_data_dict() == {}
+
 #add license, type name too long, should throw value error
 def test_lic_name_too_long():
     with pytest.raises(ValueError):
-        request_obj = user_request.AddLicReq('{name:"AddedLic666666666666666666666666666666666","ver":"3.0","type":"enterprise"}')
+        request_obj = user_request.AddLicReq('{"name":"AddedLic666666666666666666666666666666666","ver":"3.0","type":"enterprise"}')
 
 def test_lic_name_too_short():
     with pytest.raises(ValueError):
@@ -73,16 +85,12 @@ def test_has_cost_false():
     assert request_obj.has_cost() == False
 
 def test_has_restrictions_true():
-    request_obj = user_request.AddLicReq('{"name":"Windows 11","ver":"v0.8","type":"Enterprise","cost":1200.99,"curr":"USD","period":"annual","date_of_renewal":"2026-03-24","expiration_date":"2045-10-24"}')   
-    assert request_obj.has_cost() == True
+    request_obj = user_request.AddLicReq('{"name":"Windows 11","ver":"v0.8","type":"Enterprise","cost":1200.99,"curr":"USD","period":"annual","date_of_renewal":"2026-03-24","expiration_date":"2045-10-24","restrictions":"Asia-Pacific Region"}')   
+    assert request_obj.has_restrictions() == True
 
 def test_has_restrictions_false():
     request_obj = user_request.AddLicReq('{"name":"Windows 11","ver":"v0.8","type":"Enterprise","expiration_date":"2045-10-24"}')
     assert request_obj.has_restrictions() == False
-
-def test_del_valid():
-    request_obj = user_request.DelLicReq('{"licenseID":12}')
-    assert request_obj.get_clean_data_dict() == {"licenseID":12}
 
 def test_lic_id_negative():
     with pytest.raises(ValueError):
@@ -92,7 +100,7 @@ def test_lic_id_wrong_type():
     with pytest.raises(TypeError):
         request_obj = user_request.DelLicReq('{"licenseID":12.5}')
 
-def test_del_empty():
-    with pytest.raises(ValueError):
-        request_obj = user_request.DelLicReq('{}')
+
+
+
     

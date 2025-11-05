@@ -1,5 +1,3 @@
-
-
 from abc import ABC
 from abc import abstractmethod
 import json
@@ -112,8 +110,6 @@ class Request(ABC):
         :return: Dictionary of validated data.
         :rtype: dict
         """
-        if self.clean_data == None:
-            self.clean_data = {}
         return self.clean_data
     
     def get_clean_data_json(self):
@@ -129,7 +125,6 @@ class Request(ABC):
     @abstractmethod 
     def validate_data(self):
         """Abstract method to force implementation of data validation by request specific subclasses."""
-        pass
 
 
 class AddLicReq(Request):
@@ -183,31 +178,3 @@ class QueryLicReq(Request):
             if self.field_exists(self.config_dict["licenseID"]["key"]):
                 self.validate_field(self.config_dict["licenseID"]["key"])        
 
-
-"""
-#here for testing purposes
-class QueryReturn(Request):
-    def validate_data(self):
-        log.log("INFO", "returned table  begin validation")
-        if not self.field_exists(self.config_dict["name"]["key"]) or not self.field_exists(self.config_dict["ver"]["key"]) or not self.field_exists(self.config_dict["type"]["key"]):
-            log.log("ERROR", "one or more components required for licenses are missing; terminating program")
-            raise ValueError("Missing one or more required field")
-        else:
-            self.validate_field(self.lic_data[self.config_dict["licenseID"]["key"]])
-            self.validate_field(self.lic_data[self.config_dict["name"]["key"]])
-            self.validate_field(self.lic_data[self.config_dict["ver"]["key"]])
-            self.validate_field(self.lic_data[self.config_dict["type"]["key"]])
-            if self.field_exists(self.config_dict["cost"]["key"]):
-                self.validate_field(self.lic_data[self.config_dict["cost"]["key"]])
-            if self.field_exists(self.config_dict["curr"]["key"]):
-                self.validate_field(self.lic_data[self.config_dict["curr"]["key"]])
-            if self.field_exists(self.config_dict["period"]["key"]):
-                self.validate_field(self.lic_data[self.config_dict["period"]["key"]])
-            if self.field_exists(self.config_dict["date_of_renewal"]["key"]):
-                self.validate_field(self.lic_data[self.config_dict["date_of_renewal"]["key"]])
-            if self.field_exists(self.config_dict["date_of_expiration"]["key"]):
-                self.validate_field(self.lic_data[self.config_dict["date_of_expiration"]["key"]])
-            if self.field_exists(self.config_dict["restrictions"]["key"]):
-                self.validate_field(self.lic_data[self.config_dict["restrictions"]["key"]])
-*/
-"""

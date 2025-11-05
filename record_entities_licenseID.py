@@ -106,6 +106,11 @@ class LicenseDAO:
     def AddLicense(self, user_request, user_credentials):
         fields = user_request.get_clean_data_dict()
         try: 
+            if not user_credentials.has_license_auth():
+                log.log("ERROR", "User not authorized to make this request.")
+                return False
+            
+            
             # Base info about license, always insert into this table
             license_query = ''' INSERT INTO License (licenseName, version, licenseType, dateAdded, uploaderID)
             Values(%s, %s, %s, CURRENT_DATE, %s)
@@ -149,37 +154,34 @@ class LicenseDAO:
             return False
 
 
-    def DeleteLicense(self, licenseID):
+    def DeleteLicense(self, user_request, user_credentials):
         try: 
             ''' 
             Deleting license record by ID from all child tables before deleting from License table to avoid 
             foreign key constraint errors 
             '''
             #Check if user has authorization to delete records
-            #USER CREDENTIALS
-            user_creds = UserCredentials()
-            user_creds.validate()
-            if not user_creds.has_license_auth():
-                raise PermissionError("User is not authorized to continue with delete operation.")
+            if not user_credentials.has_license_auth():
+                log.log("ERROR", "User not authorized to make this request.")
+                return False
             
-            
-            #USER REQUEST
-            del_request = DelLicReq(lic_data)
-            lic_data = {"licenseID":licenseID}
-            del_request.config_dic = {
-                "licenseID":{"key": "licenseID"}
-            }
+            licenseID = user_request.get_clean_data_dict()["licenseID"]
             
             # Now delete from parent table
-            self.cursor.execute('DELETE FROM License WHERE licenseID = %s', (licenseID,))
+            self.cursor.execute('DELETE FROM License WHERE id = %s', (licenseID,))
 
             # Commit license deletion from all tables
             self.conn.commit()
-            print(f"License ID {licenseID} and all related records have been deleted.")
         
+            return True
+
         except mysql.connector.Error as err:
-                print(f"Error deleting license {licenseID}: {err}")
-                self.conn.rollback()
+            print(f"Error deleting license {licenseID}: {err}")
+            self.conn.rollback()
+            return False
+        except Exception as e:
+            log.log("ERROR", f'Error in DB: {e.args[0]}')
+            return False
 
 
 

@@ -80,11 +80,42 @@ def addLicense():
 User expected to provide a JSON object in the body includin the fields of the license being added.
 
 Required: 
-    - "id": int
+    - "licenseID": int
 """
 @app.post("/deleteLicense/")
 def deleteLicense():
-    return f'<p>NOT YET IMPLEMENTED</p>'
+    # Extract info from request, create request object 
+    try:
+        log.log("INFO", "Request to delete license received.")
+        license_request = request.json
+        user_req = DelLicReq(json.dumps(license_request))
+    except:
+        # If the code ends up here, it was probably the user's fault
+        abort(400)
+
+    # Verify credentials received from authentication server.
+    try:
+        success, auth_response = authentication.authorize(request.headers)
+        if not success:
+            raise Exception
+        credentials = UserCredentials(json.loads(auth_response))
+        credentials.validate()
+
+        # check user is a manager and IT/Legal
+        if not credentials.has_license_auth():
+            raise Exception
+    except:
+        abort(401)
+
+    # DB Call. If method returns false, user couldn't be authorizaed.
+    try:
+        deleted_record = db.DeleteLicense(user_req, credentials)
+    except:
+        abort(400)
+    if not deleted_record:
+        abort(401)
+    
+    return f'<p>License L{license_request["licenseID"]} removed.<p>'
 
 """
 For updating a license, the user is expected to provide a license ID, 

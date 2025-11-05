@@ -1,7 +1,7 @@
 import unittest
 import mysql.connector
 import json
-
+from src.credentials.credentials_manager import *
 from src.config.settings import Settings
 from src.request.user_request import *
 from src.logger import log
@@ -155,11 +155,20 @@ class LicenseDAO:
             Deleting license record by ID from all child tables before deleting from License table to avoid 
             foreign key constraint errors 
             '''
-            self.cursor.execute('DELETE FROM Cost WHERE licenseID = %s', (licenseID,))
-            self.cursor.execute('DELETE FROM GeogRestriction WHERE licenseID = %s', (licenseID,))
-            self.cursor.execute('DELETE FROM ExpirationDate WHERE licenseID = %s', (licenseID,))
-            self.cursor.execute('DELETE FROM CompAssign WHERE licenseID = %s', (licenseID,))
-            self.cursor.execute('DELETE FROM EmployeeAssign WHERE licenseID = %s', (licenseID,))
+            #Check if user has authorization to delete records
+            #USER CREDENTIALS
+            user_creds = UserCredentials()
+            user_creds.validate()
+            if not user_creds.has_license_auth():
+                raise PermissionError("User is not authorized to continue with delete operation.")
+            
+            
+            #USER REQUEST
+            del_request = DelLicReq(lic_data)
+            lic_data = {"licenseID":licenseID}
+            del_request.config_dic = {
+                "licenseID":{"key": "licenseID"}
+            }
             
             # Now delete from parent table
             self.cursor.execute('DELETE FROM License WHERE licenseID = %s', (licenseID,))
@@ -171,6 +180,8 @@ class LicenseDAO:
         except mysql.connector.Error as err:
                 print(f"Error deleting license {licenseID}: {err}")
                 self.conn.rollback()
+
+
 
 
     def close(self):

@@ -42,13 +42,29 @@ def main():
             "loc": "United States",
             "dept": "Information Technology"
         },
-        { #test 7: case sensitivity
+        { #test 7: field name case sensitivity
             "id": 268,
             "fName": "Frederick",
             "lname": "Bumgarner",
             "loc": "United States",
             "dept": "Information Technology",
             "title": "Manager"
+        },
+        { #test 8: field ordering. should pass
+            "lName": "Lucas",
+            "loc": "United States",
+            "fName": "Tyson",
+            "title": "Sales Agent",
+            "id": 269,
+            "dept": "Sales"
+        },
+        { #test 9: wrong data type
+            "id": None,
+            "fName": "Tyson",
+            "lName": "Lucas",
+            "loc": "United States",
+            "dept": 2,
+            "title": "Sales Agent"
         }
     ]
     users = []
@@ -56,6 +72,7 @@ def main():
     for test in test_data:
         test_count += 1
         try:
+            
             new_user = UserCredentials(test)
             new_user.validate()
             users.append(new_user)

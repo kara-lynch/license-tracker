@@ -1,15 +1,16 @@
 from flask import Flask, request, abort
 from src.logger import log
+from src.database import db
 from src.util import authentication 
 from src.request.user_request import *
 from src.validation import *
-from record_entities_licenseID import *
+# from src.database.record_entities_licenseID import *
 from src.credentials.credentials_manager import *
 
 import json
 
 log.log("INFO", "REST API started.")
-db = LicenseDAO()
+# db = LicenseDAO()
 
 app = Flask(__name__)
 

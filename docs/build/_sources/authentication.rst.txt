@@ -1,0 +1,6 @@
+Authentication
+==============
+SALTS is built to use your organization
+
+.. automodule:: src.util.authenticate
+   :members:

@@ -70,9 +70,9 @@ class _Authenticate(object):
         """
         Public method for calling authorization server.
 
-        :para headers: Headers from incoming HTTP request, should contain authorization token
+        :param headers: Headers from incoming HTTP request, should contain authorization token
 
-        :return:True if successfully authenticated, False otherwise
+        :return: True if successfully authenticated, False otherwise
         :rtype: bool 
 
     

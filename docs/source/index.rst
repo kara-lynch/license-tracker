@@ -34,6 +34,8 @@ Contents
    api
    usage
    request
+   authentication
    credentials
    validation
+   database
    logger

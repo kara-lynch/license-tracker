@@ -14,14 +14,6 @@ class LicenseDAO:
     and enforce access control by validating user credentials before executing any
     database actions.
 
-    Methods typically include:
-    - add_license: Adds a new license record to the database.
-    - delete_license: Removes a license record, subject to user permissions.
-    - search_license: Retrieves license information based on query parameters.
-
-    Access to these methods is restricted based on user roles. Only authorized users
-    (e.g., managers or admins) are permitted to perform certain operations.
-
     '''
     conn = None
     cursor = None
@@ -30,18 +22,16 @@ class LicenseDAO:
         '''
         Initializes the LicenseDAO instance by establishing a connection to the MySQL database.
 
-        This method reads database credentials from a configuration file defined in `Settings.db_config_file()`,
+        This method reads database credentials from a configuration file defined in ``Settings.db_config_file()``,
         and uses them to create a shared MySQL connection and cursor for executing queries.
 
-        Attributes:
-        - LicenseDAO.conn: A class-level MySQL connection object.
-        - LicenseDAO.cursor: A class-level cursor object for executing SQL statements.
-        - self.cursor: An instance-level reference to the shared cursor.
+        :param LicenseDAO.conn: A class-level MySQL connection object.
+        :param LicenseDAO.cursor: A class-level cursor object for executing SQL statements.
+        :param self.cursor: An instance-level reference to the shared cursor.
 
-        Raises:
-        - FileNotFoundError: If the configuration file cannot be found.
-        - json.JSONDecodeError: If the configuration file is not valid JSON.
-        - mysql.connector.Error: If the database connection fails.
+        :raise FileNotFoundError: If the configuration file cannot be found.
+        :raise json.JSONDecodeError: If the configuration file is not valid JSON.
+        :raise mysql.connector.Error: If the database connection fails.
 
         '''
 
@@ -63,18 +53,13 @@ class LicenseDAO:
         '''
         Loads license details from the database using the provided license ID and populates the given license object.
 
-        Parameters:
-        - license_obj: An instance of a License model or data class that will be populated with license details.
-        - id (int): The unique identifier of the license to retrieve.
+        :param license_obj: An instance of a License model or data class that will be populated with license details.
+        :param id: The unique identifier of the license to retrieve.
+        :type id: int
 
-        Behavior:
-        - Executes a SQL query to fetch license data from the 'License' table where `lid` matches the given ID.
-        - If a matching record is found, populates the `license_obj` with fields such as LicenseID, Name, Version,
-        DateAdded, Type, and UploaderID.
-        - If no record is found, raises a `ValueError`.
+        :raise ValueError: If a license with the given ID is not found.
 
-        Raises:
-        - ValueError: If license with specific ID is not found.
+        :meta private:
 
         '''
 
@@ -98,24 +83,25 @@ class LicenseDAO:
         Retrieves and compiles detailed license information from the database.
 
         This method performs a multi-table SQL query using LEFT JOINs to gather data from the
-        `License`, `Cost`, `ExpirationDate`, and `GeogRestriction` tables. It returns a dictionary
+        ``License``, ``Cost``, ``ExpirationDate``, and ``GeogRestriction`` tables. It returns a dictionary
         of license records, keyed by license ID, with each record containing:
 
-        - name: License name
-        - ver: License version
-        - type: License type
-        - cost: License cost (float or None)
-        - curr: Currency of the cost
-        - period: Billing period
-        - date_of_renewal: Renewal date (formatted as YYYY-MM-DD or None)
-        - expiration_date: Expiration date (formatted as YYYY-MM-DD or None)
-        - restrictions: Geographic restrictions
-        Returns:
-        - dict: A dictionary of license records with structured metadata.
+        - ``name``: License name
+        - ``ver``: License version
+        - ``type``: License type
+        - ``cost``: License cost (float or None)
+        - ``curr``: Currency of the cost
+        - ``period``: Billing period
+        - ``date_of_renewal``: Renewal date (formatted as YYYY-MM-DD or None)
+        - ``expiration_date``: Expiration date (formatted as YYYY-MM-DD or None)
+        - ``restrictions``: Geographic restrictions
 
-        Notes:
-        - If certain fields (e.g., cost, renewal date, expiration date) are missing, their values
-        will be set to `None`.
+        More information on these fields can be found on the :doc:`api` page.
+
+        Note: If certain fields (e.g., cost, renewal date, expiration date) are missing, their values will be set to ``None``.
+        
+        :return: A dictionary of license records with structured metadata.
+        :rtype: dict
 
         '''
 
@@ -156,33 +142,22 @@ class LicenseDAO:
 
     def AddLicense(self, user_request, user_credentials):
         '''    
-        Adds a new license record to the database, along with optional metadata such as cost,
-        geographic restrictions, and expiration date.
+        Adds a new license record to the database, along with optional metadata such as cost, geographic restrictions, and expiration date.
 
-        This method first checks whether the user has authorization to add licenses using
-        `user_credentials.has_license_auth()`. If authorized, it inserts the base license
-        information into the `License` table and conditionally inserts related data into
-        the `Cost`, `GeogRestriction`, and `ExpirationDate` tables based on the contents
-        of `user_request`.
+        This method first checks whether the user has authorization to add licenses using 
+        ``user_credentials.has_license_auth()``. If authorized, it inserts the base license
+        information into the ``License`` table and conditionally inserts related data into
+        the ``Cost``, ``GeogRestriction``, and ``ExpirationDate`` tables based on the contents
+        of ``user_request``.
 
-        Parameters:
-        - user_request: An object containing cleaned license data and flags indicating which
-        optional fields are present (e.g., cost, restrictions, expiration).
-        - user_credentials: An object representing the user's identity and permissions.
+        :param user_request: An object containing cleaned license data and flags indicating which optional fields are present (e.g., cost, restrictions, expiration).
+        :param user_credentials: An object representing the user's identity and permissions.
 
-        Behavior:
-        - Inserts base license data (name, version, type, uploader ID) into the `License` table.
-        - Conditionally inserts cost, geographic restriction, and expiration data into their
-        respective tables if present in the request.
-        - Commits all changes if successful; rolls back on error.
+        :return: True if all inserts succeed, or False if the user is unauthorized or if any database error occurs.
+        :rtype: bool
 
-        Returns:
-        - True if all inserts succeed.
-        - False if the user is unauthorized or if any database error occurs.
-
-        Raises:
-        - mysql.connector.Error: For database-related issues.
-        - Exception: For unexpected errors, which are logged.
+        :raise mysql.connector.Error: For database-related issues.
+        :raise Exception: For unexpected errors, which are logged.
 
         '''
 
@@ -237,34 +212,26 @@ class LicenseDAO:
 
 
     def DeleteLicense(self, user_request, user_credentials):
+        '''      
+        Deletes a license record from the database based on the license ID provided in the user request.
+
+        This method first checks whether the user has authorization to delete licenses using
+        ``user_credentials.has_license_auth()``. If authorized, it retrieves the license ID from the
+        request and deletes the corresponding record from the ``License`` table. If foreign key
+        constraints with ``ON DELETE CASCADE`` are properly set up, related records in child tables
+        will also be deleted automatically.
+
+        :param user_request: An object containing the cleaned license data, including the license ID.
+        :param user_credentials: An object representing the user's identity and permissions.
+
+        :return: True if the deletion is successful, or False if the user is unauthorized or if any error occurs during deletion.
+
+        :raise mysql.connector.Error: For database-related issues.
+        :raise Exception: For unexpected errors, which are logged.
+
+        '''
         try: 
-            '''      
-            Deletes a license record from the database based on the license ID provided in the user request.
-
-            This method first checks whether the user has authorization to delete licenses using
-            `user_credentials.has_license_auth()`. If authorized, it retrieves the license ID from the
-            request and deletes the corresponding record from the `License` table. If foreign key
-            constraints with `ON DELETE CASCADE` are properly set up, related records in child tables
-            will also be deleted automatically.
-
-            Parameters:
-            - user_request: An object containing the cleaned license data, including the license ID.
-            - user_credentials: An object representing the user's identity and permissions.
-
-            Behavior:
-            - Validates user authorization.
-            - Deletes the license record from the `License` table.
-            - Commits the transaction if successful; rolls back on error.
-
-            Returns:
-            - True if the deletion is successful.
-            - False if the user is unauthorized or if any error occurs during deletion.
-
-            Raises:
-            - mysql.connector.Error: For database-related issues.
-            - Exception: For unexpected errors, which are logged.
-
-            '''
+            
             
             #Check if user has authorization to delete records
             if not user_credentials.has_license_auth():
@@ -298,10 +265,6 @@ class LicenseDAO:
 
         This method should be called when database operations are complete to ensure
         that resources are properly released and connections are not left open.
-
-        Behavior:
-        - Closes the active cursor.
-        - Closes the database connection.
         
         '''
 

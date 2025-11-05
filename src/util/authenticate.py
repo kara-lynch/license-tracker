@@ -35,12 +35,13 @@ class _Authenticate(object):
             2. Is token too large?
             3. Is token too small?
 
-        PARAS:
-            headers:: headers stripped from HTTP request
+        :param headers: Headers stripped from HTTP request
 
-        RETURN:
-            bool:: if true, token was validated
-            str::  contains the stripped authorization token
+        :return: If true, token was validated
+        :rtype: boolean
+
+        :return: Contains the stripped authorization token
+        :rtype: str
         """
         # Extract token
         token = headers.get("Bearer")
@@ -63,12 +64,14 @@ class _Authenticate(object):
         """
         Public method for calling authorization server.
 
-        PARAS: 
-            headers:: headers from incoming HTTP request, should contain authorization token
+        :para headers: Headers from incoming HTTP request, should contain authorization token
 
-        RETURN:
-            bool:: True if successfully authenticated, False otherwise
-            str:: The credentials associated with the token
+        :return:True if successfully authenticated, False otherwise
+        :rtype: bool 
+
+    
+        :return: The credentials associated with the token
+        :rtype: str 
         """
         log.log("INFO", "Beginning authorization process.")
         valid_token, token = self._validate_token(headers)

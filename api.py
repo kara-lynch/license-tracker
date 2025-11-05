@@ -82,7 +82,7 @@ User expected to provide a JSON object in the body includin the fields of the li
 Required: 
     - "licenseID": int
 """
-@app.post("/deleteLicense/")
+@app.delete("/deleteLicense/")
 def deleteLicense():
     # Extract info from request, create request object 
     try:

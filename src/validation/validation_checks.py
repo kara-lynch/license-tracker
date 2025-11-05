@@ -29,31 +29,6 @@ def check_field_size(input_str: str, max_size: int, min_size: int):
     if len(input_str) < min_size:
         raise ValueError(f"must be at least {min_size} characters long")
 
-def is_alpha_or_hyphen(input_str: str):
-    """
-    :deprecated: Do not use this function. It is not supported and will be removed in a future release.
-
-    Checks if the input consists of only letters and up to one hyphen. Used to validate the name of a person.
-    
-    :param input_str: The string to be checked.
-    :type input_str: str
-    :raise ValueError: If invalid characters are found in the input string.
-    :return: None
-    """
-    if input_str.isalpha():
-        return
-    hyphen = False
-    for char in input_str:
-        if char == "-" and hyphen:
-            raise ValueError("must contain only letters, spaces, and up to one hyphen")
-        elif char == "-" and not hyphen:
-            hyphen = True
-            continue
-        elif char == " ":
-            continue
-        elif not char.isalpha():
-            raise ValueError("must contain only letters, spaces, and up to one hyphen")
-
 def list_check(input_obj, input_list: list):
     """
     Checks if the input object is in the input list.

@@ -106,6 +106,11 @@ class LicenseDAO:
     def AddLicense(self, user_request, user_credentials):
         fields = user_request.get_clean_data_dict()
         try: 
+            if not user_credentials.has_license_auth():
+                log.log("ERROR", "User not authorized to make this request.")
+                return False
+            
+            
             # Base info about license, always insert into this table
             license_query = ''' INSERT INTO License (licenseName, version, licenseType, dateAdded, uploaderID)
             Values(%s, %s, %s, CURRENT_DATE, %s)

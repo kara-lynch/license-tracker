@@ -1,6 +1,8 @@
 import requests
+import json
 
 from src.logger import log
+from src.config.settings import Settings
 
 class _Authenticate(object):
     """
@@ -12,9 +14,13 @@ class _Authenticate(object):
         """
         Constructor for Authenticate object. Pings the authorization to make sure it is responsive.
         """
-        log.log("WARNING", "NOTE: Auth Server URL currently hardcoded!!")
-        _ping_url = "http://172.16.0.51:8080/auth_service/api/auth/ping"
-        self._auth_url = "http://172.16.0.51:8080/auth_service/api/auth/verify"
+
+        log.log("DEBUG", "Loading API config.")
+        config_path = Settings.api_config_file()
+        with open(config_path, "r") as file:
+            config_json = json.load(file)
+        _ping_url = config_json["PING_URL"]
+        self._auth_url = config_json["AUTH_URL"]
 
         # Ping Authorization Server to make sure it is up
         log.log("INFO", "Pinging authorization server.")
@@ -46,7 +52,7 @@ class _Authenticate(object):
         # Extract token
         token = headers.get("Bearer")
         if token is None:
-            log.log("WARN", "Request has no authorization token attached.")
+            log.log("WARNING", "Request has no authorization token attached.")
             return False, None
 
         # TODO: ADD LENGTH CHECKING

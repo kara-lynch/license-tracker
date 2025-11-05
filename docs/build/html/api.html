@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>API &#8212; SALTS 0.5 documentation</title>
+    <title>API and Usage &#8212; SALTS 0.5 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=4f649999" />
     <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=cb25574f" />
     <script src="_static/documentation_options.js?v=db78e746"></script>
@@ -13,7 +13,8 @@
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="prev" title="Logging" href="logger.html" />
+    <link rel="next" title="Usage" href="usage.html" />
+    <link rel="prev" title="Welcome to SALTS’s documentation!" href="index.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
@@ -30,9 +31,33 @@
 
           <div class="body" role="main">
             
-  <section id="api">
-<h1>API<a class="headerlink" href="#api" title="Link to this heading">¶</a></h1>
-<p>This is filler text. Maybe.</p>
+  <section id="api-and-usage">
+<h1>API and Usage<a class="headerlink" href="#api-and-usage" title="Link to this heading">¶</a></h1>
+<p>SALTS uses a REST API to handle user requests.</p>
+<section id="adding-a-license">
+<h2>Adding a License<a class="headerlink" href="#adding-a-license" title="Link to this heading">¶</a></h2>
+<p>To add a license, an HTTP POST request must be sent to the following URI: /addLicenses/</p>
+<p>The request must include a <code class="docutils literal notranslate"><span class="pre">Bearer</span></code> field in the header with a valid authentication token indicating that the current user is a manager of the IT or Legal departments, as well as a JSON object in the body in the following format:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+  <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="o">&lt;</span><span class="nb">str</span><span class="o">&gt;</span><span class="p">,</span> <span class="o">//</span><span class="n">the</span> <span class="n">name</span> <span class="n">of</span> <span class="n">the</span> <span class="n">software</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">g</span><span class="o">.</span> <span class="s2">&quot;Microsoft Office&quot;</span>
+      <span class="s2">&quot;ver&quot;</span><span class="p">:</span> <span class="o">&lt;</span><span class="nb">str</span><span class="o">&gt;</span><span class="p">,</span> <span class="o">//</span><span class="n">the</span> <span class="n">specific</span> <span class="n">version</span> <span class="n">of</span> <span class="n">the</span> <span class="n">software</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">g</span><span class="o">.</span> <span class="s2">&quot;2.0.56&quot;</span>
+      <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="o">&lt;</span><span class="nb">str</span><span class="o">&gt;</span><span class="p">,</span> <span class="o">//</span><span class="n">the</span> <span class="nb">type</span> <span class="n">of</span> <span class="n">license</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">g</span><span class="o">.</span> <span class="s2">&quot;Enterprise&quot;</span>
+      <span class="s2">&quot;cost&quot;</span><span class="p">:</span> <span class="o">&lt;</span><span class="nb">float</span><span class="o">&gt;</span><span class="p">,</span> <span class="o">//</span><span class="n">the</span> <span class="n">cost</span> <span class="n">value</span> <span class="k">for</span> <span class="n">the</span> <span class="n">license</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">g</span><span class="o">.</span> <span class="mf">199.99</span>
+      <span class="s2">&quot;curr&quot;</span><span class="p">:</span> <span class="o">&lt;</span><span class="nb">str</span><span class="p">,</span> <span class="mi">3</span> <span class="n">chars</span><span class="o">&gt;</span> <span class="o">//</span><span class="n">the</span> <span class="n">currency</span> <span class="n">that</span> <span class="n">the</span> <span class="n">cost</span> <span class="n">value</span> <span class="ow">is</span> <span class="ow">in</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">g</span><span class="o">.</span> <span class="s2">&quot;USD&quot;</span>
+      <span class="s2">&quot;period&quot;</span><span class="p">:</span> <span class="o">&lt;</span><span class="nb">str</span><span class="o">&gt;</span><span class="p">,</span> <span class="o">//</span><span class="n">the</span> <span class="n">renewal</span> <span class="n">period</span> <span class="k">for</span> <span class="n">the</span> <span class="n">license</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">g</span><span class="o">.</span> <span class="s2">&quot;Annual&quot;</span>
+      <span class="s2">&quot;date_of_renewal&quot;</span><span class="p">:</span> <span class="o">&lt;</span><span class="nb">str</span><span class="p">,</span> <span class="n">yyyy</span><span class="o">-</span><span class="n">mm</span><span class="o">-</span><span class="n">dd</span><span class="o">&gt;</span><span class="p">,</span> <span class="o">//</span><span class="n">the</span> <span class="n">date</span> <span class="n">the</span> <span class="n">license</span> <span class="n">most</span> <span class="n">recently</span> <span class="n">renewed</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">g</span><span class="o">.</span> <span class="s2">&quot;2025-06-30&quot;</span>
+      <span class="s2">&quot;expiration_date&quot;</span><span class="p">:</span> <span class="o">&lt;</span><span class="nb">str</span><span class="p">,</span> <span class="n">yyyy</span><span class="o">-</span><span class="n">mm</span><span class="o">-</span><span class="n">dd</span><span class="o">&gt;</span><span class="p">,</span> <span class="o">//</span><span class="n">the</span> <span class="n">expiration</span> <span class="n">date</span> <span class="k">for</span> <span class="n">the</span> <span class="n">license</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">g</span><span class="o">.</span> <span class="s2">&quot;2026-03-31&quot;</span>
+      <span class="s2">&quot;restrictions&quot;</span><span class="p">:</span> <span class="o">&lt;</span><span class="nb">str</span><span class="o">&gt;</span> <span class="o">//</span><span class="n">a</span> <span class="nb">list</span> <span class="n">of</span> <span class="n">regions</span> <span class="n">the</span> <span class="n">license</span> <span class="n">can</span><span class="s1">&#39;t be used, e.g. &quot;Croatia, Czech Republic&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Definitions of each of these fields are as follows:</p>
+<dl class="field-list simple">
+<dt class="field-odd">name<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The name of the software, e.g. “Microsoft Office” or “Mozilla Firefox”</p>
+</dd>
+</dl>
+</section>
 </section>
 
 
@@ -53,18 +78,23 @@
 
 <h3>Navigation</h3>
 <ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">API and Usage</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#adding-a-license">Adding a License</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="request.html">User Requests</a></li>
 <li class="toctree-l1"><a class="reference internal" href="credentials.html">User Credentials</a></li>
 <li class="toctree-l1"><a class="reference internal" href="validation.html">Validation Checks</a></li>
 <li class="toctree-l1"><a class="reference internal" href="logger.html">Logging</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">API</a></li>
 </ul>
 
 <div class="relations">
 <h3>Related Topics</h3>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="logger.html" title="previous chapter">Logging</a></li>
+      <li>Previous: <a href="index.html" title="previous chapter">Welcome to SALTS’s documentation!</a></li>
+      <li>Next: <a href="usage.html" title="next chapter">Usage</a></li>
   </ul></li>
 </ul>
 </div>

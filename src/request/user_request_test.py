@@ -50,6 +50,10 @@ def test_del_empty():
     with pytest.raises(ValueError):
         request_obj = user_request.DelLicReq('{}')
 
+def test_query_valid_empty():
+    request_obj = user_request.QueryLicReq('{}')
+    assert request_obj.get_clean_data_dict() == {}
+
 #add license, type name too long, should throw value error
 def test_lic_name_too_long():
     with pytest.raises(ValueError):
@@ -95,6 +99,8 @@ def test_lic_id_negative():
 def test_lic_id_wrong_type():
     with pytest.raises(TypeError):
         request_obj = user_request.DelLicReq('{"licenseID":12.5}')
+
+
 
 
     

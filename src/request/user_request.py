@@ -87,7 +87,7 @@ class Request(ABC):
 
         :rtype: boolean
         """
-        if self.clean_data.get(self.config_dict["date_of_expiration"]["key"]) == None:
+        if self.clean_data.get(self.config_dict["expiration_date"]["key"]) == None:
             return False
         else:
             return True

@@ -50,7 +50,7 @@ def main():
             "dept": "Information Technology",
             "title": "Manager"
         },
-        { #test 8: field ordering. should pass
+        { #test 8: nonstandard field ordering. should pass
             "lName": "Lucas",
             "loc": "United States",
             "fName": "Tyson",
@@ -76,7 +76,7 @@ def main():
             new_user = UserCredentials(test)
             new_user.validate()
             users.append(new_user)
-            print(f"{new_user.name()} added successfully")
+            print(f"Test {test_count} succeeded. {new_user.name()} added")
         except Exception as e:
             print(f"Test {test_count} failed for reason: {e.args[0]}")
 

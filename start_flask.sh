@@ -1,0 +1,1 @@
+flask --app api run --host=0.0.0.0

@@ -37,4 +37,5 @@ Contents
    authentication
    credentials
    validation
+   database
    logger

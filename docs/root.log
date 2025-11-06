@@ -58,3 +58,5 @@
 [INFO] - 2025-11-05 15:52:58,937 - license-tracker/src/util/authenticate/__init__:26 - Pinging authorization server.
 [DEBUG] - 2025-11-05 16:01:18,029 - license-tracker/src/util/authenticate/__init__:18 - Loading API config.
 [INFO] - 2025-11-05 16:01:18,048 - license-tracker/src/util/authenticate/__init__:26 - Pinging authorization server.
+[DEBUG] - 2025-11-05 16:09:52,438 - license-tracker/src/util/authenticate/__init__:18 - Loading API config.
+[INFO] - 2025-11-05 16:09:52,454 - license-tracker/src/util/authenticate/__init__:26 - Pinging authorization server.

@@ -13,18 +13,11 @@ def test_add_min_valid():
 #add license, valid data, maximum fields
 def test_add_max_valid():
     request_obj = user_request.AddLicReq('{"name":"AddedLic2","ver":"3.0","type":"enterprise","cost":2000.50,"curr":"USD","period":"Annual","date_of_renewal":"12-17-2025","expiration_date":"12-20-2025","restrictions":"Australia"}')
-    print(request_obj.lic_data)
-    print(request_obj.get_clean_data_json())
-    print("all good")
     assert request_obj.get_clean_data_dict() == {"name":"AddedLic2","ver":"3.0","type":"enterprise","cost":2000.50,"curr":"USD","period":"Annual","date_of_renewal":"12-17-2025","expiration_date":"12-20-2025","restrictions":"Australia"}
 
 #add license, extra data field not expected, should be ignored and not returned in cleaned data
 def test_add_extra_field():
     request_obj = user_request.AddLicReq('{"name":"AddedLic3","ver":"3.0","type":"enterprise", "badReq":"DROP LICENSE"}')
-    print(request_obj.lic_data)
-    print(request_obj.get_clean_data_json())
-    print(request_obj.get_clean_data_dict().get("storage"))
-    print("all good")
     assert request_obj.get_clean_data_dict() == {"name":"AddedLic3","ver":"3.0","type":"enterprise"}
 
 #add license, name missing, should throw value error
@@ -42,6 +35,14 @@ def test_add_type_missing():
     with pytest.raises(ValueError):
         request_obj = user_request.AddLicReq('{name:"AddedLic6","ver":"3.0"}')
 
+def test_add_cost_no_curr():
+    with pytest.raises(ValueError):
+        request_obj = user_request.AddLicReq('{"name":"pretty cool","ver":"v0.8","type":"Enterprise","cost":1200.99,"expiration_date":"2045-10-24","restrictions":"Asia-Pacific Region"}')
+
+def test_add_no_cost_has_curr():
+    with pytest.raises(ValueError):
+        request_obj = user_request.AddLicReq('{"name":"pretty cool","ver":"v0.8","type":"Enterprise","curr":"USD","expiration_date":"2045-10-24","restrictions":"Asia-Pacific Region"}')
+
 def test_del_valid():
     request_obj = user_request.DelLicReq('{"licenseID":12}')
     assert request_obj.get_clean_data_dict() == {"licenseID":12}
@@ -53,6 +54,22 @@ def test_del_empty():
 def test_query_valid_empty():
     request_obj = user_request.QueryLicReq('{}')
     assert request_obj.get_clean_data_dict() == {}
+
+def test_query_name_valid():
+    request_obj = user_request.QueryLicReq('{"name":"pretty cool"}')
+    assert request_obj.get_clean_data_dict() == {"name":"pretty cool"}
+
+def test_query_type_valid():
+    request_obj = user_request.QueryLicReq('{"type":"Enterprise"}')
+    assert request_obj.get_clean_data_dict() == {"type":"Enterprise"}
+
+def test_query_ID_valid():
+    request_obj = user_request.QueryLicReq('{"licenseID":11}')
+    assert request_obj.get_clean_data_dict() == {"licenseID":11}
+
+def test_query_multiple():
+    with pytest.raises(ValueError):
+        request_obj = user_request.QueryLicReq('{"licenseID":11,"name":"pretty cool"}')
 
 #add license, type name too long, should throw value error
 def test_lic_name_too_long():

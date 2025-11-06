@@ -1,0 +1,123 @@
+from src.request import user_request
+from src.validation import validation_checks
+import pytest
+
+#add license, valid data, minimum fields
+def test_add_min_valid():
+    request_obj = user_request.AddLicReq('{"name":"AddedLic","ver":"3.0","type":"enterprise"}')
+    print(request_obj.lic_data)
+    print(request_obj.get_clean_data_json())
+    print("all good")
+    assert request_obj.get_clean_data_dict() == {"name":"AddedLic","ver":"3.0","type":"enterprise"}
+
+#add license, valid data, maximum fields
+def test_add_max_valid():
+    request_obj = user_request.AddLicReq('{"name":"AddedLic2","ver":"3.0","type":"enterprise","cost":2000.50,"curr":"USD","period":"Annual","date_of_renewal":"12-17-2025","expiration_date":"12-20-2025","restrictions":"Australia"}')
+    assert request_obj.get_clean_data_dict() == {"name":"AddedLic2","ver":"3.0","type":"enterprise","cost":2000.50,"curr":"USD","period":"Annual","date_of_renewal":"12-17-2025","expiration_date":"12-20-2025","restrictions":"Australia"}
+
+#add license, extra data field not expected, should be ignored and not returned in cleaned data
+def test_add_extra_field():
+    request_obj = user_request.AddLicReq('{"name":"AddedLic3","ver":"3.0","type":"enterprise", "badReq":"DROP LICENSE"}')
+    assert request_obj.get_clean_data_dict() == {"name":"AddedLic3","ver":"3.0","type":"enterprise"}
+
+#add license, name missing, should throw value error
+def test_add_name_missing():
+    with pytest.raises(ValueError):
+        request_obj = user_request.AddLicReq('{"ver":"3.0","type":"enterprise"}')
+
+#add license, version missing, should throw value error
+def test_add_version_missing():
+    with pytest.raises(ValueError):
+        request_obj = user_request.AddLicReq('{name:"AddedLic5","type":"enterprise"}')
+
+#add license, type missing, should throw value error
+def test_add_type_missing():
+    with pytest.raises(ValueError):
+        request_obj = user_request.AddLicReq('{name:"AddedLic6","ver":"3.0"}')
+
+def test_add_cost_no_curr():
+    with pytest.raises(ValueError):
+        request_obj = user_request.AddLicReq('{"name":"pretty cool","ver":"v0.8","type":"Enterprise","cost":1200.99,"expiration_date":"2045-10-24","restrictions":"Asia-Pacific Region"}')
+
+def test_add_no_cost_has_curr():
+    with pytest.raises(ValueError):
+        request_obj = user_request.AddLicReq('{"name":"pretty cool","ver":"v0.8","type":"Enterprise","curr":"USD","expiration_date":"2045-10-24","restrictions":"Asia-Pacific Region"}')
+
+def test_del_valid():
+    request_obj = user_request.DelLicReq('{"licenseID":12}')
+    assert request_obj.get_clean_data_dict() == {"licenseID":12}
+
+def test_del_empty():
+    with pytest.raises(ValueError):
+        request_obj = user_request.DelLicReq('{}')
+
+def test_query_valid_empty():
+    request_obj = user_request.QueryLicReq('{}')
+    assert request_obj.get_clean_data_dict() == {}
+
+def test_query_name_valid():
+    request_obj = user_request.QueryLicReq('{"name":"pretty cool"}')
+    assert request_obj.get_clean_data_dict() == {"name":"pretty cool"}
+
+def test_query_type_valid():
+    request_obj = user_request.QueryLicReq('{"type":"Enterprise"}')
+    assert request_obj.get_clean_data_dict() == {"type":"Enterprise"}
+
+def test_query_ID_valid():
+    request_obj = user_request.QueryLicReq('{"licenseID":11}')
+    assert request_obj.get_clean_data_dict() == {"licenseID":11}
+
+def test_query_multiple():
+    with pytest.raises(ValueError):
+        request_obj = user_request.QueryLicReq('{"licenseID":11,"name":"pretty cool"}')
+
+#add license, type name too long, should throw value error
+def test_lic_name_too_long():
+    with pytest.raises(ValueError):
+        request_obj = user_request.AddLicReq('{"name":"AddedLic666666666666666666666666666666666","ver":"3.0","type":"enterprise"}')
+
+def test_lic_name_too_short():
+    with pytest.raises(ValueError):
+        request_obj = user_request.AddLicReq('{"name":"","ver":"v0.8","type":"Enterprise","cost":1200.99,"curr":"USD","period":"annual","date_of_renewal":"2026-03-24","expiration_date":"2045-10-24","restrictions":"Asia-Pacific Region"}')
+
+def test_cost_negative():
+    with pytest.raises(ValueError):
+        request_obj = user_request.AddLicReq('{"name":"Windows 11","ver":"v0.8","type":"Enterprise","cost":-1200.99,"curr":"USD","period":"annual","date_of_renewal":"2026-03-24","expiration_date":"2045-10-24","restrictions":"Asia-Pacific Region"}')
+
+#add license, testing has expiration function valid data
+def test_has_expiration_true():
+    request_obj = user_request.AddLicReq('{"name":"Windows 11","ver":"v0.8","type":"Enterprise","cost":1200.99,"curr":"USD","period":"annual","date_of_renewal":"2026-03-24","expiration_date":"2045-10-24","restrictions":"Asia-Pacific Region"}')
+    assert request_obj.has_expiration() == True
+
+def test_has_expiration_False():
+    request_obj = user_request.AddLicReq('{"name":"Windows 11","ver":"v0.8","type":"Enterprise","cost":1200.99,"curr":"USD","period":"annual","date_of_renewal":"2026-03-24","restrictions":"Asia-Pacific Region"}')    
+    assert request_obj.has_expiration() == False
+
+def test_has_cost_true():
+    request_obj = user_request.AddLicReq('{"name":"Windows 11","ver":"v0.8","type":"Enterprise","cost":1200.99,"curr":"USD","period":"annual","date_of_renewal":"2026-03-24","expiration_date":"2045-10-24","restrictions":"Asia-Pacific Region"}')   
+    assert request_obj.has_cost() == True
+
+def test_has_cost_false():
+    request_obj = user_request.AddLicReq('{"name":"Windows 11","ver":"v0.8","type":"Enterprise","expiration_date":"2045-10-24","restrictions":"Asia-Pacific Region"}')   
+    assert request_obj.has_cost() == False
+
+def test_has_restrictions_true():
+    request_obj = user_request.AddLicReq('{"name":"Windows 11","ver":"v0.8","type":"Enterprise","cost":1200.99,"curr":"USD","period":"annual","date_of_renewal":"2026-03-24","expiration_date":"2045-10-24","restrictions":"Asia-Pacific Region"}')   
+    assert request_obj.has_restrictions() == True
+
+def test_has_restrictions_false():
+    request_obj = user_request.AddLicReq('{"name":"Windows 11","ver":"v0.8","type":"Enterprise","expiration_date":"2045-10-24"}')
+    assert request_obj.has_restrictions() == False
+
+def test_lic_id_negative():
+    with pytest.raises(ValueError):
+        request_obj = user_request.DelLicReq('{"licenseID":-12}')
+
+def test_lic_id_wrong_type():
+    with pytest.raises(TypeError):
+        request_obj = user_request.DelLicReq('{"licenseID":12.5}')
+
+
+
+
+    

@@ -1,3 +1,4 @@
 {
-    "AUTH_URL": "http://172.16.0.51:8080/auth_service/api/auth/ping"
+    "PING_URL": "http://172.16.0.51:8080/auth_service/api/auth/ping",
+    "AUTH_URL":"http://172.16.0.51:8080/auth_service/api/auth/verify"
 }

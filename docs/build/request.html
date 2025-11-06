@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>User Requests &#8212; SALTS 0.5 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=4f649999" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=cb25574f" />
+    <script src="_static/documentation_options.js?v=db78e746"></script>
+    <script src="_static/doctools.js?v=888ff710"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Authentication" href="authentication.html" />
+    <link rel="prev" title="API and Usage" href="api.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="user-requests">
+<h1>User Requests<a class="headerlink" href="#user-requests" title="Link to this heading">¶</a></h1>
+<p>SALTS uses the following class to handle user requests.</p>
+<dl class="py class" id="module-src.request.user_request">
+<dt class="sig sig-object py" id="src.request.user_request.Request">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.request.user_request.</span></span><span class="sig-name descname"><span class="pre">Request</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user_req_json</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.request.user_request.Request" title="Link to this definition">¶</a></dt>
+<dd><p>This class manages the sanitization and storage of user defined request data.
+An abstract class is used for validation, which is implemented in request type-specific subclasses.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>user_req_json</strong> (<em>str</em>) – JSON string object from user, to be validated and turned into a dictionary.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="src.request.user_request.Request.field_exists">
+<span class="sig-name descname"><span class="pre">field_exists</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">field_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.request.user_request.Request.field_exists" title="Link to this definition">¶</a></dt>
+<dd><p>Checks to confirm if a field exists in the initial user request.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>field_name</strong> (<em>str</em>) – The name of the field being checked.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>boolean</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.request.user_request.Request.get_clean_data_dict">
+<span class="sig-name descname"><span class="pre">get_clean_data_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.request.user_request.Request.get_clean_data_dict" title="Link to this definition">¶</a></dt>
+<dd><p>Getter for clean data formatted as a dict.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dictionary of validated data.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.request.user_request.Request.get_clean_data_json">
+<span class="sig-name descname"><span class="pre">get_clean_data_json</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.request.user_request.Request.get_clean_data_json" title="Link to this definition">¶</a></dt>
+<dd><p>Getter method for clean data converted to a JSON-formatted string.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Validated data as a JSON string object.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.request.user_request.Request.get_configs">
+<span class="sig-name descname"><span class="pre">get_configs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.request.user_request.Request.get_configs" title="Link to this definition">¶</a></dt>
+<dd><p>Gets business rules for each field from config and returns them as a dictionary.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Contents of the request_fields.json config file formatted as a dictionary.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.request.user_request.Request.has_cost">
+<span class="sig-name descname"><span class="pre">has_cost</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.request.user_request.Request.has_cost" title="Link to this definition">¶</a></dt>
+<dd><p>Checks to confirm if the cost field exists in clean data. Used as a flag in the database API layer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>boolean</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.request.user_request.Request.has_expiration">
+<span class="sig-name descname"><span class="pre">has_expiration</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.request.user_request.Request.has_expiration" title="Link to this definition">¶</a></dt>
+<dd><p>Checks to confirm if the date of expiration field exists in clean data. Used as a flag in the database API layer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>boolean</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.request.user_request.Request.has_restrictions">
+<span class="sig-name descname"><span class="pre">has_restrictions</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.request.user_request.Request.has_restrictions" title="Link to this definition">¶</a></dt>
+<dd><p>Checks to confirm if the restrictions field exists in clean data. Used as a flag in the database API layer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>boolean</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.request.user_request.Request.validate_data">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">validate_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.request.user_request.Request.validate_data" title="Link to this definition">¶</a></dt>
+<dd><p>Abstract method to force implementation of data validation by request specific subclasses.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.request.user_request.Request.validate_field">
+<span class="sig-name descname"><span class="pre">validate_field</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">field_key</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.request.user_request.Request.validate_field" title="Link to this definition">¶</a></dt>
+<dd><p>Validates request fields based on config file values.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>field_key</strong> (<em>str</em>) – The name of the field to validate.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If the field is found to be invalid.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">SALTS</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API and Usage</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">User Requests</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#src.request.user_request.Request"><code class="docutils literal notranslate"><span class="pre">Request</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#src.request.user_request.Request.field_exists"><code class="docutils literal notranslate"><span class="pre">Request.field_exists()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.request.user_request.Request.get_clean_data_dict"><code class="docutils literal notranslate"><span class="pre">Request.get_clean_data_dict()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.request.user_request.Request.get_clean_data_json"><code class="docutils literal notranslate"><span class="pre">Request.get_clean_data_json()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.request.user_request.Request.get_configs"><code class="docutils literal notranslate"><span class="pre">Request.get_configs()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.request.user_request.Request.has_cost"><code class="docutils literal notranslate"><span class="pre">Request.has_cost()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.request.user_request.Request.has_expiration"><code class="docutils literal notranslate"><span class="pre">Request.has_expiration()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.request.user_request.Request.has_restrictions"><code class="docutils literal notranslate"><span class="pre">Request.has_restrictions()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.request.user_request.Request.validate_data"><code class="docutils literal notranslate"><span class="pre">Request.validate_data()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.request.user_request.Request.validate_field"><code class="docutils literal notranslate"><span class="pre">Request.validate_field()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="authentication.html">Authentication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="credentials.html">User Credentials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="validation.html">Validation Checks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="database.html">Database Calls</a></li>
+<li class="toctree-l1"><a class="reference internal" href="logger.html">Logging</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="api.html" title="previous chapter">API and Usage</a></li>
+      <li>Next: <a href="authentication.html" title="next chapter">Authentication</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2025, Red Team.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 7.2.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/request.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

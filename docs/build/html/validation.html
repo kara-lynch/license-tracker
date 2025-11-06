@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Validation Checks &#8212; SALTS 0.5 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=4f649999" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=cb25574f" />
+    <script src="_static/documentation_options.js?v=db78e746"></script>
+    <script src="_static/doctools.js?v=888ff710"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Logging" href="logger.html" />
+    <link rel="prev" title="User Credentials" href="credentials.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="validation-checks">
+<h1>Validation Checks<a class="headerlink" href="#validation-checks" title="Link to this heading">¶</a></h1>
+<p>SALTS has several built-in validation checks to ensure that the data passed into it is valid. For example, the <code class="docutils literal notranslate"><span class="pre">check_field_size</span></code> function will raise a <code class="docutils literal notranslate"><span class="pre">ValueError</span></code> if its input is outside the specified bounds. These functions are used by the <a class="reference internal" href="credentials.html"><span class="doc">User Credentials</span></a> object.</p>
+<dl class="py function" id="module-src.validation.validation_checks">
+<dt class="sig sig-object py" id="src.validation.validation_checks.check_data_type">
+<span class="sig-prename descclassname"><span class="pre">src.validation.validation_checks.</span></span><span class="sig-name descname"><span class="pre">check_data_type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_to_check</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.validation.validation_checks.check_data_type" title="Link to this definition">¶</a></dt>
+<dd><p>Checks if the input is of the specified type.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data_to_check</strong> – The data to run a check on.</p></li>
+<li><p><strong>input_type</strong> – The data type to be checked against.</p></li>
+<li><p><strong>type_name</strong> – Deprecated. Does nothing.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>TypeError</strong> – If the input is not of the specified type.</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.validation.validation_checks.check_field_size">
+<span class="sig-prename descclassname"><span class="pre">src.validation.validation_checks.</span></span><span class="sig-name descname"><span class="pre">check_field_size</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_str</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.validation.validation_checks.check_field_size" title="Link to this definition">¶</a></dt>
+<dd><p>Checks if the input string is within the specified size limits.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input_str</strong> (<em>str</em>) – The string to be checked.</p></li>
+<li><p><strong>max_size</strong> (<em>int</em>) – The upper size limit.</p></li>
+<li><p><strong>min_size</strong> (<em>int</em>) – The lower size limit.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If the input is outside the specified range.</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.validation.validation_checks.is_positive">
+<span class="sig-prename descclassname"><span class="pre">src.validation.validation_checks.</span></span><span class="sig-name descname"><span class="pre">is_positive</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_num</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.validation.validation_checks.is_positive" title="Link to this definition">¶</a></dt>
+<dd><p>Checks if the input number is positive. Intended for ID numbers and other ints, but should be usable with floats as well.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>input_num</strong> (<em>int</em><em> or </em><em>float</em>) – The number to be checked.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If the value is zero or negative.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.validation.validation_checks.list_check">
+<span class="sig-prename descclassname"><span class="pre">src.validation.validation_checks.</span></span><span class="sig-name descname"><span class="pre">list_check</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_obj</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_list</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.validation.validation_checks.list_check" title="Link to this definition">¶</a></dt>
+<dd><p>Checks if the input object is in the input list.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input_obj</strong> – The data to be checked.</p></li>
+<li><p><strong>input_list</strong> (<em>list</em><em> or </em><em>tuple</em>) – The list to be checked against.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If the input object isn’t in the input list.</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">SALTS</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="api.html">API and Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="request.html">User Requests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="credentials.html">User Credentials</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Validation Checks</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#src.validation.validation_checks.check_data_type"><code class="docutils literal notranslate"><span class="pre">check_data_type()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#src.validation.validation_checks.check_field_size"><code class="docutils literal notranslate"><span class="pre">check_field_size()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#src.validation.validation_checks.is_positive"><code class="docutils literal notranslate"><span class="pre">is_positive()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#src.validation.validation_checks.list_check"><code class="docutils literal notranslate"><span class="pre">list_check()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="logger.html">Logging</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="credentials.html" title="previous chapter">User Credentials</a></li>
+      <li>Next: <a href="logger.html" title="next chapter">Logging</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2025, Red Team.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 7.2.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/validation.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

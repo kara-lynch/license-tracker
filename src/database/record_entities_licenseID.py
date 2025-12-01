@@ -224,7 +224,89 @@ class _LicenseDAO:
         except Exception as e:
             log.log("ERROR", f'Error in DB: {e.args[0]}')
             return False
+        
+    def EditLicense(self, user_request, user_credentials):
+        '''    
+        Updates a license record in the database. The ID must be provided as well as any fields to be updated.
 
+        This method first checks whether the user has authorization to edit licenses using 
+        ``user_credentials.has_license_auth()``. If authorized, it updates the ``License``, 
+        ``Cost``, ``GeogRestriction``, and ``ExpirationDate`` tables as needed based on the contents
+        of ``user_request``.
+
+        :param user_request: An object containing cleaned license data and flags indicating which optional fields are present (e.g., cost, restrictions, expiration).
+        :param user_credentials: An object representing the user's identity and permissions.
+
+        :return: True if all inserts succeed, or False if the user is unauthorized or if any database error occurs.
+        :rtype: bool
+
+        :raise mysql.connector.Error: For database-related issues.
+        :raise Exception: For unexpected errors, which are logged.
+
+        '''
+
+        fields = user_request.get_clean_data_dict()
+        try: 
+            if not user_credentials.has_license_auth():
+                log.log("ERROR", "User not authorized to make this request.")
+                return False
+            
+            new_field_info = []
+            
+            # Assemble query for main table
+            license_main_query = ''' UPDATE License 
+            SET '''
+
+            if "name" in fields:
+                license_main_query += "licenseName = %s "
+                new_field_info.append(fields["name"])
+            
+            if "ver" in fields:
+                license_main_query += "version = %s "
+                new_field_info.append(fields["ver"])
+            
+            if "type" in fields:
+                license_main_query += "licenseType = %s "
+                new_field_info.append(fields["type"])
+
+            license_main_query += "/nWHERE licenseID = %s"
+            new_field_info.append(fields["licenseID"])
+            
+            self.cursor_man.execute(license_main_query, new_field_info)
+
+            # Cost insert:
+            if user_request.has_cost():
+                cost_query = ''' INSERT INTO Cost (licenseID, price, currency, period, renewalDate)
+                VALUES(%s, %s, %s, %s, %s)
+                '''
+                self.cursor_man.execute(cost_query, (fields["licenseID"], fields["cost"], fields["curr"], fields["period"], fields["date_of_renewal"]))
+
+            # Geographic Restriction insert:
+            if user_request.has_restrictions():
+                geo_query = ''' INSERT INTO GeogRestriction (licenseID, restriction)
+                VALUES(%s, %s)
+                '''
+                self.cursor_man.execute(geo_query, (fields["licenseID"], fields["restrictions"]))
+
+            # Expiration insert:
+            if user_request.has_expiration():
+                expiration_query = ''' INSERT INTO ExpirationDate (licenseID, endDate)
+                VALUES(%s, %s)
+                '''
+                self.cursor_man.execute(expiration_query, (fields["licenseID"], fields["expiration_date"]))
+
+            # commit all inserts to the tables
+            self.conn_manager.commit()
+
+            return True
+
+        except mysql.connector.Error as err:
+            print(f"Error: {err}")
+            self.conn.rollback()
+            return False
+        except Exception as e:
+            log.log("ERROR", f'Error in DB: {e.args[0]}')
+            return False
 
     def DeleteLicense(self, user_request, user_credentials):
         '''      

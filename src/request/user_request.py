@@ -154,6 +154,51 @@ class AddLicReq(Request):
             if self.field_exists(self.config_dict["restrictions"]["key"]):
                 self.validate_field(self.config_dict["restrictions"]["key"])
 
+class EditLicReq(Request):
+    def validate_data(self):
+        log.log("INFO", "update license request begin validation")
+        if not self.field_exists(self.config_dict["licenseID"]["key"]):
+            log.log("ERROR", "license ID missing, required for edit; terminating program")
+            raise ValueError("Missing license ID")
+
+        else:
+            if self.field_exists(self.config_dict["name"]["key"]):
+                self.validate_field(self.config_dict["name"]["key"])
+
+            if self.field_exists(self.config_dict["ver"]["key"]):
+                self.validate_field(self.config_dict["ver"]["key"])
+
+            if self.field_exists(self.config_dict["type"]["key"]):
+                self.validate_field(self.config_dict["type"]["key"])
+
+            if self.field_exists(self.config_dict["cost"]["key"]):
+                if self.field_exists(self.config_dict["curr"]["key"]):
+                    self.validate_field(self.config_dict["curr"]["key"])
+                    self.validate_field(self.config_dict["cost"]["key"])
+
+                    if self.field_exists(self.config_dict["period"]["key"]):
+                        self.validate_field(self.config_dict["period"]["key"])
+
+                    if self.field_exists(self.config_dict["date_of_renewal"]["key"]):
+                        self.validate_field(self.config_dict["date_of_renewal"]["key"])
+                else:
+                    raise ValueError("cost must have currency")
+                
+            elif self.field_exists(self.config_dict["curr"]["key"]) or self.field_exists(self.config_dict["date_of_renewal"]["key"]) or self.field_exists(self.config_dict["period"]["key"]):
+                raise ValueError("cost based field entered but not cost")
+            
+            if self.field_exists(self.config_dict["expiration_date"]["key"]):
+
+                self.validate_field(self.config_dict["expiration_date"]["key"])
+            if self.field_exists(self.config_dict["restrictions"]["key"]):
+
+                self.validate_field(self.config_dict["restrictions"]["key"])
+        
+        if len(self.clean_data) < 2:
+            log.log("ERROR", "No data was provided to edit")
+            raise ValueError("Must have at least one field to change")
+
+
 
 class DelLicReq(Request):
     def validate_data(self):

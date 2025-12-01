@@ -148,6 +148,41 @@ def seeLicenses():
         # If the code ends up here, it was probably the user's fault
         abort(401)
 
+@app.post("/editLicense/")
+def editLicense():
+    # Extract info from request, create request object 
+    try:
+        log.log("INFO", "Request to edit license received.")
+        license_request = request.json
+        user_req = EditLicReq(json.dumps(license_request))
+    except:
+        # If the code ends up here, it was probably the user's fault
+        abort(400)
+
+    # Verify credentials received from authentication server.
+    try:
+        success, auth_response = authentication.authorize(request.headers)
+        if not success:
+            raise Exception
+        credentials = UserCredentials(json.loads(auth_response))
+        credentials.validate()
+
+        # check user is a manager and IT/Legal
+        if not credentials.has_license_auth():
+            raise Exception
+    except:
+        abort(401)
+
+    # DB Call. If method returns false, user couldn't be authorizaed.
+    try:
+        updated_record = db.EditLicense(user_req, credentials)
+    except:
+        abort(400)
+    if not updated_record:
+        abort(401)
+    
+    return f'<p>License updated<p>'
+
 # @app.get("/filteredView/")
 # def filteredView():
 #     return f'NOT YET IMPLEMENTED'

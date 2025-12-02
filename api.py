@@ -124,30 +124,6 @@ along with the fields they want to update.
 
 Any fields not provided will not be updated.
 """
-# @app.post("/updateLicense/")
-# def updateLicense():
-#     return f'<p>NOT YET IMPLEMENTED</p>'
-
-
-# Query methods
-
-@app.get("/seeLicenses/")
-def seeLicenses():
-    # Extract token from request.
-    try:
-        log.log("INFO", "Request to see all licenses received.")
-        success, auth_response = authentication.authorize(request.headers)
-        if success:
-            credentials = UserCredentials(json.loads(auth_response))
-            credentials.validate()
-            records = db.seeLicenses()
-            return records
-        else:
-            raise Exception
-    except:
-        # If the code ends up here, it was probably the user's fault
-        abort(401)
-
 @app.post("/editLicense/")
 def editLicense():
     # Extract info from request, create request object 
@@ -182,6 +158,44 @@ def editLicense():
         abort(401)
     
     return f'<p>License updated<p>'
+
+# Query methods
+
+@app.get("/seeLicenses/")
+def seeLicenses():
+    # Extract token from request.
+    try:
+        log.log("INFO", "Request to see all licenses received.")
+        success, auth_response = authentication.authorize(request.headers)
+        if success:
+            credentials = UserCredentials(json.loads(auth_response))
+            credentials.validate()
+            records = db.seeLicenses()
+            return records
+        else:
+            raise Exception
+    except:
+        # If the code ends up here, it was probably the user's fault
+        abort(401)
+
+@app.get("/seeLicenseRange/")
+def seeLicenseRange():
+    # Extract token from request.
+    try:
+        log.log("INFO", "Request to see all licenses received.")
+        success, auth_response = authentication.authorize(request.headers)
+        license_request = request.json
+        user_req = QueryRangeLicReq(json.dumps(license_request))
+        if success:
+            credentials = UserCredentials(json.loads(auth_response))
+            credentials.validate()
+            records = db.seeLicenseRange()
+            return records
+        else:
+            raise Exception
+    except:
+        # If the code ends up here, it was probably the user's fault
+        abort(401)
 
 # @app.get("/filteredView/")
 # def filteredView():

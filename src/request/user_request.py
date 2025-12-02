@@ -223,3 +223,20 @@ class QueryLicReq(Request):
             if self.field_exists(self.config_dict["licenseID"]["key"]):
                 self.validate_field(self.config_dict["licenseID"]["key"])        
 
+class QueryRangeLicReq(Request):
+    def validate_data(self):
+        log.log("INFO", "query range license request begin validation")
+        if (len(self.lic_data.keys()) != 2):
+            log.log("ERROR", "query range request must have exactly 2 params; program terminated")
+            raise ValueError("Incorrect number of params given")
+        else:
+            if self.field_exists(self.config_dict["range"]["key"]):
+                self.validate_field(self.config_dict["range"]["key"])
+            else:
+                log.log("ERROR", "query range request must have a range value; program terminated")
+                raise ValueError("Range field missing for query range request")
+            if not self.field_exists(self.config_dict["offset"]["key"]):
+                self.lic_data["offset"] = 0
+                
+            self.validate_field(self.config_dict["offset"]["key"]) 
+                

@@ -154,6 +154,58 @@ class _LicenseDAO:
 
 
         return records
+    
+    def seeLicenseRange(self, user_request):
+        '''
+        Retrieves and compiles a specific range of records from the database.
+        
+        This method works identically to seeLicenses(), except it takes parameters for range and offset (included in 
+        the user_request object). The range determines how many records to return, while the offset determines the
+        starting point in the database to pull from.
+        
+        :return: A dictionary of license records with structured metadata.
+        :rtype: dict
+
+        '''
+        fields = user_request.get_clean_data_dict()
+        query = ''' 
+            SELECT License.id, License.licenseName, License.version, License.licenseType, Cost.price, Cost.currency, Cost.period, Cost.renewalDate, ExpirationDate.endDate, GeogRestriction.restriction
+            FROM License
+            LEFT JOIN Cost ON License.id = Cost.licenseID
+            LEFT JOIN ExpirationDate ON License.id = ExpirationDate.licenseID
+            LEFT JOIN GeogRestriction ON License.id = GeogRestriction.licenseID
+            LIMIT %s OFFSET %s
+            '''
+        try:
+            self.cursor_emp.execute(query, (fields["range"], fields["offset"])) 
+            results = self.cursor_emp.fetchall()
+        except Exception as e:
+            log.log("ERROR", f'Database issue. {e.args[0]}')
+       
+        records = {}
+        for col in results:
+            records[f"{col[0]}"] = {}
+            records[f"{col[0]}"]["name"] = col[1]
+            records[f"{col[0]}"]["ver"] = col[2]
+            records[f"{col[0]}"]["type"] = col[3]
+            if col[4] is None:
+                records[f"{col[0]}"]["cost"] = None
+            else:
+                records[f"{col[0]}"]["cost"] = float(col[4])
+            records[f"{col[0]}"]["curr"] = col[5]
+            records[f"{col[0]}"]["period"] = col[6]
+            if col[7] is None:
+                records[f"{col[0]}"]["date_of_renewal"] = None
+            else:
+                records[f"{col[0]}"]["date_of_renewal"] = col[7].strftime("%Y-%m-%d")
+            if col[8] is None:
+                records[f"{col[0]}"]["expiration_date"] = None
+            else:
+                records[f"{col[0]}"]["expiration_date"] = col[8].strftime("%Y-%m-%d")
+            records[f"{col[0]}"]["restrictions"] = col[9]
+
+
+        return records
 
     def AddLicense(self, user_request, user_credentials):
         '''    
@@ -224,7 +276,7 @@ class _LicenseDAO:
         except Exception as e:
             log.log("ERROR", f'Error in DB: {e.args[0]}')
             return False
-        
+    
     def EditLicense(self, user_request, user_credentials):
         '''    
         Updates a license record in the database. The ID must be provided as well as any fields to be updated.
@@ -244,7 +296,7 @@ class _LicenseDAO:
         :raise Exception: For unexpected errors, which are logged.
 
         '''
-
+        """
         fields = user_request.get_clean_data_dict()
         try: 
             if not user_credentials.has_license_auth():
@@ -307,6 +359,9 @@ class _LicenseDAO:
         except Exception as e:
             log.log("ERROR", f'Error in DB: {e.args[0]}')
             return False
+        """
+        pass
+    
 
     def DeleteLicense(self, user_request, user_credentials):
         '''      

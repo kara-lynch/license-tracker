@@ -58,5 +58,17 @@
         "max_size":10,
         "min_size":1,
         "type":"int"
+    },
+    "range":{
+        "key":"range",
+        "max_size":10,
+        "min_size":1,
+        "type":"int"
+    },
+    "offset":{
+        "key":"offset",
+        "max_size":10,
+        "min_size":1,
+        "type":"int"
     }
 }

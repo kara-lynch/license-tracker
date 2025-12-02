@@ -127,13 +127,13 @@ insert into CompAssign (id, licenseID, computerID, assignerID) values (10, 1, 2,
 Insert into the Cost
 */
 
-insert into Cost (ID, licenseID, price, currency, period, renewalDate) values (1, 15, 7849.82, 'PLN', 'quarterly', '2000-07-03');
+insert into Cost (ID, licenseID, price, currency, period, renewalDate) values (1, 1, 7849.82, 'PLN', 'quarterly', '2000-07-03');
 insert into Cost (ID, licenseID, price, currency, period, renewalDate) values (2, 10, 3940.69, 'EUR', 'quarterly', '2021-08-11');
 insert into Cost (ID, licenseID, price, currency, period, renewalDate) values (4, 8, 507.57, 'CNY', 'bi-annual', '2017-02-28');
 insert into Cost (ID, licenseID, price, currency, period, renewalDate) values (5, 9, 513.31, 'CZK', 'annual', '2021-04-29');
 insert into Cost (ID, licenseID, price, currency, period, renewalDate) values (6, 15, 4942.93, 'THB', 'semi-annual', '2004-09-14');
 insert into Cost (ID, licenseID, price, currency, period, renewalDate) values (7, 7, 9898.61, 'EUR', 'quarterly', '2001-02-16');
-insert into Cost (ID, licenseID, price, currency, period, renewalDate) values (8, 3, 8131.64, 'PHP', 'quarterly', '2005-06-07');
+insert into Cost (ID, licenseID, price, currency, period, renewalDate) values (8, 2, 8131.64, 'PHP', 'quarterly', '2005-06-07');
 insert into Cost (ID, licenseID, price, currency, period, renewalDate) values (9, 3, 4285.48, 'EUR', 'monthly', '2006-12-05');
 insert into Cost (ID, licenseID, price, currency, period, renewalDate) values (10, 4, 2580.44, 'PYG', 'semi-annual', '2021-09-16');
 
@@ -141,15 +141,15 @@ insert into Cost (ID, licenseID, price, currency, period, renewalDate) values (1
 Insert into ExpirationDate
 */
 
-insert into ExpirationDate (id, licenseID, endDate) values (1, 12, '2009-06-12');
+insert into ExpirationDate (id, licenseID, endDate) values (1, 4, '2009-06-12');
 insert into ExpirationDate (id, licenseID, endDate) values (2, 2, '2000-01-12');
 insert into ExpirationDate (id, licenseID, endDate) values (3, 8, '2020-08-29');
 insert into ExpirationDate (id, licenseID, endDate) values (4, 3, '2003-07-01');
-insert into ExpirationDate (id, licenseID, endDate) values (5, 3, '2000-04-23');
+insert into ExpirationDate (id, licenseID, endDate) values (5, 7, '2000-04-23');
 insert into ExpirationDate (id, licenseID, endDate) values (6, 6, '2013-04-15');
 insert into ExpirationDate (id, licenseID, endDate) values (7, 1, '2002-02-25');
 insert into ExpirationDate (id, licenseID, endDate) values (8, 12, '2004-06-13');
-insert into ExpirationDate (id, licenseID, endDate) values (9, 12, '2018-03-08');
+insert into ExpirationDate (id, licenseID, endDate) values (9, 10, '2018-03-08');
 insert into ExpirationDate (id, licenseID, endDate) values (10, 5, '2017-09-04');
 
 /*
@@ -161,15 +161,15 @@ insert into GeogRestriction (id, licenseID, restriction) values (2, 3, 'Brazil')
 insert into GeogRestriction (id, licenseID, restriction) values (3, 14, 'Brazil');
 insert into GeogRestriction (id, licenseID, restriction) values (4, 4, 'Australia');
 insert into GeogRestriction (id, licenseID, restriction) values (5, 9, 'USA');
-insert into GeogRestriction (id, licenseID, restriction) values (6, 11, 'USA');
+insert into GeogRestriction (id, licenseID, restriction) values (6, 13, 'USA');
 insert into GeogRestriction (id, licenseID, restriction) values (7, 1, 'USA');
 insert into GeogRestriction (id, licenseID, restriction) values (8, 15, 'USA');
 insert into GeogRestriction (id, licenseID, restriction) values (9, 10, 'Canada');
-insert into GeogRestriction (id, licenseID, restriction) values (10, 9, 'Australia');
+insert into GeogRestriction (id, licenseID, restriction) values (10, 12, 'Australia');
 
 
-
-
+INSERT INTO License (licenseName, version, dateAdded, licenseType, uploaderID)
+VALUES ('Windows', 'v1.0.1', '2025-11-04', 'Ent', 1);
 
 
 

@@ -1,8 +1,16 @@
 from flask import Flask, request, abort
 from src.logger import log
+from src.database import db
 from src.util import authentication 
+from src.request.user_request import *
+from src.validation import *
+# from src.database.record_entities_licenseID import *
+from src.credentials.credentials_manager import *
+
+import json
 
 log.log("INFO", "REST API started.")
+# db = LicenseDAO()
 
 app = Flask(__name__)
 
@@ -13,12 +21,14 @@ def hello():
 """
 When sending get request to this URI, API will respond with instructions for how to use API.
 """
-@app.get("/")
-def help():
-    return "<p>HELP SCREEN TBA<p>"
+# @app.get("/")
+# def help():
+#     return "<p>HELP SCREEN TBA<p>"
 
 """
 User expected to provide a JSON object in the body includin the fields of the license being added.
+
+If user fails to include the JSON object in the request body, a 415 error is returned.
 
 Required: 
     - "name": str
@@ -34,28 +44,79 @@ Optional fields:
 """
 @app.post("/addLicense/")
 def addLicense():
-    log.log("INFO", "Request to add license received.")
-    success, auth_response = authentication.authorize(request.headers)
-    if success:
+    # Extract info from request, create request object 
+    try:
+        log.log("INFO", "Request to add license received.")
         license_request = request.json
-        # INTEGRATION: Call backend function
-        # credentials = Credentials(auth_response)
+        user_req = AddLicReq(json.dumps(license_request))
+    except:
+        # If the code ends up here, it was probably the user's fault
+        abort(400)
+
+    # Verify credentials received from authentication server.
+    try:
+        success, auth_response = authentication.authorize(request.headers)
+        if not success:
+            raise Exception
+        credentials = UserCredentials(json.loads(auth_response))
+        credentials.validate()
+
         # check user is a manager and IT/Legal
-        # request_info = AddLicReq(auth_response)
-        # LicenseDatabase.addLicense(request_info, credentials)
-        return f'<p>License added<p>'
-    else:
+        if not credentials.has_license_auth():
+            raise Exception
+    except:
         abort(401)
+
+    # DB Call. If method returns false, user couldn't be authorizaed.
+    try:
+        added_record = db.AddLicense(user_req, credentials)
+    except:
+        abort(400)
+    if not added_record:
+        abort(401)
+    
+    return f'<p>License added<p>'
 
 """
 User expected to provide a JSON object in the body includin the fields of the license being added.
 
 Required: 
-    - "id": int
+    - "licenseID": int
 """
-@app.post("/deleteLicense/")
+@app.delete("/deleteLicense/")
 def deleteLicense():
-    return f'<p>NOT YET IMPLEMENTED</p>'
+    # Extract info from request, create request object 
+    try:
+        log.log("INFO", "Request to delete license received.")
+        license_request = request.json
+        user_req = DelLicReq(json.dumps(license_request))
+    except:
+        # If the code ends up here, it was probably the user's fault
+        abort(400)
+
+    # Verify credentials received from authentication server.
+    try:
+        success, auth_response = authentication.authorize(request.headers)
+        if not success:
+            raise Exception
+        credentials = UserCredentials(json.loads(auth_response))
+        credentials.validate()
+
+        # check user is a manager and IT/Legal
+        if not credentials.has_license_auth():
+            raise Exception
+    except:
+        abort(401)
+
+    # DB Call. If method returns false, user couldn't be authorizaed.
+    try:
+        deleted_record = db.DeleteLicense(user_req, credentials)
+    except:
+        abort(400)
+    if not deleted_record:
+        abort(401)
+    
+    return f'<p>License L{license_request["licenseID"]} removed.<p>'
 
 """
 For updating a license, the user is expected to provide a license ID, 
@@ -63,36 +124,33 @@ along with the fields they want to update.
 
 Any fields not provided will not be updated.
 """
-@app.post("/updateLicense/")
-def updateLicense():
-    return f'<p>NOT YET IMPLEMENTED</p>'
+# @app.post("/updateLicense/")
+# def updateLicense():
+#     return f'<p>NOT YET IMPLEMENTED</p>'
 
 
 # Query methods
 
-"""
-Alternative URI for getting the API documentation.
-"""
-@app.get("/")
-def help_screen():
-    return f'NOT YET IMPLEMENTED'
-
-@app.get("/seeAllLicenses/")
-def seeAllLicenses():
-    log.log("INFO", "Request to see all licenses received..")
-    success, auth_response = authentication.authorize(request.headers)
-    if success:
-        # license_request = request.json
-        # INTEGRATION: Call backend function
-        # credentials = Credentials(auth_response)
-        # LicenseDatabase.viewLicenses(request_info, credentials)
-        return f'<p>License added<p>'
-    else:
+@app.get("/seeLicenses/")
+def seeLicenses():
+    # Extract token from request.
+    try:
+        log.log("INFO", "Request to see all licenses received.")
+        success, auth_response = authentication.authorize(request.headers)
+        if success:
+            credentials = UserCredentials(json.loads(auth_response))
+            credentials.validate()
+            records = db.seeLicenses()
+            return records
+        else:
+            raise Exception
+    except:
+        # If the code ends up here, it was probably the user's fault
         abort(401)
 
-@app.get("/filteredView/")
-def filteredView():
-    return f'NOT YET IMPLEMENTED'
+# @app.get("/filteredView/")
+# def filteredView():
+#     return f'NOT YET IMPLEMENTED'
 
 
 # Error handlers

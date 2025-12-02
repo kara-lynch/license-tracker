@@ -1,6 +1,8 @@
 import requests
+import json
 
 from src.logger import log
+from src.config.settings import Settings
 
 class _Authenticate(object):
     """
@@ -12,9 +14,13 @@ class _Authenticate(object):
         """
         Constructor for Authenticate object. Pings the authorization to make sure it is responsive.
         """
-        log.log("WARNING", "NOTE: Auth Server URL currently hardcoded!!")
-        _ping_url = "http://172.16.0.51:8080/auth_service/api/auth/ping"
-        self._auth_url = "http://172.16.0.51:8080/auth_service/api/auth/verify"
+
+        log.log("DEBUG", "Loading API config.")
+        config_path = Settings.api_config_file()
+        with open(config_path, "r") as file:
+            config_json = json.load(file)
+        _ping_url = config_json["PING_URL"]
+        self._auth_url = config_json["AUTH_URL"]
 
         # Ping Authorization Server to make sure it is up
         log.log("INFO", "Pinging authorization server.")
@@ -35,17 +41,18 @@ class _Authenticate(object):
             2. Is token too large?
             3. Is token too small?
 
-        PARAS:
-            headers:: headers stripped from HTTP request
+        :param headers: Headers stripped from HTTP request
 
-        RETURN:
-            bool:: if true, token was validated
-            str::  contains the stripped authorization token
+        :return: If true, token was validated
+        :rtype: boolean
+
+        :return: Contains the stripped authorization token
+        :rtype: str
         """
         # Extract token
         token = headers.get("Bearer")
         if token is None:
-            log.log("WARN", "Request has no authorization token attached.")
+            log.log("WARNING", "Request has no authorization token attached.")
             return False, None
 
         # TODO: ADD LENGTH CHECKING
@@ -63,12 +70,14 @@ class _Authenticate(object):
         """
         Public method for calling authorization server.
 
-        PARAS: 
-            headers:: headers from incoming HTTP request, should contain authorization token
+        :param headers: Headers from incoming HTTP request, should contain authorization token
 
-        RETURN:
-            bool:: True if successfully authenticated, False otherwise
-            str:: The credentials associated with the token
+        :return: True if successfully authenticated, False otherwise
+        :rtype: bool 
+
+    
+        :return: The credentials associated with the token
+        :rtype: str 
         """
         log.log("INFO", "Beginning authorization process.")
         valid_token, token = self._validate_token(headers)

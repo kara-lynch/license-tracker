@@ -178,7 +178,7 @@ def seeLicenses():
         # If the code ends up here, it was probably the user's fault
         abort(401)
 
-@app.get("/seeLicenseRange/")
+@app.post("/seeLicenseRange/")
 def seeLicenseRange():
     # Extract token from request.
     try:

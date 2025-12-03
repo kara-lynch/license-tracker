@@ -4,3 +4,4 @@ flask_test.py
 *.log
 test_scripts/*
 src/config/db_credentials.json
+.venv/

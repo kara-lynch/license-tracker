@@ -3,4 +3,4 @@ flask_test.py
 *_test.py
 *.log
 test_scripts/*
-src/config/db_credentials.json
+/src/config/db_credentials.json

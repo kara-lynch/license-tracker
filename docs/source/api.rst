@@ -43,6 +43,20 @@ All fields other than ``id``, ``name``, ``ver``, and ``type`` are optional and a
 :expiration_date: The expiration date for the license, e.g. "2026-03-31".
 :restrictions: A list of regions the license can't be used, e.g. "Croatia, Czech Republic" or "All countries except Japan".
 
+Getting All Licenses in a Range
+-------------------------------
+
+To get a specific number of licenses in the system, an HTTP POST request must be sent to the following URI: ``/seeLicenseRange/``
+
+The request must include a ``Bearer`` field in the header with a valid authentication token, as well as a JSON object in the body in the following format:: 
+
+	{
+	  "range": 10,
+	  "offset": 0
+	}
+
+The records will be returned in the same format listed above. This is generally used for the infinite scrolling functionality built into the front end.
+
 Adding a License
 ----------------
 

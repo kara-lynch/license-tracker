@@ -30,3 +30,7 @@
 [WARNING] - 2025-11-05 13:05:52,150 - license-tracker/src/credentials/credentials_manager/validate:48 - Credentials validation failed
 [WARNING] - 2025-11-05 13:05:52,150 - license-tracker/src/credentials/credentials_manager/validate:48 - Credentials validation failed
 [WARNING] - 2025-11-05 13:05:52,151 - license-tracker/src/credentials/credentials_manager/validate:86 - Credentials validation failed
+[WARNING] - 2025-12-03 17:36:25,988 - license-tracker/backend/src/util/authenticate/_validate_token:55 - Request has no authorization token attached.
+[ERROR] - 2025-12-03 17:36:25,993 - license-tracker/backend/src/util/authenticate/authorize:85 - Invalid authorization token provided.
+[WARNING] - 2025-12-03 17:41:55,974 - license-tracker/backend/src/util/authenticate/_validate_token:55 - Request has no authorization token attached.
+[ERROR] - 2025-12-03 17:41:55,976 - license-tracker/backend/src/util/authenticate/authorize:85 - Invalid authorization token provided.

@@ -64,3 +64,30 @@
 [WARNING] - 2025-11-05 13:05:52,150 - license-tracker/src/credentials/credentials_manager/validate:48 - Credentials validation failed
 [INFO] - 2025-11-05 13:05:52,150 - license-tracker/src/credentials/credentials_manager/validate:80 - Credentials validation succeeded for Tyson Lucas
 [WARNING] - 2025-11-05 13:05:52,151 - license-tracker/src/credentials/credentials_manager/validate:86 - Credentials validation failed
+[DEBUG] - 2025-12-03 17:34:47,624 - license-tracker/backend/src/util/authenticate/__init__:18 - Loading API config.
+[INFO] - 2025-12-03 17:34:47,634 - license-tracker/backend/src/util/authenticate/__init__:26 - Pinging authorization server.
+[DEBUG] - 2025-12-03 17:34:47,637 - Starting new HTTP connection (1): 172.16.0.51:8080
+[DEBUG] - 2025-12-03 17:34:47,643 - http://172.16.0.51:8080 "GET /auth_service/api/auth/ping HTTP/1.1" 200 14
+[INFO] - 2025-12-03 17:34:47,652 - license-tracker/backend/src/util/authenticate/__init__:29 - Ping successful; authorization server is up.
+[INFO] - 2025-12-03 17:34:47,656 - license-tracker/backend/api/<module>:12 - REST API started.
+[INFO] - 2025-12-03 17:34:47,661 - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://172.16.0.199:5000
+[INFO] - 2025-12-03 17:34:47,661 - [33mPress CTRL+C to quit[0m
+[INFO] - 2025-12-03 17:36:00,354 - 172.16.0.199 - - [03/Dec/2025 17:36:00] "[33mGET / HTTP/1.1[0m" 404 -
+[INFO] - 2025-12-03 17:36:00,398 - 172.16.0.199 - - [03/Dec/2025 17:36:00] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+[INFO] - 2025-12-03 17:36:16,113 - 172.16.0.199 - - [03/Dec/2025 17:36:16] "[33mGET / HTTP/1.1[0m" 404 -
+[INFO] - 2025-12-03 17:36:25,961 - 172.16.0.199 - - [03/Dec/2025 17:36:25] "[32mGET /seeLicenses HTTP/1.1[0m" 308 -
+[INFO] - 2025-12-03 17:36:25,982 - license-tracker/backend/api/seeLicenses:168 - Request to see all licenses received.
+[INFO] - 2025-12-03 17:36:25,983 - license-tracker/backend/src/util/authenticate/authorize:82 - Beginning authorization process.
+[WARNING] - 2025-12-03 17:36:25,988 - license-tracker/backend/src/util/authenticate/_validate_token:55 - Request has no authorization token attached.
+[ERROR] - 2025-12-03 17:36:25,993 - license-tracker/backend/src/util/authenticate/authorize:85 - Invalid authorization token provided.
+[INFO] - 2025-12-03 17:36:25,996 - 172.16.0.199 - - [03/Dec/2025 17:36:25] "[31m[1mGET /seeLicenses/ HTTP/1.1[0m" 401 -
+[INFO] - 2025-12-03 17:40:29,035 - 172.16.0.199 - - [03/Dec/2025 17:40:29] "[33mGET / HTTP/1.1[0m" 404 -
+[INFO] - 2025-12-03 17:41:55,960 - 172.16.0.199 - - [03/Dec/2025 17:41:55] "[32mGET /seeLicenses HTTP/1.1[0m" 308 -
+[INFO] - 2025-12-03 17:41:55,971 - license-tracker/backend/api/seeLicenses:168 - Request to see all licenses received.
+[INFO] - 2025-12-03 17:41:55,973 - license-tracker/backend/src/util/authenticate/authorize:82 - Beginning authorization process.
+[WARNING] - 2025-12-03 17:41:55,974 - license-tracker/backend/src/util/authenticate/_validate_token:55 - Request has no authorization token attached.
+[ERROR] - 2025-12-03 17:41:55,976 - license-tracker/backend/src/util/authenticate/authorize:85 - Invalid authorization token provided.
+[INFO] - 2025-12-03 17:41:55,977 - 172.16.0.199 - - [03/Dec/2025 17:41:55] "[31m[1mGET /seeLicenses/ HTTP/1.1[0m" 401 -

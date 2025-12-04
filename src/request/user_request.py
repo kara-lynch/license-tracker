@@ -268,26 +268,12 @@ class QueryRangeLicReq(Request):
 class EmpAssignLicReq(Request):
     def validate_data(self):
         log.log("INFO", "assign license to employee request begin validation")
-        if not self.field_exists(self.config_dict["name"]["key"]) or not self.field_exists(self.config_dict["ver"]["key"]) or not self.field_exists(self.config_dict["type"]["key"]):
-            log.log("ERROR", "one or more components required for adding are missing; terminating program")
-            raise ValueError("Missing one or more required field")
+        if (len(self.lic_data.keys()) != 2):
+            log.log("ERROR", "assigning a license must be given exactly 2 params; program terminated")
+            raise ValueError("Wrong number of params given")
+        if not self.field_exists(self.config_dict["employeeId"]["key"]) or not self.field_exists(self.config_dict["licenseId"]["key"]):
+            log.log("ERROR", "one or more components required for assigning to an employee are missing; terminating program")
+            raise ValueError("Missing one or more required fields")
         else:
-            self.validate_field(self.config_dict["name"]["key"])
-            self.validate_field(self.config_dict["ver"]["key"])
-            self.validate_field(self.config_dict["type"]["key"])
-            if self.field_exists(self.config_dict["cost"]["key"]):
-                if self.field_exists(self.config_dict["curr"]["key"]):
-                    self.validate_field(self.config_dict["curr"]["key"])
-                    self.validate_field(self.config_dict["cost"]["key"])
-                    if self.field_exists(self.config_dict["period"]["key"]):
-                        self.validate_field(self.config_dict["period"]["key"])
-                    if self.field_exists(self.config_dict["date_of_renewal"]["key"]):
-                        self.validate_field(self.config_dict["date_of_renewal"]["key"])
-                else:
-                    raise ValueError("cost must have currency")
-            elif self.field_exists(self.config_dict["curr"]["key"]) or self.field_exists(self.config_dict["date_of_renewal"]["key"]) or self.field_exists(self.config_dict["period"]["key"]):
-                raise ValueError("cost based field entered but not cost")
-            if self.field_exists(self.config_dict["expiration_date"]["key"]):
-                self.validate_field(self.config_dict["expiration_date"]["key"])
-            if self.field_exists(self.config_dict["restrictions"]["key"]):
-                self.validate_field(self.config_dict["restrictions"]["key"])
+            self.validate_field(self.config_dict["employeeId"]["key"])
+            self.validate_field(self.config_dict["licenseId"]["key"])

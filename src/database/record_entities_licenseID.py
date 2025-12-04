@@ -421,8 +421,96 @@ class _LicenseDAO:
         except Exception as e:
             log.log("ERROR", f'Error in DB: {e.args[0]}')
             return False
+        
+    def EmployeeAssign(self, user_request, user_credentials):
+        '''    
+        Adds a new employee assignment record to the database. This creates a relation between an 
+        employee record and a license record.
 
+        This method first checks whether the user has authorization to add licenses using 
+        ``user_credentials.has_license_auth()``. If authorized, it inserts the assignment
+        information into the ``EmployeeAssign`` table.
 
+        :param user_request: An object containing cleaned assignment data indicating the employee
+        and license to be assigned to each other.
+        :param user_credentials: An object representing the user's identity and permissions.
+
+        :return: True if all inserts succeed, or False if the user is unauthorized or if any database error occurs.
+        :rtype: bool
+
+        :raise mysql.connector.Error: For database-related issues.
+        :raise Exception: For unexpected errors, which are logged.
+
+        '''
+
+        fields = user_request.get_clean_data_dict()
+        try: 
+            if not user_credentials.has_license_auth():
+                log.log("ERROR", "User not authorized to make this request.")
+                return False
+                        
+            # Prep query to insert an assignment record
+            license_query = ''' INSERT INTO EmployeeAssign (licenseID, employeeID, assignerID)
+            Values(%s, %s, %s)
+            '''
+            self.cursor_man.execute(license_query,(fields["licenseId"], fields["employeeId"], user_credentials.employee_id()))
+            
+            # commit insert
+            self.conn_manager.commit()
+
+            return True
+
+        except mysql.connector.Error as err:
+            print(f"Error: {err}")
+            self.conn.rollback()
+            return False
+        except Exception as e:
+            log.log("ERROR", f'Error in DB: {e.args[0]}')
+            return False
+
+    def EmployeeUnassign(self, user_request, user_credentials):
+        '''      
+        Deletes an employee assignment record from the database based on the license ID provided in the user request.
+
+        This method first checks whether the user has authorization to delete licenses using
+        ``user_credentials.has_license_auth()``. If authorized, it retrieves the license and employee 
+        IDs from the request and deletes the corresponding record from the ``EmployeeAssign`` table.
+
+        :param user_request: An object containing the cleaned license data, including the license ID.
+        :param user_credentials: An object representing the user's identity and permissions.
+
+        :return: True if the deletion is successful, or False if the user is unauthorized or if any error occurs during deletion.
+
+        :raise mysql.connector.Error: For database-related issues.
+        :raise Exception: For unexpected errors, which are logged.
+
+        '''
+        try: 
+            
+            
+            # Check if user has authorization to delete records
+            if not user_credentials.has_license_auth():
+                log.log("ERROR", "User not authorized to make this request.")
+                return False
+            
+            fields = user_request.get_clean_data_dict()
+            
+            # Run deletion query
+            self.cursor_man.execute('DELETE FROM EmployeeAssign WHERE (licenseID = %s AND employeeID = %s', 
+                (fields["licenseId"], fields["employeeId"]))
+
+            # Commit assignment deletion
+            self.conn_manager.commit()
+        
+            return True
+
+        except mysql.connector.Error as err:
+            print(f"Error deleting license {fields["licenseId"]}: {err}")
+            self.conn.rollback()
+            return False
+        except Exception as e:
+            log.log("ERROR", f'Error in DB: {e.args[0]}')
+            return False
 
 
     def close(self):

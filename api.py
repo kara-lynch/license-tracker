@@ -198,21 +198,13 @@ def seeLicenseRange():
         abort(401)
 
 """
-User expected to provide a JSON object in the body includin the fields of the license being added.
+User expected to provide a JSON object in the body including the fields of the assignment being added.
 
 If user fails to include the JSON object in the request body, a 415 error is returned.
 
 Required: 
-    - "name": str
-    - "ver": str
-    - "type": str
-
-Optional fields:
-    - "cost": float and "curr": str with 3 chars (if one is present, the other must be as well)
-    - "period": str (cost and curr required)
-    - "renewal_date": str, format "yyyy-mm-dd
-    - "expiration_date": str, format "yyyy-mm-dd
-    - "restrictions": str
+    - "licenseId": int
+    - "employeeId": int
 """
 @app.post("/employeeAssign/")
 def employeeAssign():
@@ -241,13 +233,57 @@ def employeeAssign():
 
     # DB Call. If method returns false, user couldn't be authorizaed.
     try:
-        added_record = db.AddLicense(user_req, credentials)
+        added_record = db.EmployeeAssign(user_req, credentials)
     except:
         abort(400)
     if not added_record:
         abort(401)
     
     return f'<p>License assigned<p>'
+
+"""
+User expected to provide a JSON object in the body including the fields of the assignment being added.
+
+If user fails to include the JSON object in the request body, a 415 error is returned.
+
+Required: 
+    - "licenseId": int
+    - "employeeId": int
+"""
+@app.post("/employeeUnassign/")
+def employeeUnassign():
+    # Extract info from request, create request object 
+    try:
+        log.log("INFO", "Request to assign license to employee received.")
+        license_request = request.json
+        user_req = EmpAssignLicReq(json.dumps(license_request))
+    except:
+        # If the code ends up here, it was probably the user's fault
+        abort(400)
+
+    # Verify credentials received from authentication server.
+    try:
+        success, auth_response = authentication.authorize(request.headers)
+        if not success:
+            raise Exception
+        credentials = UserCredentials(json.loads(auth_response))
+        credentials.validate()
+
+        # check user is a manager and IT/Legal
+        if not credentials.has_license_auth():
+            raise Exception
+    except:
+        abort(401)
+
+    # DB Call. If method returns false, user couldn't be authorizaed.
+    try:
+        added_record = db.EmployeeUnassign(user_req, credentials)
+    except:
+        abort(400)
+    if not added_record:
+        abort(401)
+    
+    return f'<p>License assignment removed<p>'
 
 # @app.get("/filteredView/")
 # def filteredView():

@@ -1,7 +1,8 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+</script> 
 
 <template>
-  <h1>This is our home view</h1>
+  <h1>This is our assigned to me view</h1>
 </template>
 
 <style>

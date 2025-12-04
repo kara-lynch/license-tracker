@@ -82,5 +82,11 @@
         "max_size":10,
         "min_size":1,
         "type":"bool"
+    },
+    "employeeId":{
+        "key":"employeeId",
+        "max_size":10,
+        "min_size":1,
+        "type":"int"
     }
 }

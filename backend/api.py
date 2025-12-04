@@ -6,6 +6,7 @@ from src.request.user_request import *
 from src.validation import *
 # from src.database.record_entities_licenseID import *
 from src.credentials.credentials_manager import *
+from flask_cors import CORS
 
 import json
 
@@ -13,6 +14,13 @@ log.log("INFO", "REST API started.")
 # db = LicenseDAO()
 
 app = Flask(__name__)
+
+CORS(
+    app,
+    resources={r"/*": {"origins": "http://localhost:5173"}},
+    allow_headers=["Content-Type", "Bearer", "Authorization"],
+    supports_credentials=True,
+) 
 
 @app.get("/hello_world/")
 def hello():

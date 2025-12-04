@@ -6,6 +6,7 @@ from src.request.user_request import *
 from src.validation import *
 # from src.database.record_entities_licenseID import *
 from src.credentials.credentials_manager import *
+from flask_cors import CORS
 
 import json
 
@@ -13,6 +14,13 @@ log.log("INFO", "REST API started.")
 # db = LicenseDAO()
 
 app = Flask(__name__)
+
+CORS(
+    app,
+    resources={r"/*": {"origins": "http://localhost:5173"}},
+    allow_headers=["Content-Type", "Bearer", "Authorization"],
+    supports_credentials=True,
+) 
 
 @app.get("/hello_world/")
 def hello():
@@ -124,10 +132,40 @@ along with the fields they want to update.
 
 Any fields not provided will not be updated.
 """
-# @app.post("/updateLicense/")
-# def updateLicense():
-#     return f'<p>NOT YET IMPLEMENTED</p>'
+@app.post("/editLicense/")
+def editLicense():
+    # Extract info from request, create request object 
+    try:
+        log.log("INFO", "Request to edit license received.")
+        license_request = request.json
+        user_req = EditLicReq(json.dumps(license_request))
+    except:
+        # If the code ends up here, it was probably the user's fault
+        abort(400)
 
+    # Verify credentials received from authentication server.
+    try:
+        success, auth_response = authentication.authorize(request.headers)
+        if not success:
+            raise Exception
+        credentials = UserCredentials(json.loads(auth_response))
+        credentials.validate()
+
+        # check user is a manager and IT/Legal
+        if not credentials.has_license_auth():
+            raise Exception
+    except:
+        abort(401)
+
+    # DB Call. If method returns false, user couldn't be authorizaed.
+    try:
+        updated_record = db.EditLicense(user_req, credentials)
+    except:
+        abort(400)
+    if not updated_record:
+        abort(401)
+    
+    return f'<p>License updated<p>'
 
 # Query methods
 
@@ -141,6 +179,25 @@ def seeLicenses():
             credentials = UserCredentials(json.loads(auth_response))
             credentials.validate()
             records = db.seeLicenses()
+            return records
+        else:
+            raise Exception
+    except:
+        # If the code ends up here, it was probably the user's fault
+        abort(401)
+
+@app.post("/seeLicenseRange/")
+def seeLicenseRange():
+    # Extract token from request.
+    try:
+        log.log("INFO", "Request to see all licenses received.")
+        success, auth_response = authentication.authorize(request.headers)
+        license_request = request.json
+        user_req = QueryRangeLicReq(json.dumps(license_request))
+        if success:
+            credentials = UserCredentials(json.loads(auth_response))
+            credentials.validate()
+            records = db.seeLicenseRange()
             return records
         else:
             raise Exception

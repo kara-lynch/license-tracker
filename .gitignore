@@ -1,0 +1,5 @@
+__pycache__
+flask_test.py
+*_test.py
+*.log
+test_scripts/*

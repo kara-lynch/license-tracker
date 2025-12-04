@@ -168,16 +168,30 @@ class _LicenseDAO:
 
         '''
         fields = user_request.get_clean_data_dict()
+        args = []
         query = ''' 
             SELECT License.id, License.licenseName, License.version, License.licenseType, Cost.price, Cost.currency, Cost.period, Cost.renewalDate, ExpirationDate.endDate, GeogRestriction.restriction
             FROM License
             LEFT JOIN Cost ON License.id = Cost.licenseID
             LEFT JOIN ExpirationDate ON License.id = ExpirationDate.licenseID
             LEFT JOIN GeogRestriction ON License.id = GeogRestriction.licenseID
-            LIMIT %s OFFSET %s
             '''
+        
+        if "sort_field" in fields:
+            query += "ORDER BY %s "
+            args.append(fields["sort_field"])
+            if "ascending" in fields & fields["ascending"]:
+                query += "ASC"
+            else:
+                query += "DESC"
+        
+        query += '''
+        LIMIT %s OFFSET %s'''
+        args.append(fields["range"])
+        args.append(fields["offset"])
+
         try:
-            self.cursor_emp.execute(query, (fields["range"], fields["offset"])) 
+            self.cursor_emp.execute(query, args) 
             results = self.cursor_emp.fetchall()
         except Exception as e:
             log.log("ERROR", f'Database issue. {e.args[0]}')

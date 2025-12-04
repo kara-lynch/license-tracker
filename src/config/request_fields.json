@@ -76,5 +76,11 @@
         "max_size":10,
         "min_size":1,
         "type":"str"
+    },
+    "ascending":{
+        "key":"ascending",
+        "max_size":10,
+        "min_size":1,
+        "type":"bool"
     }
 }

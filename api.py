@@ -220,7 +220,7 @@ def employeeAssign():
     try:
         log.log("INFO", "Request to assign license to employee received.")
         license_request = request.json
-        user_req = AddLicReq(json.dumps(license_request))
+        user_req = EmpAssignLicReq(json.dumps(license_request))
     except:
         # If the code ends up here, it was probably the user's fault
         abort(400)

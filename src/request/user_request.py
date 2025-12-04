@@ -7,14 +7,13 @@ from pydoc import locate
 from enum import StrEnum, auto
 
 class DatabaseField(StrEnum):
-    NAME = auto()
-    DATE_ADDED = auto()
-    TYPE = auto()
-    COST = auto()
-    PERIOD = auto()
-    DATE_LAST_RENEWED = auto()
-    DATE_EXPIRES = auto()
-    GEOG_RESTRICT = auto()
+    licenseName = auto()
+    licenseType = auto()
+    price = auto()
+    period = auto()
+    renewalDate = auto()
+    endDate = auto()
+    restriction = auto()
 
 class Request(ABC):
     """
@@ -54,8 +53,8 @@ class Request(ABC):
     def validate_db_field(self, field_key):
         if self.field_exists(field_key):
             validation_checks.check_data_type(self.lic_data[field_key], locate(self.config_dict[field_key]["type"]))
-            if self.lic_data[field_key].lower() in list(map(lambda x: str(x).lower(), DatabaseField)):
-                self.clean_data[field_key] = self.lic_data[field_key].upper()
+            if self.lic_data[field_key] in list(map(lambda x: x.name, DatabaseField)):
+                self.clean_data[field_key] = self.lic_data[field_key]
                 log.log("INFO", f"license {field_key} validated")
             else:
                 log.log("ERROR", f"invalid database field entered in the {field_key} field")
@@ -248,7 +247,7 @@ class QueryLicReq(Request):
 class QueryRangeLicReq(Request):
     def validate_data(self):
         log.log("INFO", "query range license request begin validation")
-        if (len(self.lic_data.keys()) > 3):
+        if (len(self.lic_data.keys()) > 4):
             log.log("ERROR", "too many params; program terminated")
             raise ValueError("Too many params given")
         else:
@@ -263,6 +262,8 @@ class QueryRangeLicReq(Request):
                 self.validate_field(self.config_dict["offset"]["key"])
             if self.field_exists(self.config_dict["sort_field"]["key"]):
                 self.validate_db_field(self.config_dict["sort_field"]["key"])
+            if self.field_exists(self.config_dict["ascending"]["key"]):
+                self.validate_field(self.config_dict["ascending"]["key"])
                 
 class EmpAssignLicReq(Request):
     def validate_data(self):

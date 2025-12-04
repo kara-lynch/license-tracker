@@ -110,19 +110,19 @@ def test_query_range_min_request():
 
 #query range, valid data, all fields
 def test_query_range_all_request():
-    request_obj = user_request.QueryRangeLicReq('{"range":5,"offset":1,"sort_field":"NAME"}')
+    request_obj = user_request.QueryRangeLicReq('{"range":5,"offset":1,"sort_field":"licenseName","ascending":true}')
     print(request_obj.lic_data)
     print(request_obj.get_clean_data_json())
     print("all good")
-    assert request_obj.get_clean_data_dict() == {"range":5,"offset":1,"sort_field":"NAME"}
+    assert request_obj.get_clean_data_dict() == {"range":5,"offset":1,"sort_field":"licenseName","ascending":True}
 
 #query range, valid data, two fields
 def test_query_range_sort_no_offset_request():
-    request_obj = user_request.QueryRangeLicReq('{"range":5,"sort_field":"date_added"}')
+    request_obj = user_request.QueryRangeLicReq('{"range":5,"sort_field":"endDate"}')
     print(request_obj.lic_data)
     print(request_obj.get_clean_data_json())
     print("all good")
-    assert request_obj.get_clean_data_dict() == {"range":5,"sort_field":"DATE_ADDED"}
+    assert request_obj.get_clean_data_dict() == {"range":5,"sort_field":"endDate"}
 
 #query range, invalid sort field
 def test_query_range_request_enum_negative():

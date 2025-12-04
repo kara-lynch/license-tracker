@@ -178,6 +178,17 @@ def seeLicenses():
         # If the code ends up here, it was probably the user's fault
         abort(401)
 
+"""
+To see a specific range of licenses, the following fields can be provided by the frontend:
+
+range: int
+offset: int (optional)
+sort_field: str (optional)
+ascending: bool (optional)
+
+If provided, sort_field is case sensitive and must match one of the following: [licenseName, licenseType, price,
+period, renewalDate, endDate, restriction]
+"""
 @app.post("/seeLicenseRange/")
 def seeLicenseRange():
     # Extract token from request.
@@ -242,7 +253,7 @@ def employeeAssign():
     return f'<p>License assigned<p>'
 
 """
-User expected to provide a JSON object in the body including the fields of the assignment being added.
+User expected to provide a JSON object in the body including the fields of the assignment being removed.
 
 If user fails to include the JSON object in the request body, a 415 error is returned.
 
@@ -284,6 +295,39 @@ def employeeUnassign():
         abort(401)
     
     return f'<p>License assignment removed<p>'
+
+"""
+To see licenses assigned to a user, the following fields can be provided by the frontend:
+
+range: int
+offset: int (optional)
+sort_field: str (optional)
+ascending: bool (optional)
+employeeId: int (optional)
+
+If provided, sort_field is case sensitive and must match one of the following: [licenseName, licenseType, price,
+period, renewalDate, endDate, restriction]
+
+employeeId is only checked if the user is a manager. A non-manager user can only see licenses assigned to that user.
+"""
+@app.post("/seeAssignment/")
+def seeAssignment():
+    # Extract token from request.
+    try:
+        log.log("INFO", "Request to see a range of licenses received.")
+        success, auth_response = authentication.authorize(request.headers)
+        license_request = request.json
+        user_req = QueryRangeLicReq(json.dumps(license_request))
+        if success:
+            credentials = UserCredentials(json.loads(auth_response))
+            credentials.validate()
+            records = db.SeeAssignment(user_req, credentials)
+            return records
+        else:
+            raise Exception
+    except:
+        # If the code ends up here, it was probably the user's fault
+        abort(401)
 
 # @app.get("/filteredView/")
 # def filteredView():

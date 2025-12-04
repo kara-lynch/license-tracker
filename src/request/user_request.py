@@ -246,7 +246,7 @@ class QueryLicReq(Request):
 
 class QueryRangeLicReq(Request):
     def validate_data(self):
-        log.log("INFO", "query range license request begin validation")
+        log.log("INFO", "query range request begin validation")
         if (len(self.lic_data.keys()) > 4):
             log.log("ERROR", "too many params; program terminated")
             raise ValueError("Too many params given")
@@ -277,3 +277,26 @@ class EmpAssignLicReq(Request):
         else:
             self.validate_field(self.config_dict["employeeId"]["key"])
             self.validate_field(self.config_dict["licenseId"]["key"])
+
+class AssignQueryLicReq(Request):
+    def validate_data(self):
+        log.log("INFO", "assignment query request begin validation")
+        if (len(self.lic_data.keys()) > 5):
+            log.log("ERROR", "too many params; program terminated")
+            raise ValueError("Too many params given")
+        else:
+            if self.field_exists(self.config_dict["range"]["key"]):
+                self.validate_field(self.config_dict["range"]["key"])
+            else:
+                log.log("ERROR", "query range request must have a range value; program terminated")
+                raise ValueError("Range field missing for query range request")
+            if not self.field_exists(self.config_dict["offset"]["key"]):
+                self.lic_data["offset"] = 0
+            else:    
+                self.validate_field(self.config_dict["offset"]["key"])
+            if self.field_exists(self.config_dict["sort_field"]["key"]):
+                self.validate_db_field(self.config_dict["sort_field"]["key"])
+            if self.field_exists(self.config_dict["ascending"]["key"]):
+                self.validate_field(self.config_dict["ascending"]["key"])
+            if self.field_exists(self.config_dict["employeeId"]["key"]):
+                self.validate_field(self.config_dict["employeeId"]["key"])

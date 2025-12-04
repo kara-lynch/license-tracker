@@ -435,7 +435,7 @@ class _LicenseDAO:
         and license to be assigned to each other.
         :param user_credentials: An object representing the user's identity and permissions.
 
-        :return: True if all inserts succeed, or False if the user is unauthorized or if any database error occurs.
+        :return: True if the insert succeeds, or False if the user is unauthorized or if any database error occurs.
         :rtype: bool
 
         :raise mysql.connector.Error: For database-related issues.
@@ -496,7 +496,7 @@ class _LicenseDAO:
             fields = user_request.get_clean_data_dict()
             
             # Run deletion query
-            self.cursor_man.execute('DELETE FROM EmployeeAssign WHERE (licenseID = %s AND employeeID = %s', 
+            self.cursor_man.execute('DELETE FROM EmployeeAssign WHERE (licenseID = %s AND employeeID = %s)', 
                 (fields["licenseId"], fields["employeeId"]))
 
             # Commit assignment deletion
@@ -511,6 +511,81 @@ class _LicenseDAO:
         except Exception as e:
             log.log("ERROR", f'Error in DB: {e.args[0]}')
             return False
+        
+    def SeeAssignment(self, user_request, user_credentials):
+        '''
+        Retrieves and compiles a specific range of records from the EmployeeAssign table.
+        
+        This method works identically to seeLicenseRange(), except it only returns records that have been
+        assigned to a specific employee. If the user is a manager, they can provide a specific employee ID
+        to see all licenses assigned to that employee; if not provided, or if the user is not a manager, 
+        only the licenses assigned to the current user will be returned.
+        
+        :return: A dictionary of license records with structured metadata.
+        :rtype: dict
+
+        '''
+        fields = user_request.get_clean_data_dict()
+        args = []
+
+        if user_credentials.has_license_auth() & "employeeId" in fields:
+            id_to_query = fields["employeeId"]
+        else:
+            id_to_query = user_credentials.employee_id()
+        query = ''' 
+            SELECT License.id, License.licenseName, License.version, License.licenseType, Cost.price, Cost.currency, Cost.period, Cost.renewalDate, ExpirationDate.endDate, GeogRestriction.restriction
+            FROM License
+            LEFT JOIN Cost ON License.id = Cost.licenseID
+            LEFT JOIN ExpirationDate ON License.id = ExpirationDate.licenseID
+            LEFT JOIN GeogRestriction ON License.id = GeogRestriction.licenseID
+            LEFT JOIN EmployeeAssign ON License.id = EmployeeAssign.licenseID
+            WHERE EmployeeAssign.employeeID = %s
+            '''
+        args.append(str(id_to_query))
+        
+        if "sort_field" in fields:
+            query += "ORDER BY %s "
+            args.append(fields["sort_field"])
+            if "ascending" in fields & fields["ascending"]:
+                query += "ASC"
+            else:
+                query += "DESC"
+        
+        query += '''
+        LIMIT %s OFFSET %s'''
+        args.append(fields["range"])
+        args.append(fields["offset"])
+
+        try:
+            self.cursor_emp.execute(query, args) 
+            results = self.cursor_emp.fetchall()
+        except Exception as e:
+            log.log("ERROR", f'Database issue. {e.args[0]}')
+       
+        records = {}
+        for col in results:
+            records[f"{col[0]}"] = {}
+            records[f"{col[0]}"]["name"] = col[1]
+            records[f"{col[0]}"]["ver"] = col[2]
+            records[f"{col[0]}"]["type"] = col[3]
+            if col[4] is None:
+                records[f"{col[0]}"]["cost"] = None
+            else:
+                records[f"{col[0]}"]["cost"] = float(col[4])
+            records[f"{col[0]}"]["curr"] = col[5]
+            records[f"{col[0]}"]["period"] = col[6]
+            if col[7] is None:
+                records[f"{col[0]}"]["date_of_renewal"] = None
+            else:
+                records[f"{col[0]}"]["date_of_renewal"] = col[7].strftime("%Y-%m-%d")
+            if col[8] is None:
+                records[f"{col[0]}"]["expiration_date"] = None
+            else:
+                records[f"{col[0]}"]["expiration_date"] = col[8].strftime("%Y-%m-%d")
+            records[f"{col[0]}"]["restrictions"] = col[9]
+
+
+        return records
 
 
     def close(self):

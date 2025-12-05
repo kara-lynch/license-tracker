@@ -19,6 +19,11 @@ const router = createRouter({
       name: 'assigned-to-me',
       component: () => import('../views/AssignedToMeView.vue'),
     },
+    {
+      path: '/assign-license',
+      name: 'assign-license',
+      component: () => import('../views/AssignLicenseView.vue')
+    },
   ],
 })
 

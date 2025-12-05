@@ -617,5 +617,7 @@ class _LicenseDAO:
         
         '''
 
-        self.cursor.close()
-        self.conn.close()
+        self.cursor_emp.close()
+        self.cursor_man.close()
+        self.conn_employee.close()
+        self.conn_manager.close()

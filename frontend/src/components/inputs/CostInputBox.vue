@@ -22,10 +22,10 @@ function updateCurrency() {
     <label>Cost</label>
     <div class="input-wrapper">
       <!-- Currency symbol -->
-      <span>{{ selectedCurrency?.symbol }}</span>
+      <span class="selected">{{ selectedCurrency?.symbol }}</span>
 
       <!-- Amount input -->
-      <input type="number" v-model="amount" placeholder="0.00"/>
+      <input v-model="amount" placeholder="0.00"/>
 
       <!-- Dropdown -->
       <select v-model="selectedCurrency" @change="updateCurrency">
@@ -37,3 +37,13 @@ function updateCurrency() {
   </div>
 
 </template>
+
+<style scoped>
+.input-wrapper {
+  border: 1px solid rgb(0, 0, 0); 
+  padding: 10px;
+}
+.selected {
+  margin-right: 10px;
+}
+</style>

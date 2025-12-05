@@ -14,6 +14,7 @@ function toggleBool() {
 <template>
     <button @click="toggleBool">Add</button>
     <div v-show="showFormFlag">
-        <AddLicenseForm />
+        <!-- listen for the child's close event and toggle the form visibility -->
+        <AddLicenseForm @close="toggleBool" />
     </div>
 </template>

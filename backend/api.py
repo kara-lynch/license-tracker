@@ -186,18 +186,150 @@ def seeLicenses():
         # If the code ends up here, it was probably the user's fault
         abort(401)
 
+"""
+To see a specific range of licenses, the following fields can be provided by the frontend:
+
+range: int
+offset: int (optional)
+sort_field: str (optional)
+ascending: bool (optional)
+
+If provided, sort_field is case sensitive and must match one of the following: [licenseName, licenseType, price,
+period, renewalDate, endDate, restriction]
+"""
 @app.post("/seeLicenseRange/")
 def seeLicenseRange():
     # Extract token from request.
     try:
-        log.log("INFO", "Request to see all licenses received.")
+        log.log("INFO", "Request to see a range of licenses received.")
         success, auth_response = authentication.authorize(request.headers)
         license_request = request.json
         user_req = QueryRangeLicReq(json.dumps(license_request))
         if success:
             credentials = UserCredentials(json.loads(auth_response))
             credentials.validate()
-            records = db.seeLicenseRange()
+            records = db.seeLicenseRange(user_req)
+            return records
+        else:
+            raise Exception
+    except:
+        # If the code ends up here, it was probably the user's fault
+        abort(401)
+
+"""
+User expected to provide a JSON object in the body including the fields of the assignment being added.
+
+If user fails to include the JSON object in the request body, a 415 error is returned.
+
+Required: 
+    - "licenseId": int
+    - "employeeId": int
+"""
+@app.post("/employeeAssign/")
+def employeeAssign():
+    # Extract info from request, create request object 
+    try:
+        log.log("INFO", "Request to assign license to employee received.")
+        license_request = request.json
+        user_req = EmpAssignLicReq(json.dumps(license_request))
+    except:
+        # If the code ends up here, it was probably the user's fault
+        abort(400)
+
+    # Verify credentials received from authentication server.
+    try:
+        success, auth_response = authentication.authorize(request.headers)
+        if not success:
+            raise Exception
+        credentials = UserCredentials(json.loads(auth_response))
+        credentials.validate()
+
+        # check user is a manager and IT/Legal
+        if not credentials.has_license_auth():
+            raise Exception
+    except:
+        abort(401)
+
+    # DB Call. If method returns false, user couldn't be authorizaed.
+    try:
+        added_record = db.EmployeeAssign(user_req, credentials)
+    except:
+        abort(400)
+    if not added_record:
+        abort(401)
+    
+    return f'<p>License assigned<p>'
+
+"""
+User expected to provide a JSON object in the body including the fields of the assignment being removed.
+
+If user fails to include the JSON object in the request body, a 415 error is returned.
+
+Required: 
+    - "licenseId": int
+    - "employeeId": int
+"""
+@app.post("/employeeUnassign/")
+def employeeUnassign():
+    # Extract info from request, create request object 
+    try:
+        log.log("INFO", "Request to assign license to employee received.")
+        license_request = request.json
+        user_req = EmpAssignLicReq(json.dumps(license_request))
+    except:
+        # If the code ends up here, it was probably the user's fault
+        abort(400)
+
+    # Verify credentials received from authentication server.
+    try:
+        success, auth_response = authentication.authorize(request.headers)
+        if not success:
+            raise Exception
+        credentials = UserCredentials(json.loads(auth_response))
+        credentials.validate()
+
+        # check user is a manager and IT/Legal
+        if not credentials.has_license_auth():
+            raise Exception
+    except:
+        abort(401)
+
+    # DB Call. If method returns false, user couldn't be authorizaed.
+    try:
+        added_record = db.EmployeeUnassign(user_req, credentials)
+    except:
+        abort(400)
+    if not added_record:
+        abort(401)
+    
+    return f'<p>License assignment removed<p>'
+
+"""
+To see licenses assigned to a user, the following fields can be provided by the frontend:
+
+range: int
+offset: int (optional)
+sort_field: str (optional)
+ascending: bool (optional)
+employeeId: int (optional)
+
+If provided, sort_field is case sensitive and must match one of the following: [licenseName, licenseType, price,
+period, renewalDate, endDate, restriction]
+
+employeeId is only checked if the user is a manager. A non-manager user can only see licenses assigned to that user.
+"""
+@app.post("/seeAssignment/")
+def seeAssignment():
+    # Extract token from request.
+    try:
+        log.log("INFO", "Request to see a range of licenses received.")
+        success, auth_response = authentication.authorize(request.headers)
+        license_request = request.json
+        user_req = QueryRangeLicReq(json.dumps(license_request))
+        if success:
+            credentials = UserCredentials(json.loads(auth_response))
+            credentials.validate()
+            records = db.SeeAssignment(user_req, credentials)
             return records
         else:
             raise Exception

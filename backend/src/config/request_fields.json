@@ -70,5 +70,23 @@
         "max_size":10,
         "min_size":1,
         "type":"int"
+    },
+    "sort_field":{
+        "key":"sort_field",
+        "max_size":10,
+        "min_size":1,
+        "type":"str"
+    },
+    "ascending":{
+        "key":"ascending",
+        "max_size":10,
+        "min_size":1,
+        "type":"bool"
+    },
+    "employeeId":{
+        "key":"employeeId",
+        "max_size":10,
+        "min_size":1,
+        "type":"int"
     }
 }

@@ -77,6 +77,15 @@
         "min_size":1,
         "type":"str"
     },
+    "valid_db_fields": [
+        "licenseName",
+        "licenseType",
+        "price",
+        "period",
+        "renewalDate",
+        "endDate",
+        "restriction"
+    ],
     "ascending":{
         "key":"ascending",
         "max_size":10,

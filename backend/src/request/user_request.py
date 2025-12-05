@@ -4,16 +4,6 @@ import json
 from src.validation import validation_checks
 from src.logger import log
 from pydoc import locate
-from enum import StrEnum, auto
-
-class DatabaseField(StrEnum):
-    licenseName = auto()
-    licenseType = auto()
-    price = auto()
-    period = auto()
-    renewalDate = auto()
-    endDate = auto()
-    restriction = auto()
 
 class Request(ABC):
     """
@@ -51,9 +41,16 @@ class Request(ABC):
             log.log("INFO", f"license {field_key} validated")
     
     def validate_db_field(self, field_key):
+        """
+        Validates a request field that specifies a column in the database based on config file values.
+
+        :param field_key: The name of the field to validate.
+        :type field_key: str
+        :raises ValueError: If the field is found to be invalid.
+        """
         if self.field_exists(field_key):
             validation_checks.check_data_type(self.lic_data[field_key], locate(self.config_dict[field_key]["type"]))
-            if self.lic_data[field_key] in list(map(lambda x: x.name, DatabaseField)):
+            if self.lic_data[field_key] in self.config_dict["valid_db_fields"]:
                 self.clean_data[field_key] = self.lic_data[field_key]
                 log.log("INFO", f"license {field_key} validated")
             else:

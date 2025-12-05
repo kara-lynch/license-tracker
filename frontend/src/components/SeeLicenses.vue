@@ -4,6 +4,8 @@
 import { ref, onMounted } from 'vue'
 import SortByComponent from './inputs/SortByComponent.vue'
 import AddLicense from './buttons/AddLicenseBtn.vue'
+import AssignLicense from './buttons/AssignLicenseBtn.vue'
+import DeleteLicense from './buttons/DeleteLicenseBtn.vue'
 
 const apiBase = 'http://localhost:5000'
 const token = ref<string>(localStorage.getItem('api_token') || '')
@@ -72,6 +74,10 @@ onMounted(() => {
     <div v-if="error" style="color:#b00020;margin-bottom:1rem">{{ error }}</div>
 
     <AddLicense />
+
+    <AssignLicense />
+
+    <DeleteLicense />
     
     <ul v-if="licenses.length">
       <!-- <li>{{ licenses }}</li> -->

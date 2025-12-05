@@ -2,6 +2,8 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
+import SortByComponent from './inputs/SortByComponent.vue'
+import AddLicense from './buttons/AddLicenseBtn.vue'
 
 const apiBase = 'http://localhost:5000'
 const token = ref<string>(localStorage.getItem('api_token') || '')
@@ -54,29 +56,36 @@ onMounted(() => {
 </script>
 
 <template>
-  <main style="padding:1rem; max-width:900px;">
-    <div style="margin-bottom:1rem;">
-      <label style="display:block;margin-bottom:.5rem;">Paste mock SSO token (optional):</label>
-      <input v-model="token" placeholder="Paste token here" style="width:100%;max-width:600px;padding:.4rem" />
-      <div style="margin-top:.5rem;">
-        <button @click="saveToken" style="margin-right:.5rem;">Save token</button>
+  <main>
+    <div>
+      <label>Paste mock SSO token (optional):</label>
+      <input v-model="token" placeholder="Paste token here"/>
+      <div>
+        <button @click="saveToken">Save token</button>
         <button @click="fetchLicenses" :disabled="loading">{{ loading ? 'Loading…' : 'Refresh licenses' }}</button>
       </div>
-      <div style="font-size:0.85rem;color:#666;margin-top:.5rem;">
+      <div>
         Token is stored in localStorage under "api_token" for convenience.
       </div>
     </div>
 
     <div v-if="error" style="color:#b00020;margin-bottom:1rem">{{ error }}</div>
 
-    <ul v-if="licenses.length" style="list-style:none;padding:0;">
-      <li v-for="lic in licenses">{{ lic.curr }}</li>
-      <li v-for="lic in licenses" :key="lic.id || lic.name || JSON.stringify(lic)" style="margin-bottom:1rem;padding:0.5rem;border:1px solid #eee;">
-        <div style="font-weight:600">{{ lic.name || lic.id }}</div>
-        <div v-if="lic.version">Version: {{ lic.version }}</div>
+    <AddLicense />
+    
+    <ul v-if="licenses.length">
+      <!-- <li>{{ licenses }}</li> -->
+      <li v-for="lic in licenses" :key="lic.id">
+        <div>ID: {{ lic.id }}</div>
+        <div>Name: {{ lic.name }}</div>
+        <div>Version: {{ lic.version }}</div>
         <div v-if="lic.type">Type: {{ lic.type }}</div>
         <div v-if="lic.cost">Cost: {{ lic.cost }}</div>
+        <div v-if="lic.curr">Currency: {{ lic.curr }}</div>
+        <div v-if="lic.date_of_renewal">Renewal date: {{ lic.date_of_renewal }}</div>
         <div v-if="lic.expiration">Expiration: {{ lic.expiration }}</div>
+        <div v-if="lic.period">Period: {{ lic.period }}</div>
+        <div v-if="lic.restrictions">Restrictions: {{ lic.restrictions }}</div>
       </li>
     </ul>
 

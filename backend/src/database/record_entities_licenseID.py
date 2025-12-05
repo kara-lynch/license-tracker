@@ -19,6 +19,7 @@ class _LicenseDAO:
     conn_manager = None
     cursor_emp = None
     cursor_man = None
+    creds = None
 
     def __init__(self):  
         '''
@@ -39,24 +40,25 @@ class _LicenseDAO:
 
         config_path = Settings.db_config_file()
         with open(config_path, "r") as file:
-            creds = json.load(file)
+            self.creds = json.load(file)
 
+    def open(self):
         _LicenseDAO.conn_manager = mysql.connector.connect(
-            host = creds["manager-level"]["host"],
-            port = creds["manager-level"]["port"],
-            user = creds["manager-level"]["username"],
-            password = creds["manager-level"]["password"],
-            database = creds["manager-level"]["database"]
+            host = self.creds["manager-level"]["host"],
+            port = self.creds["manager-level"]["port"],
+            user = self.creds["manager-level"]["username"],
+            password = self.creds["manager-level"]["password"],
+            database = self.creds["manager-level"]["database"]
         )  
         _LicenseDAO.cursor_man = _LicenseDAO.conn_manager.cursor()
         self.cursor_man = _LicenseDAO.cursor_man
 
         _LicenseDAO.conn_employee = mysql.connector.connect(
-            host = creds["employee-level"]["host"],
-            port = creds["employee-level"]["port"],
-            user = creds["employee-level"]["username"],
-            password = creds["employee-level"]["password"],
-            database = creds["employee-level"]["database"]
+            host = self.creds["employee-level"]["host"],
+            port = self.creds["employee-level"]["port"],
+            user = self.creds["employee-level"]["username"],
+            password = self.creds["employee-level"]["password"],
+            database = self.creds["employee-level"]["database"]
         )  
         _LicenseDAO.cursor_emp = _LicenseDAO.conn_employee.cursor()
         self.cursor_emp = _LicenseDAO.cursor_emp
@@ -74,6 +76,8 @@ class _LicenseDAO:
         :meta private:
 
         '''
+
+        self.open()
 
         query = 'SELECT * FROM License WHERE lid = %s'
         self.cursor_emp.execute (query, (id,))
@@ -117,6 +121,8 @@ class _LicenseDAO:
 
         '''
 
+        self.open()
+
         query = ''' 
             SELECT License.id, License.licenseName, License.version, License.licenseType, Cost.price, Cost.currency, Cost.period, Cost.renewalDate, ExpirationDate.endDate, GeogRestriction.restriction
             FROM License
@@ -152,7 +158,7 @@ class _LicenseDAO:
                 records[f"{col[0]}"]["expiration_date"] = col[8].strftime("%Y-%m-%d")
             records[f"{col[0]}"]["restrictions"] = col[9]
 
-
+        self.close()
         return records
     
     def seeLicenseRange(self, user_request):
@@ -167,6 +173,7 @@ class _LicenseDAO:
         :rtype: dict
 
         '''
+        self.open()
         fields = user_request.get_clean_data_dict()
         args = []
         query = ''' 
@@ -218,7 +225,7 @@ class _LicenseDAO:
                 records[f"{col[0]}"]["expiration_date"] = col[8].strftime("%Y-%m-%d")
             records[f"{col[0]}"]["restrictions"] = col[9]
 
-
+        self.close()
         return records
 
     def AddLicense(self, user_request, user_credentials):
@@ -241,7 +248,7 @@ class _LicenseDAO:
         :raise Exception: For unexpected errors, which are logged.
 
         '''
-
+        self.open()
         fields = user_request.get_clean_data_dict()
         try: 
             if not user_credentials.has_license_auth():
@@ -290,6 +297,8 @@ class _LicenseDAO:
         except Exception as e:
             log.log("ERROR", f'Error in DB: {e.args[0]}')
             return False
+        finally:
+            self.close()
     
     def EditLicense(self, user_request, user_credentials):
         '''    
@@ -396,6 +405,7 @@ class _LicenseDAO:
         :raise Exception: For unexpected errors, which are logged.
 
         '''
+        self.open()
         try: 
             
             
@@ -421,6 +431,8 @@ class _LicenseDAO:
         except Exception as e:
             log.log("ERROR", f'Error in DB: {e.args[0]}')
             return False
+        finally:
+            self.close()
         
     def EmployeeAssign(self, user_request, user_credentials):
         '''    
@@ -442,6 +454,7 @@ class _LicenseDAO:
         :raise Exception: For unexpected errors, which are logged.
 
         '''
+        self.open()
 
         fields = user_request.get_clean_data_dict()
         try: 
@@ -467,6 +480,8 @@ class _LicenseDAO:
         except Exception as e:
             log.log("ERROR", f'Error in DB: {e.args[0]}')
             return False
+        finally:
+            self.close()
 
     def EmployeeUnassign(self, user_request, user_credentials):
         '''      
@@ -485,6 +500,7 @@ class _LicenseDAO:
         :raise Exception: For unexpected errors, which are logged.
 
         '''
+        self.open()
         try: 
             
             
@@ -511,6 +527,8 @@ class _LicenseDAO:
         except Exception as e:
             log.log("ERROR", f'Error in DB: {e.args[0]}')
             return False
+        finally:
+            self.close()
         
     def SeeAssignment(self, user_request, user_credentials):
         '''
@@ -525,6 +543,7 @@ class _LicenseDAO:
         :rtype: dict
 
         '''
+        self.open()
         fields = user_request.get_clean_data_dict()
         args = []
 
@@ -585,6 +604,7 @@ class _LicenseDAO:
             records[f"{col[0]}"]["restrictions"] = col[9]
 
 
+        self.close()
         return records
 
 

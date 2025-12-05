@@ -1,7 +1,11 @@
-<script setup lang="ts"></script>
+<!-- Spencer will work on this view -->
+
+<script setup lang="ts">
+import SeeLicenses from '@/components/SeeLicenses.vue'
+</script> 
 
 <template>
-  <h1>This is our home view</h1>
+  <SeeLicenses />
 </template>
 
 <style>

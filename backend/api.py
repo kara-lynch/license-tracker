@@ -269,7 +269,7 @@ Required:
     - "licenseId": int
     - "employeeId": int
 """
-@app.post("/employeeUnassign/")
+@app.delete("/employeeUnassign/")
 def employeeUnassign():
     # Extract info from request, create request object 
     try:

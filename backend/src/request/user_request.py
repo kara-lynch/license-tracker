@@ -4,9 +4,9 @@ import json
 from src.validation import validation_checks
 from src.logger import log
 from pydoc import locate
-from enum import StrEnum, auto
+from enum import Enum, auto
 
-class DatabaseField(StrEnum):
+class DatabaseField(Enum):
     licenseName = auto()
     licenseType = auto()
     price = auto()

@@ -13,7 +13,7 @@
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="API and Usage" href="api.html" />
+    <link rel="next" title="Installation" href="usage.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
@@ -34,7 +34,7 @@
 <h1>Welcome to SALTS’s documentation!<a class="headerlink" href="#welcome-to-salts-s-documentation" title="Link to this heading">¶</a></h1>
 <a class="reference internal image-reference" href="_images/salts-logo.png"><img alt="The SALTS logo, drawn by Frederick Bumgarner." class="align-center" src="_images/salts-logo.png" style="width: 325.5px; height: 349.0px;" /></a>
 <p>The <strong>Software Assignment and License Tracking System</strong>, or <strong>SALTS</strong>, is a Python web application designed to track the external software licenses an organization is using and allow the licenses to be assigned to specific users.</p>
-<p>Check out the <a class="reference internal" href="usage.html"><span class="doc">Usage</span></a> section for further information.</p>
+<p>Check out the <a class="reference internal" href="usage.html"><span class="doc">Installation</span></a> section for further information.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>This project is under active development.</p>
@@ -53,15 +53,16 @@
 <h2>Contents<a class="headerlink" href="#contents" title="Link to this heading">¶</a></h2>
 <div class="toctree-wrapper compound">
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api.html">API and Usage</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="api.html#displaying-the-documentation">Displaying the Documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#pinging-the-server">Pinging the Server</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api.html#getting-all-licenses">Getting All Licenses</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#getting-all-licenses-in-a-range">Getting All Licenses in a Range</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api.html#adding-a-license">Adding a License</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api.html#removing-a-license">Removing a License</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="usage.html#installation">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#assigning-a-license">Assigning a License</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#unassigning-a-license">Unassigning a License</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#seeing-license-assignments">Seeing License Assignments</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="request.html">User Requests</a><ul>
@@ -89,16 +90,16 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="credentials.html">User Credentials</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="credentials.html#src.credentials.credentials_manager.UserCredentials"><code class="docutils literal notranslate"><span class="pre">UserCredentials</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="credentials.html#src.credentials.credentials_manager.UserCredentials.department"><code class="docutils literal notranslate"><span class="pre">UserCredentials.department()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="credentials.html#src.credentials.credentials_manager.UserCredentials.employee_id"><code class="docutils literal notranslate"><span class="pre">UserCredentials.employee_id()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="credentials.html#src.credentials.credentials_manager.UserCredentials.first_name"><code class="docutils literal notranslate"><span class="pre">UserCredentials.first_name()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="credentials.html#src.credentials.credentials_manager.UserCredentials.has_license_auth"><code class="docutils literal notranslate"><span class="pre">UserCredentials.has_license_auth()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="credentials.html#src.credentials.credentials_manager.UserCredentials.is_manager"><code class="docutils literal notranslate"><span class="pre">UserCredentials.is_manager()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="credentials.html#src.credentials.credentials_manager.UserCredentials.last_name"><code class="docutils literal notranslate"><span class="pre">UserCredentials.last_name()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="credentials.html#src.credentials.credentials_manager.UserCredentials.location"><code class="docutils literal notranslate"><span class="pre">UserCredentials.location()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="credentials.html#src.credentials.credentials_manager.UserCredentials.name"><code class="docutils literal notranslate"><span class="pre">UserCredentials.name()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="credentials.html#src.credentials.credentials_manager.UserCredentials.title"><code class="docutils literal notranslate"><span class="pre">UserCredentials.title()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="credentials.html#src.credentials.credentials_manager.UserCredentials.validate"><code class="docutils literal notranslate"><span class="pre">UserCredentials.validate()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="credentials.html#src.credentials.credentials_manager.UserCredentials.name"><code class="docutils literal notranslate"><span class="pre">UserCredentials.name()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="credentials.html#src.credentials.credentials_manager.UserCredentials.first_name"><code class="docutils literal notranslate"><span class="pre">UserCredentials.first_name()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="credentials.html#src.credentials.credentials_manager.UserCredentials.last_name"><code class="docutils literal notranslate"><span class="pre">UserCredentials.last_name()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="credentials.html#src.credentials.credentials_manager.UserCredentials.employee_id"><code class="docutils literal notranslate"><span class="pre">UserCredentials.employee_id()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="credentials.html#src.credentials.credentials_manager.UserCredentials.location"><code class="docutils literal notranslate"><span class="pre">UserCredentials.location()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="credentials.html#src.credentials.credentials_manager.UserCredentials.department"><code class="docutils literal notranslate"><span class="pre">UserCredentials.department()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="credentials.html#src.credentials.credentials_manager.UserCredentials.title"><code class="docutils literal notranslate"><span class="pre">UserCredentials.title()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="credentials.html#src.credentials.credentials_manager.UserCredentials.is_manager"><code class="docutils literal notranslate"><span class="pre">UserCredentials.is_manager()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="credentials.html#src.credentials.credentials_manager.UserCredentials.has_license_auth"><code class="docutils literal notranslate"><span class="pre">UserCredentials.has_license_auth()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -141,8 +142,8 @@
 
 <h3>Navigation</h3>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api.html">API and Usage</a></li>
-<li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="request.html">User Requests</a></li>
 <li class="toctree-l1"><a class="reference internal" href="authentication.html">Authentication</a></li>
 <li class="toctree-l1"><a class="reference internal" href="credentials.html">User Credentials</a></li>
@@ -155,7 +156,7 @@
 <h3>Related Topics</h3>
 <ul>
   <li><a href="#">Documentation overview</a><ul>
-      <li>Next: <a href="api.html" title="next chapter">API and Usage</a></li>
+      <li>Next: <a href="usage.html" title="next chapter">Installation</a></li>
   </ul></li>
 </ul>
 </div>
@@ -182,7 +183,7 @@
       <div class="clearer"></div>
     </div>
     <div class="footer">
-      &copy;2025, Red Team.
+      &copy;2025 Red Team.
       
       |
       Powered by <a href="http://sphinx-doc.org/">Sphinx 7.2.6</a>

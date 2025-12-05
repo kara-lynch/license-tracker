@@ -31,8 +31,8 @@ Contents
 --------
 .. toctree::
 
-   api
    usage
+   api
    request
    authentication
    credentials

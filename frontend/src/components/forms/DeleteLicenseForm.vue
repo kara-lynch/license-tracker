@@ -11,6 +11,8 @@ const emit = defineEmits<{
 
 const formRef = ref<HTMLFormElement | null>(null)
 const lID = ref<number | null>(null)
+const token = import.meta.env.VITE_JWT_TOKEN ?? ''
+const responseText = ref<any | null>(null)
 
 function handleCancel() {
   // reset native form fields
@@ -20,17 +22,20 @@ function handleCancel() {
 }
 
 function sendDelete(){
-    
-    //var token = localStorage.getItem("api_token")
+  if (!formRef.value) return 
+
+  const formData = new FormData(formRef.value)
     
   axios.delete("http://localhost:5000/deleteLicense/", {
     headers: {
-        "Bearer": localStorage.getItem("api_token")
+        Bearer: token,
+        'Content-Type': 'application/json',
     },
     data: {
         "licenseID": lID.value
     }
-  }).catch(function(error){
+  })
+  .catch(function(error){
     console.log(error)
   });
   if (formRef.value) formRef.value.reset()

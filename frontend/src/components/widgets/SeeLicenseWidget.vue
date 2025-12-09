@@ -10,8 +10,8 @@ export default {
     const error = ref<string | null>(null)
     const loading = ref(false)
 
-    // hardcoded JWT for testing
-    const token = 'eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJBdXRoIFNlcnZpY2UiLCJsYXN0X25hbWUiOiJGaXNoYmllIiwibG9jYXRpb24iOiJKYXBhbiIsImlkIjo2NTgsImRlcGFydG1lbnQiOiJMZWdhbCIsInRpdGxlIjoiTWFuYWdlciIsImZpcnN0X25hbWUiOiJKb2xlZW4iLCJzdWIiOiJKb2xlZW4gRmlzaGJpZSIsImlhdCI6MTc2NTIzMTUzOCwiZXhwIjoxNzY1MjM1MTM4fQ.0tY3O-7-7memUGUf3FqcOftfqPP7xi0xHaGVJ09Mcbo'
+    // load token from env 
+    const token = import.meta.env.VITE_JWT_TOKEN ?? ''
 
     async function fetchLicenses() {
       loading.value = true
@@ -20,6 +20,7 @@ export default {
       try {
         console.log('Fetching licenses with token:', token)
         const res = await axios.get('http://localhost:5000/seeLicenses/', {
+          method: 'GET',
           headers: {
             Bearer: token,
             'Content-Type': 'application/json',
@@ -54,12 +55,14 @@ export default {
 
     <ul v-else>
         <li v-for="(license, i) in licenses" :key="license.id">
+            <!-- <ul>{{ license }}</ul> -->
+        
           <div>License Name: {{ license.name }}</div>
-          <div>License ID: {{ license.id }}</div>
-          <div>Version: {{ license.version }}</div>
+          <!-- <div>License ID: {{ license.id }}</div> -->
+          <div>License Type: {{ license.type }}</div>
+          <div>Version: {{ license.ver }}</div>
           <div>License Cost: {{ license.cost }}</div>
           <div>Currency: {{ license.curr }}</div>
-          <div>License Type: {{ license.type }}</div>
           <div>Renewal Date: {{ license.date_of_renewal }}</div>
           <div>Expiration Date: {{ license.expiration_date }}</div>
           <div>Restrictions: {{ license.restrictions }}</div>

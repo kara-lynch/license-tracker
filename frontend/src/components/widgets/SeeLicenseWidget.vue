@@ -55,7 +55,7 @@ export default {
 
     <ul v-else>
         <li v-for="(license, i) in licenses" :key="license.id">
-            <!-- <ul>{{ license }}</ul> -->
+            <ul>{{ license }}</ul>
         
           <div>License Name: {{ license.name }}</div>
           <!-- <div>License ID: {{ license.id }}</div> -->

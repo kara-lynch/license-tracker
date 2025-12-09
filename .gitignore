@@ -5,3 +5,7 @@ flask_test.py
 test_scripts/*
 src/config/db_credentials.json
 .venv/
+frontend/package-lock.json
+frontend/package.json
+.gitignore
+.gitignore

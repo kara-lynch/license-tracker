@@ -6,6 +6,7 @@ import SeeLicenseWidget from './widgets/SeeLicenseWidget.vue'
 import AddLicenseBtn from './buttons/AddLicenseBtn.vue'
 import SortByComponent from './inputs/SortByComponent.vue'
 import SideWidgetDiv from './widgets/SideWidgetDiv.vue'
+import DeleteLicenseBtn from './buttons/DeleteLicenseBtn.vue'
 </script>
 
 <template>
@@ -13,6 +14,7 @@ import SideWidgetDiv from './widgets/SideWidgetDiv.vue'
     <!-- Side widget with manager buttons-->>
     <SideWidgetDiv>
       <AddLicenseBtn />
+      <DeleteLicenseBtn />
     </SideWidgetDiv>  
 
     <BackgroundWidgetDiv>

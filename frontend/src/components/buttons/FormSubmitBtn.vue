@@ -6,5 +6,5 @@
 
 <template>
     <!-- emit "submit" when clicked; parent (form) will send an http request to the license management API -->
-    <button type="button" @click="emit('submit')">Submit</button>
+    <button type="submit" @click="emit('submit')">Submit</button>
 </template>

@@ -31,10 +31,10 @@ async function handleSubmit(e: Event) {
         expiration_date: formData.get('expiration_date') || '',
         restrictions: String(formData.get('restrictions')) || '',
 
-        // cost: parseFloat(String(formData.get('cost'))) || parseFloat('0'),
-        // curr: String(formData.get('curr')) || '',
-        // period: String(formData.get('period')) || '',
-        // date_of_renewal: formData.get('date_of_renewal') || '',
+        cost: parseFloat(String(formData.get('cost'))) || parseFloat('0'),
+        curr: String(formData.get('curr')) || '',
+        period: String(formData.get('period')) || '',
+        date_of_renewal: formData.get('date_of_renewal') || '',
     } // data object to hold formData
    
     try {
@@ -93,7 +93,7 @@ async function handleSubmit(e: Event) {
 
                 <!-- vv NOT WORKING vv-->
 
-                <!-- <div class="field-block">
+                <div class="field-block">
                     <label id="license-cost">License Cost</label>
                         <input class="input-box" name="cost"/>
                 </div>
@@ -111,7 +111,7 @@ async function handleSubmit(e: Event) {
                 <div class="field-block">
                     <label id="license-renewal-date">Renewal Date</label>
                         <input type="date" class="input-box" name="date_of_renewal" />
-                </div> -->
+                </div> 
 
                 <!-- <LicenseTypeBox />
 

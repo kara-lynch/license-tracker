@@ -21,11 +21,15 @@ function handleCancel() {
   emit('close')
 }
 
-function sendDelete(){
+async function sendDelete(e: Event){
+  e.preventDefault()
   if (!formRef.value) return 
 
   const formData = new FormData(formRef.value)
-    
+  const data: Record<string, any> = {
+        licenseID: parseInt(String(formData.get('licenseID'))) || ''
+  }
+  /*
   axios.delete("http://localhost:5000/deleteLicense/", {
     headers: {
         Bearer: token,
@@ -38,24 +42,48 @@ function sendDelete(){
   .catch(function(error){
     console.log(error)
   });
+  */
+
+  try {
+    const res = await fetch('http://localhost:5000/deleteLicense/', {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        Bearer: token,
+      },
+      body: JSON.stringify(data)
+    })
+
+    // On success reset + close; otherwise log
+    if (res.ok) {
+      console.log('License deleted succesfully')
+      if (formRef.value) formRef.value.reset()
+      emit('close')
+    } else {
+      console.error('Delete license failed', res.status, await res.text())
+    }
+  } catch (err) {
+    console.error('Network error', err)
+  }
+
   if (formRef.value) formRef.value.reset()
 }
 </script>
 
 <template>
     <!-- add ref so we can reset the form programmatically -->
-    <form class="form-wrapper" ref="formRef">
+    <form class="form-wrapper" ref="formRef" @submit="sendDelete">
         <div class="form-content">
             <label id="required-fields">Please fill out all required fields *</label>
 
             
                 <div class="field-block">
                     <label id="license-id">license ID</label>
-                        <input v-model="lID" class="input-box" name="id" />
+                        <input v-model="lID" class="input-box" name="licenseID" />
                 </div>
 
                 <div style="display:flex;gap:8px;align-items:center">
-                  <FormSubmitBtn @submit="sendDelete" />
+                  <FormSubmitBtn />
                   <!-- Cancel button resets the form and closes it via handleCancel -->
                   <FormCancelBtn @cancel="handleCancel" />
                 </div>

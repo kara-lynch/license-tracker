@@ -12,36 +12,108 @@ const emit = defineEmits<{
 }>()
 
 const formRef = ref<HTMLFormElement | null>(null)
+const token = import.meta.env.VITE_JWT_TOKEN ?? ''
 
 function handleCancel() {
-  // reset native form fields
   if (formRef.value) formRef.value.reset()
-  // notify parent to close the form
   emit('close')
+}
+async function handleSubmit(e: Event) {
+    e.preventDefault()
+    if (!formRef.value) return 
+
+    const formData = new FormData(formRef.value)
+    const data: Record<string, any> = {
+        name: String(formData.get('name')) || '',
+        ver: String(formData.get('ver')) || '',
+        type: String(formData.get('type')) || '',
+        cost: parseFloat(String(formData.get('cost'))) || '',
+        curr: String(formData.get('curr')) || undefined,
+        period: String(formData.get('period')) || undefined,
+        date_of_renewal: formData.get('date_of_renewal') || undefined,
+        expiration_date: formData.get('expiration_date') || undefined,
+        restrictions: String(formData.get('restrictions')) || undefined,
+    } // data object to hold formData
+   
+    try {
+    const res = await fetch('http://localhost:5000/addLicense/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Bearer: token,
+      },
+      body: JSON.stringify(data),
+    })
+
+    // On success reset + close; otherwise log
+    if (res.ok) {
+      console.log('License added successfully:', String(data.name), String(data.ver), String(data.type))
+      if (formRef.value) formRef.value.reset()
+      emit('close')
+    } else {
+      console.error('Add license failed', res.status, await res.text())
+    }
+  } catch (err) {
+    console.error('Network error', err)
+  }
 }
 </script>
 
 <template>
-    <!-- add ref so we can reset the form programmatically -->
-    <form class="form-wrapper" ref="formRef">
+    <form class="form-wrapper" ref="formRef" @submit="handleSubmit">
         <div class="form-content">
             <label id="required-fields">Please fill out all required fields *</label>
 
                 <div class="field-block">
                     <label id="license-name">License Name *</label>
-                        <input class="input-box" name="name" />
+                        <input class="input-box" name="name" required/>
                 </div>
 
                 <div class="field-block">
                     <label id="license-version">License version *</label>
-                        <input class="input-box" name="version" />
+                        <input class="input-box" name="ver" required/>
                 </div>
 
-                <LicenseTypeBox />
+                 <div class="field-block">
+                    <label id="license-type">License Type *</label>
+                        <input class="input-box" name="type" required/>
+                </div>
+
+                <div class="field-block">
+                    <label id="license-cost">License Cost</label>
+                        <input class="input-box" name="cost"/>
+                </div>
+
+                <div class="field-block">
+                    <label id="license-curr">Currency</label>
+                        <input class="input-box" name="curr"/>
+                </div>
+
+                <div class="field-block">
+                    <label id="license-period">Period</label>
+                        <input class="input-box" name="period"/>
+                </div>
+
+               <div class="field-block">
+                    <label id="license-renewal-date">Renewal Date</label>
+                        <input type="date" class="input-box" name="date_of_renewal" />
+                </div>
+
+                <div class="field-block">
+                    <label id="license-expiration-date">Expiration Date</label>
+                        <input type="date" class="input-box" name="expiration_date" />
+                </div>
+
+                <div class="field-block">
+                    <label id="license-geographical-restrictions">Geographical Restrictions</label>
+                        <input class="input-box" name="restrictions" />
+                </div>
+
+                <!-- <LicenseTypeBox />
 
                 <CostInputBox />
 
-                <RenewalPeriodBox />
+                <RenewalPeriodBox /> 
 
                 <div class="field-block">
                     <label id="license-renewal-date">Renewal Date</label>
@@ -56,11 +128,10 @@ function handleCancel() {
                 <div class="field-block">
                     <label id="license-geographical-restrictions">Geographical Restrictions</label>
                         <input class="input-box" name="restrictions" />
-                </div>
+                </div> -->
 
                 <div style="display:flex;gap:8px;align-items:center">
                   <FormSubmitBtn />
-                  <!-- Cancel button resets the form and closes it via handleCancel -->
                   <FormCancelBtn @cancel="handleCancel" />
                 </div>
         </div>

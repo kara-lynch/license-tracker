@@ -1,3 +1,5 @@
+<!-- Spencer will work on this component -->
+
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 
@@ -68,6 +70,7 @@ onMounted(() => {
     <div v-if="error" style="color:#b00020;margin-bottom:1rem">{{ error }}</div>
 
     <ul v-if="licenses.length" style="list-style:none;padding:0;">
+      <li v-for="lic in licenses">{{ lic.curr }}</li>
       <li v-for="lic in licenses" :key="lic.id || lic.name || JSON.stringify(lic)" style="margin-bottom:1rem;padding:0.5rem;border:1px solid #eee;">
         <div style="font-weight:600">{{ lic.name || lic.id }}</div>
         <div v-if="lic.version">Version: {{ lic.version }}</div>

@@ -1,20 +1,20 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
+// import HelloWorld from './components/HelloWorld.vue'
 </script>
 
 <template>
   <header>
 
     <div class="wrapper">
-      <HelloWorld msg="You did it!" />
+      <!-- <HelloWorld msg="You did it!" /> -->
       <nav>
         <RouterLink to="/">Home</RouterLink>
         <RouterLink to="/view-licenses">View Licenses</RouterLink>
         <RouterLink to="/assigned-to-me">Assigned to me</RouterLink>
       </nav>
     </div>
-    
+
   </header>
   <RouterView />
 </template>

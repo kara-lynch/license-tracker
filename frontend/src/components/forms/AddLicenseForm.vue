@@ -5,6 +5,7 @@ import LicenseTypeBox from '../inputs/LicenseTypeBox.vue';
 import RenewalPeriodBox from '../inputs/RenewalPeriodBox.vue';
 import FormSubmitBtn from '../buttons/FormSubmitBtn.vue';
 import FormCancelBtn from '../buttons/FormCancelBtn.vue';
+import { parse } from 'vue/compiler-sfc';
 
 // allow emitting a "close" event to the parent
 const emit = defineEmits<{
@@ -27,12 +28,13 @@ async function handleSubmit(e: Event) {
         name: String(formData.get('name')) || '',
         ver: String(formData.get('ver')) || '',
         type: String(formData.get('type')) || '',
-        cost: parseFloat(String(formData.get('cost'))) || '',
-        curr: String(formData.get('curr')) || undefined,
-        period: String(formData.get('period')) || undefined,
-        date_of_renewal: formData.get('date_of_renewal') || undefined,
-        expiration_date: formData.get('expiration_date') || undefined,
-        restrictions: String(formData.get('restrictions')) || undefined,
+        expiration_date: formData.get('expiration_date') || '',
+        restrictions: String(formData.get('restrictions')) || '',
+
+        // cost: parseFloat(String(formData.get('cost'))) || parseFloat('0'),
+        // curr: String(formData.get('curr')) || '',
+        // period: String(formData.get('period')) || '',
+        // date_of_renewal: formData.get('date_of_renewal') || '',
     } // data object to hold formData
    
     try {
@@ -47,7 +49,7 @@ async function handleSubmit(e: Event) {
 
     // On success reset + close; otherwise log
     if (res.ok) {
-      console.log('License added successfully:', String(data.name), String(data.ver), String(data.type))
+      console.log('License added successfully:', String(data.name), String(data.ver), String(data.type), String(data.expiration_date), String(data.restrictions))
       if (formRef.value) formRef.value.reset()
       emit('close')
     } else {
@@ -80,6 +82,18 @@ async function handleSubmit(e: Event) {
                 </div>
 
                 <div class="field-block">
+                    <label id="license-expiration-date">Expiration Date</label>
+                        <input type="date" class="input-box" name="expiration_date" />
+                </div> 
+
+                <div class="field-block">
+                    <label id="license-geographical-restrictions">Geographical Restrictions</label>
+                        <input class="input-box" name="restrictions" />
+                </div>
+
+                <!-- vv NOT WORKING vv-->
+
+                <!-- <div class="field-block">
                     <label id="license-cost">License Cost</label>
                         <input class="input-box" name="cost"/>
                 </div>
@@ -92,22 +106,12 @@ async function handleSubmit(e: Event) {
                 <div class="field-block">
                     <label id="license-period">Period</label>
                         <input class="input-box" name="period"/>
-                </div>
+                </div> 
 
-               <div class="field-block">
+                <div class="field-block">
                     <label id="license-renewal-date">Renewal Date</label>
                         <input type="date" class="input-box" name="date_of_renewal" />
-                </div>
-
-                <div class="field-block">
-                    <label id="license-expiration-date">Expiration Date</label>
-                        <input type="date" class="input-box" name="expiration_date" />
-                </div>
-
-                <div class="field-block">
-                    <label id="license-geographical-restrictions">Geographical Restrictions</label>
-                        <input class="input-box" name="restrictions" />
-                </div>
+                </div> -->
 
                 <!-- <LicenseTypeBox />
 

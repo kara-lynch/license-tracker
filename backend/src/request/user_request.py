@@ -33,12 +33,20 @@ class Request(ABC):
         :raises ValueError: If the field is found to be invalid.
         """
         if self.field_exists(field_key):
-            validation_checks.check_data_type(self.lic_data[field_key], locate(self.config_dict[field_key]["type"]))
-            validation_checks.check_field_size(str(self.lic_data[field_key]), self.config_dict[field_key]["max_size"], self.config_dict[field_key]["min_size"])
-            if locate(self.config_dict[field_key]["type"]) == int or locate(self.config_dict[field_key]["type"]) == float:
-                validation_checks.is_positive(self.lic_data[field_key])
-            self.clean_data[field_key] = self.lic_data[field_key]
-            log.log("INFO", f"license {field_key} validated")
+            try:
+                
+                validation_checks.check_field_size(str(self.lic_data[field_key]), self.config_dict[field_key]["max_size"], self.config_dict[field_key]["min_size"])
+                if locate(self.config_dict[field_key]["type"]) == int or locate(self.config_dict[field_key]["type"]) == float:
+                    self.lic_data[field_key] = int(self.lic_data[field_key])
+                    validation_checks.is_positive(self.lic_data[field_key])
+                if locate(self.config_dict[field_key]["type"]) == float:
+                    self.lic_data[field_key] = float(self.lic_data[field_key])
+                    validation_checks.is_positive(self.lic_data[field_key])
+                validation_checks.check_data_type(self.lic_data[field_key], locate(self.config_dict[field_key]["type"]))
+                self.clean_data[field_key] = self.lic_data[field_key]
+                log.log("INFO", f"license {field_key} validated")
+            except Exception as e:
+                log.log("ERROR", f"{e} + field is {self.lic_data[field_key]}")
     
     def validate_db_field(self, field_key):
         """

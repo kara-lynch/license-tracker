@@ -19,6 +19,7 @@ class _LicenseDAO:
     conn_manager = None
     cursor_emp = None
     cursor_man = None
+    creds = None
 
     def __init__(self):  
         '''
@@ -39,24 +40,25 @@ class _LicenseDAO:
 
         config_path = Settings.db_config_file()
         with open(config_path, "r") as file:
-            creds = json.load(file)
+            self.creds = json.load(file)
 
+    def open(self):
         _LicenseDAO.conn_manager = mysql.connector.connect(
-            host = creds["manager-level"]["host"],
-            port = creds["manager-level"]["port"],
-            user = creds["manager-level"]["username"],
-            password = creds["manager-level"]["password"],
-            database = creds["manager-level"]["database"]
+            host = self.creds["manager-level"]["host"],
+            port = self.creds["manager-level"]["port"],
+            user = self.creds["manager-level"]["username"],
+            password = self.creds["manager-level"]["password"],
+            database = self.creds["manager-level"]["database"]
         )  
         _LicenseDAO.cursor_man = _LicenseDAO.conn_manager.cursor()
         self.cursor_man = _LicenseDAO.cursor_man
 
         _LicenseDAO.conn_employee = mysql.connector.connect(
-            host = creds["employee-level"]["host"],
-            port = creds["employee-level"]["port"],
-            user = creds["employee-level"]["username"],
-            password = creds["employee-level"]["password"],
-            database = creds["employee-level"]["database"]
+            host = self.creds["employee-level"]["host"],
+            port = self.creds["employee-level"]["port"],
+            user = self.creds["employee-level"]["username"],
+            password = self.creds["employee-level"]["password"],
+            database = self.creds["employee-level"]["database"]
         )  
         _LicenseDAO.cursor_emp = _LicenseDAO.conn_employee.cursor()
         self.cursor_emp = _LicenseDAO.cursor_emp
@@ -74,6 +76,8 @@ class _LicenseDAO:
         :meta private:
 
         '''
+
+        self.open()
 
         query = 'SELECT * FROM License WHERE lid = %s'
         self.cursor_emp.execute (query, (id,))
@@ -117,6 +121,8 @@ class _LicenseDAO:
 
         '''
 
+        self.open()
+
         query = ''' 
             SELECT License.id, License.licenseName, License.version, License.licenseType, Cost.price, Cost.currency, Cost.period, Cost.renewalDate, ExpirationDate.endDate, GeogRestriction.restriction
             FROM License
@@ -152,7 +158,7 @@ class _LicenseDAO:
                 records[f"{col[0]}"]["expiration_date"] = col[8].strftime("%Y-%m-%d")
             records[f"{col[0]}"]["restrictions"] = col[9]
 
-
+        self.close()
         return records
     
     def seeLicenseRange(self, user_request):
@@ -167,17 +173,32 @@ class _LicenseDAO:
         :rtype: dict
 
         '''
+        self.open()
         fields = user_request.get_clean_data_dict()
+        args = []
         query = ''' 
             SELECT License.id, License.licenseName, License.version, License.licenseType, Cost.price, Cost.currency, Cost.period, Cost.renewalDate, ExpirationDate.endDate, GeogRestriction.restriction
             FROM License
             LEFT JOIN Cost ON License.id = Cost.licenseID
             LEFT JOIN ExpirationDate ON License.id = ExpirationDate.licenseID
             LEFT JOIN GeogRestriction ON License.id = GeogRestriction.licenseID
-            LIMIT %s OFFSET %s
             '''
+        
+        if "sort_field" in fields:
+            query += "ORDER BY %s "
+            args.append(fields["sort_field"])
+            if "ascending" in fields & fields["ascending"]:
+                query += "ASC"
+            else:
+                query += "DESC"
+        
+        query += '''
+        LIMIT %s OFFSET %s'''
+        args.append(fields["range"])
+        args.append(fields["offset"])
+
         try:
-            self.cursor_emp.execute(query, (fields["range"], fields["offset"])) 
+            self.cursor_emp.execute(query, args) 
             results = self.cursor_emp.fetchall()
         except Exception as e:
             log.log("ERROR", f'Database issue. {e.args[0]}')
@@ -204,7 +225,7 @@ class _LicenseDAO:
                 records[f"{col[0]}"]["expiration_date"] = col[8].strftime("%Y-%m-%d")
             records[f"{col[0]}"]["restrictions"] = col[9]
 
-
+        self.close()
         return records
 
     def AddLicense(self, user_request, user_credentials):
@@ -227,7 +248,7 @@ class _LicenseDAO:
         :raise Exception: For unexpected errors, which are logged.
 
         '''
-
+        self.open()
         fields = user_request.get_clean_data_dict()
         try: 
             if not user_credentials.has_license_auth():
@@ -276,6 +297,8 @@ class _LicenseDAO:
         except Exception as e:
             log.log("ERROR", f'Error in DB: {e.args[0]}')
             return False
+        finally:
+            self.close()
     
     def EditLicense(self, user_request, user_credentials):
         '''    
@@ -382,6 +405,7 @@ class _LicenseDAO:
         :raise Exception: For unexpected errors, which are logged.
 
         '''
+        self.open()
         try: 
             
             
@@ -407,8 +431,181 @@ class _LicenseDAO:
         except Exception as e:
             log.log("ERROR", f'Error in DB: {e.args[0]}')
             return False
+        finally:
+            self.close()
+        
+    def EmployeeAssign(self, user_request, user_credentials):
+        '''    
+        Adds a new employee assignment record to the database. This creates a relation between an 
+        employee record and a license record.
+
+        This method first checks whether the user has authorization to add licenses using 
+        ``user_credentials.has_license_auth()``. If authorized, it inserts the assignment
+        information into the ``EmployeeAssign`` table.
+
+        :param user_request: An object containing cleaned assignment data indicating the employee
+        and license to be assigned to each other.
+        :param user_credentials: An object representing the user's identity and permissions.
+
+        :return: True if the insert succeeds, or False if the user is unauthorized or if any database error occurs.
+        :rtype: bool
+
+        :raise mysql.connector.Error: For database-related issues.
+        :raise Exception: For unexpected errors, which are logged.
+
+        '''
+        self.open()
+
+        fields = user_request.get_clean_data_dict()
+        try: 
+            if not user_credentials.has_license_auth():
+                log.log("ERROR", "User not authorized to make this request.")
+                return False
+                        
+            # Prep query to insert an assignment record
+            license_query = ''' INSERT INTO EmployeeAssign (licenseID, employeeID, assignerID)
+            Values(%s, %s, %s)
+            '''
+            self.cursor_man.execute(license_query,(fields["licenseId"], fields["employeeId"], user_credentials.employee_id()))
+            
+            # commit insert
+            self.conn_manager.commit()
+
+            return True
+
+        except mysql.connector.Error as err:
+            print(f"Error: {err}")
+            self.conn.rollback()
+            return False
+        except Exception as e:
+            log.log("ERROR", f'Error in DB: {e.args[0]}')
+            return False
+        finally:
+            self.close()
+
+    def EmployeeUnassign(self, user_request, user_credentials):
+        '''      
+        Deletes an employee assignment record from the database based on the license ID provided in the user request.
+
+        This method first checks whether the user has authorization to delete licenses using
+        ``user_credentials.has_license_auth()``. If authorized, it retrieves the license and employee 
+        IDs from the request and deletes the corresponding record from the ``EmployeeAssign`` table.
+
+        :param user_request: An object containing the cleaned license data, including the license ID.
+        :param user_credentials: An object representing the user's identity and permissions.
+
+        :return: True if the deletion is successful, or False if the user is unauthorized or if any error occurs during deletion.
+
+        :raise mysql.connector.Error: For database-related issues.
+        :raise Exception: For unexpected errors, which are logged.
+
+        '''
+        self.open()
+        try: 
+            
+            
+            # Check if user has authorization to delete records
+            if not user_credentials.has_license_auth():
+                log.log("ERROR", "User not authorized to make this request.")
+                return False
+            
+            fields = user_request.get_clean_data_dict()
+            
+            # Run deletion query
+            self.cursor_man.execute('DELETE FROM EmployeeAssign WHERE (licenseID = %s AND employeeID = %s)', 
+                (fields["licenseId"], fields["employeeId"]))
+
+            # Commit assignment deletion
+            self.conn_manager.commit()
+        
+            return True
+
+        except mysql.connector.Error as err:
+            print(f"Error deleting license {fields["licenseId"]}: {err}")
+            self.conn.rollback()
+            return False
+        except Exception as e:
+            log.log("ERROR", f'Error in DB: {e.args[0]}')
+            return False
+        finally:
+            self.close()
+        
+    def SeeAssignment(self, user_request, user_credentials):
+        '''
+        Retrieves and compiles a specific range of records from the EmployeeAssign table.
+        
+        This method works identically to seeLicenseRange(), except it only returns records that have been
+        assigned to a specific employee. If the user is a manager, they can provide a specific employee ID
+        to see all licenses assigned to that employee; if not provided, or if the user is not a manager, 
+        only the licenses assigned to the current user will be returned.
+        
+        :return: A dictionary of license records with structured metadata.
+        :rtype: dict
+
+        '''
+        self.open()
+        fields = user_request.get_clean_data_dict()
+        args = []
+
+        if user_credentials.has_license_auth() & "employeeId" in fields:
+            id_to_query = fields["employeeId"]
+        else:
+            id_to_query = user_credentials.employee_id()
+        query = ''' 
+            SELECT License.id, License.licenseName, License.version, License.licenseType, Cost.price, Cost.currency, Cost.period, Cost.renewalDate, ExpirationDate.endDate, GeogRestriction.restriction
+            FROM License
+            LEFT JOIN Cost ON License.id = Cost.licenseID
+            LEFT JOIN ExpirationDate ON License.id = ExpirationDate.licenseID
+            LEFT JOIN GeogRestriction ON License.id = GeogRestriction.licenseID
+            LEFT JOIN EmployeeAssign ON License.id = EmployeeAssign.licenseID
+            WHERE EmployeeAssign.employeeID = %s
+            '''
+        args.append(str(id_to_query))
+        
+        if "sort_field" in fields:
+            query += "ORDER BY %s "
+            args.append(fields["sort_field"])
+            if "ascending" in fields & fields["ascending"]:
+                query += "ASC"
+            else:
+                query += "DESC"
+        
+        query += '''
+        LIMIT %s OFFSET %s'''
+        args.append(fields["range"])
+        args.append(fields["offset"])
+
+        try:
+            self.cursor_emp.execute(query, args) 
+            results = self.cursor_emp.fetchall()
+        except Exception as e:
+            log.log("ERROR", f'Database issue. {e.args[0]}')
+       
+        records = {}
+        for col in results:
+            records[f"{col[0]}"] = {}
+            records[f"{col[0]}"]["name"] = col[1]
+            records[f"{col[0]}"]["ver"] = col[2]
+            records[f"{col[0]}"]["type"] = col[3]
+            if col[4] is None:
+                records[f"{col[0]}"]["cost"] = None
+            else:
+                records[f"{col[0]}"]["cost"] = float(col[4])
+            records[f"{col[0]}"]["curr"] = col[5]
+            records[f"{col[0]}"]["period"] = col[6]
+            if col[7] is None:
+                records[f"{col[0]}"]["date_of_renewal"] = None
+            else:
+                records[f"{col[0]}"]["date_of_renewal"] = col[7].strftime("%Y-%m-%d")
+            if col[8] is None:
+                records[f"{col[0]}"]["expiration_date"] = None
+            else:
+                records[f"{col[0]}"]["expiration_date"] = col[8].strftime("%Y-%m-%d")
+            records[f"{col[0]}"]["restrictions"] = col[9]
 
 
+        self.close()
+        return records
 
 
     def close(self):
@@ -420,5 +617,7 @@ class _LicenseDAO:
         
         '''
 
-        self.cursor.close()
-        self.conn.close()
+        self.cursor_emp.close()
+        self.cursor_man.close()
+        self.conn_employee.close()
+        self.conn_manager.close()

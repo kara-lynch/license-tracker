@@ -1,7 +1,10 @@
 <script setup lang="ts">
-
+    const emit = defineEmits<{
+    (e: 'submit'): void
+}>()
 </script>
 
 <template>
-    <button type="submit" value="Submit" class="submit-btn">Submit</button>
+    <!-- emit "submit" when clicked; parent (form) will send an http request to the license management API -->
+    <button type="button" @click="emit('submit')">Submit</button>
 </template>

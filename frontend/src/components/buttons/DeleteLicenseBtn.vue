@@ -12,6 +12,6 @@ function toggleBool() {
 <template>
     <button @click="toggleBool">Delete License</button>
     <div v-show="showFormFlag">
-        <DeleteLicenseForm />
+        <DeleteLicenseForm @close ='toggleBool'/>
     </div>
 </template>

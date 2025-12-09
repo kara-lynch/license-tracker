@@ -5,14 +5,16 @@ import BackgroundWidgetDiv from './widgets/BackgroundWidgetDiv.vue'
 import SeeLicenseWidget from './widgets/SeeLicenseWidget.vue'
 import AddLicenseBtn from './buttons/AddLicenseBtn.vue'
 import SortByComponent from './inputs/SortByComponent.vue'
+import SideWidgetDiv from './widgets/SideWidgetDiv.vue'
 </script>
 
 <template>
   <div>
-    <BackgroundWidgetDiv>
+    <!-- Side widget with manager buttons-->>
+    <SideWidgetDiv>
       <AddLicenseBtn />
-    </BackgroundWidgetDiv>  
-    
+    </SideWidgetDiv>  
+
     <BackgroundWidgetDiv>
       <SortByComponent />
       <SeeLicenseWidget />

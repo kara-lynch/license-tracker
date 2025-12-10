@@ -434,7 +434,7 @@ class _LicenseDAO:
         finally:
             self.close()
         
-    def EmployeeAssign(self, user_request, user_credentials):
+    def employeeAssign(self, user_request, user_credentials):
         '''    
         Adds a new employee assignment record to the database. This creates a relation between an 
         employee record and a license record.
@@ -483,7 +483,7 @@ class _LicenseDAO:
         finally:
             self.close()
 
-    def EmployeeUnassign(self, user_request, user_credentials):
+    def employeeUnassign(self, user_request, user_credentials):
         '''      
         Deletes an employee assignment record from the database based on the license ID provided in the user request.
 

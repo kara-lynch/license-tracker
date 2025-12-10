@@ -19,7 +19,7 @@ import DeleteLicenseBtn from './buttons/DeleteLicenseBtn.vue'
 
     <!-- Main widget to see licenses -->
     <BackgroundWidgetDiv>
-      <SortByComponent />
+      <!-- <SortByComponent /> -->
       <SeeLicenseWidget />
     </BackgroundWidgetDiv>
   </div>

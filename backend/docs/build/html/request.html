@@ -140,6 +140,20 @@ An abstract class is used for validation, which is implemented in request type-s
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="src.request.user_request.Request.validate_db_field">
+<span class="sig-name descname"><span class="pre">validate_db_field</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">field_key</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.request.user_request.Request.validate_db_field" title="Link to this definition">¶</a></dt>
+<dd><p>Validates a request field that specifies a column in the database based on config file values.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>field_key</strong> (<em>str</em>) – The name of the field to validate.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If the field is found to be invalid.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="src.request.user_request.Request.validate_field">
 <span class="sig-name descname"><span class="pre">validate_field</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">field_key</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.request.user_request.Request.validate_field" title="Link to this definition">¶</a></dt>
 <dd><p>Validates request fields based on config file values.</p>
@@ -187,6 +201,7 @@ An abstract class is used for validation, which is implemented in request type-s
 <li class="toctree-l3"><a class="reference internal" href="#src.request.user_request.Request.has_expiration"><code class="docutils literal notranslate"><span class="pre">Request.has_expiration()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#src.request.user_request.Request.has_restrictions"><code class="docutils literal notranslate"><span class="pre">Request.has_restrictions()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#src.request.user_request.Request.validate_data"><code class="docutils literal notranslate"><span class="pre">Request.validate_data()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.request.user_request.Request.validate_db_field"><code class="docutils literal notranslate"><span class="pre">Request.validate_db_field()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#src.request.user_request.Request.validate_field"><code class="docutils literal notranslate"><span class="pre">Request.validate_field()</span></code></a></li>
 </ul>
 </li>

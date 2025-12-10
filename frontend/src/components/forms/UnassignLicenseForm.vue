@@ -30,8 +30,8 @@ async function handleSubmit(e: Event) {
     } // data object to hold formData
    
     try {
-    const res = await fetch('http://localhost:5000/employeeAssign/', {
-      method: 'POST',
+    const res = await fetch('http://localhost:5000/employeeUnassign/', {
+      method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
         Bearer: token,
@@ -41,11 +41,11 @@ async function handleSubmit(e: Event) {
 
     // On success reset + close; otherwise log
     if (res.ok) {
-      console.log('License assigned successfully:', String(data.licenseID), String(data.employeeID))
+      console.log('License unassigned successfully:', String(data.licenseID), String(data.employeeID))
       if (formRef.value) formRef.value.reset()
       emit('close')
     } else {
-      console.error('Assign license failed', res.status, await res.text())
+      console.error('unassign license failed', res.status, await res.text())
     }
   } catch (err) {
     console.error('Network error', err)

@@ -2,7 +2,7 @@
 </script> 
 
 <template>
-  <h1>This is our assigned to me view</h1>
+  <h1>Licenses assigned to me</h1>
 </template>
 
 <style>

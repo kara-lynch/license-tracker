@@ -91,7 +91,7 @@ async function handleSubmit(e: Event) {
                         <input class="input-box" name="restrictions" />
                 </div>
 
-                <!-- vv NOT WORKING vv-->
+                <!-- vv HOLY SHIT ITS FINALLY WORKING vv-->
 
                 <div class="field-block">
                     <label id="license-cost">License Cost</label>
@@ -111,7 +111,7 @@ async function handleSubmit(e: Event) {
                 <div class="field-block">
                     <label id="license-renewal-date">Renewal Date</label>
                         <input type="date" class="input-box" name="date_of_renewal" />
-                </div> 
+                </div>
 
                 <!-- <LicenseTypeBox />
 
@@ -119,20 +119,7 @@ async function handleSubmit(e: Event) {
 
                 <RenewalPeriodBox /> 
 
-                <div class="field-block">
-                    <label id="license-renewal-date">Renewal Date</label>
-                        <input type="date" class="input-box" name="renewal_date" />
-                </div>
-
-                <div class="field-block">
-                    <label id="license-expiration-date">Expiration Date</label>
-                        <input type="date" class="input-box" name="expiration_date" />
-                </div>
-
-                <div class="field-block">
-                    <label id="license-geographical-restrictions">Geographical Restrictions</label>
-                        <input class="input-box" name="restrictions" />
-                </div> -->
+                --> 
 
                 <div style="display:flex;gap:8px;align-items:center">
                   <FormSubmitBtn />

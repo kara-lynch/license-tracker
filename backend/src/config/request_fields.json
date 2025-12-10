@@ -92,8 +92,8 @@
         "min_size":1,
         "type":"bool"
     },
-    "employeeId":{
-        "key":"employeeId",
+    "employeeID":{
+        "key":"employeeID",
         "max_size":10,
         "min_size":1,
         "type":"int"

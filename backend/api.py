@@ -245,6 +245,23 @@ def seeLicenses():
         # If the code ends up here, it was probably the user's fault
         abort(401)
 
+@app.get("/seeAllAssignments/")
+def seeAllAssignments():
+    # Extract token from request.
+    try:
+        log.log("INFO", "Request to see all assignments received.")
+        success, auth_response = authentication.authorize(request.headers)
+        if success:
+            credentials = UserCredentials(json.loads(auth_response))
+            credentials.validate()
+            records = db.seeAllAssignments()
+            return records
+        else:
+            raise Exception
+    except:
+        # If the code ends up here, it was probably the user's fault
+        abort(401)
+
 """
 To see a specific range of licenses, the following fields can be provided by the frontend:
 

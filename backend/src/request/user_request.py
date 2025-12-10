@@ -33,12 +33,20 @@ class Request(ABC):
         :raises ValueError: If the field is found to be invalid.
         """
         if self.field_exists(field_key):
-            validation_checks.check_data_type(self.lic_data[field_key], locate(self.config_dict[field_key]["type"]))
-            validation_checks.check_field_size(str(self.lic_data[field_key]), self.config_dict[field_key]["max_size"], self.config_dict[field_key]["min_size"])
-            if locate(self.config_dict[field_key]["type"]) == int or locate(self.config_dict[field_key]["type"]) == float:
-                validation_checks.is_positive(self.lic_data[field_key])
-            self.clean_data[field_key] = self.lic_data[field_key]
-            log.log("INFO", f"license {field_key} validated")
+            try:
+                
+                validation_checks.check_field_size(str(self.lic_data[field_key]), self.config_dict[field_key]["max_size"], self.config_dict[field_key]["min_size"])
+                if locate(self.config_dict[field_key]["type"]) == int or locate(self.config_dict[field_key]["type"]) == float:
+                    self.lic_data[field_key] = int(self.lic_data[field_key])
+                    validation_checks.is_positive(self.lic_data[field_key])
+                if locate(self.config_dict[field_key]["type"]) == float:
+                    self.lic_data[field_key] = float(self.lic_data[field_key])
+                    validation_checks.is_positive(self.lic_data[field_key])
+                validation_checks.check_data_type(self.lic_data[field_key], locate(self.config_dict[field_key]["type"]))
+                self.clean_data[field_key] = self.lic_data[field_key]
+                log.log("INFO", f"license {field_key} validated")
+            except Exception as e:
+                log.log("ERROR", f"{e} + field is {self.lic_data[field_key]}")
     
     def validate_db_field(self, field_key):
         """
@@ -267,13 +275,13 @@ class EmpAssignLicReq(Request):
         log.log("INFO", "assign license to employee request begin validation")
         if (len(self.lic_data.keys()) != 2):
             log.log("ERROR", "assigning a license must be given exactly 2 params; program terminated")
-            raise ValueError("Wrong number of params given")
-        if not self.field_exists(self.config_dict["employeeId"]["key"]) or not self.field_exists(self.config_dict["licenseId"]["key"]):
+            raise ValueError("Wrong number of params given")      
+        if not self.field_exists(self.config_dict["employeeID"]["key"]) or not self.field_exists(self.config_dict["licenseID"]["key"]):
             log.log("ERROR", "one or more components required for assigning to an employee are missing; terminating program")
             raise ValueError("Missing one or more required fields")
         else:
-            self.validate_field(self.config_dict["employeeId"]["key"])
-            self.validate_field(self.config_dict["licenseId"]["key"])
+            self.validate_field(self.config_dict["employeeID"]["key"])
+            self.validate_field(self.config_dict["licenseID"]["key"])
 
 class AssignQueryLicReq(Request):
     def validate_data(self):
@@ -295,5 +303,6 @@ class AssignQueryLicReq(Request):
                 self.validate_db_field(self.config_dict["sort_field"]["key"])
             if self.field_exists(self.config_dict["ascending"]["key"]):
                 self.validate_field(self.config_dict["ascending"]["key"])
-            if self.field_exists(self.config_dict["employeeId"]["key"]):
-                self.validate_field(self.config_dict["employeeId"]["key"])
+            if self.field_exists(self.config_dict["employeeID"]["key"]):
+                self.validate_field(self.config_dict["employeeID"]["key"])
+            

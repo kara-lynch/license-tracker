@@ -571,7 +571,7 @@ class _LicenseDAO:
             return True
 
         except mysql.connector.Error as err:
-            print(f"Error deleting license {fields["licenseID"]}: {err}")
+            print(f"Error deleting license {fields['licenseID']}: {err}")
             self.conn.rollback()
             return False
         except Exception as e:

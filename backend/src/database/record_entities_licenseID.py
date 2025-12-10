@@ -161,6 +161,56 @@ class _LicenseDAO:
         self.close()
         return records
     
+    def seeAllAssignments(self):
+        '''
+        Retrieves and compiles detailed license information from the database.
+
+        This method performs a multi-table SQL query using LEFT JOINs to gather data from the
+        ``License``, ``Cost``, ``ExpirationDate``, and ``GeogRestriction`` tables. It returns a dictionary
+        of license records, keyed by license ID, with each record containing:
+
+        - ``name``: License name
+        - ``ver``: License version
+        - ``type``: License type
+        - ``cost``: License cost (float or None)
+        - ``curr``: Currency of the cost
+        - ``period``: Billing period
+        - ``date_of_renewal``: Renewal date (formatted as YYYY-MM-DD or None)
+        - ``expiration_date``: Expiration date (formatted as YYYY-MM-DD or None)
+        - ``restrictions``: Geographic restrictions
+
+        More information on these fields can be found on the :doc:`api` page.
+
+        Note: If certain fields (e.g., cost, renewal date, expiration date) are missing, their values will be set to ``None``.
+        
+        :return: A dictionary of license records with structured metadata.
+        :rtype: dict
+
+        '''
+
+        self.open()
+
+        query = ''' 
+            SELECT id, licenseID, employeeID, assignerID
+            FROM EmployeeAssign
+            '''
+        try:
+            self.cursor_emp.execute(query) 
+            results = self.cursor_emp.fetchall()
+        except Exception as e:
+            log.log("ERROR", f'Database issue. {e.args[0]}')
+       
+        records = {}
+        for col in results:
+            records[f"{col[0]}"] = {}
+            records[f"{col[0]}"]["licenseID"] = col[1]
+            records[f"{col[0]}"]["employeeID"] = col[2]
+            records[f"{col[0]}"]["assignerID"] = col[3]
+
+        self.close()
+        
+        return records
+    
     def seeLicenseRange(self, user_request):
         '''
         Retrieves and compiles a specific range of records from the database.
@@ -434,7 +484,7 @@ class _LicenseDAO:
         finally:
             self.close()
         
-    def EmployeeAssign(self, user_request, user_credentials):
+    def employeeAssign(self, user_request, user_credentials):
         '''    
         Adds a new employee assignment record to the database. This creates a relation between an 
         employee record and a license record.
@@ -466,7 +516,7 @@ class _LicenseDAO:
             license_query = ''' INSERT INTO EmployeeAssign (licenseID, employeeID, assignerID)
             Values(%s, %s, %s)
             '''
-            self.cursor_man.execute(license_query,(fields["licenseId"], fields["employeeId"], user_credentials.employee_id()))
+            self.cursor_man.execute(license_query,(fields["licenseID"], fields["employeeID"], user_credentials.employee_id()))
             
             # commit insert
             self.conn_manager.commit()
@@ -483,7 +533,7 @@ class _LicenseDAO:
         finally:
             self.close()
 
-    def EmployeeUnassign(self, user_request, user_credentials):
+    def employeeUnassign(self, user_request, user_credentials):
         '''      
         Deletes an employee assignment record from the database based on the license ID provided in the user request.
 
@@ -513,7 +563,7 @@ class _LicenseDAO:
             
             # Run deletion query
             self.cursor_man.execute('DELETE FROM EmployeeAssign WHERE (licenseID = %s AND employeeID = %s)', 
-                (fields["licenseId"], fields["employeeId"]))
+                (fields["licenseID"], fields["employeeID"]))
 
             # Commit assignment deletion
             self.conn_manager.commit()
@@ -521,7 +571,7 @@ class _LicenseDAO:
             return True
 
         except mysql.connector.Error as err:
-            print(f"Error deleting license {fields["licenseId"]}: {err}")
+            print(f"Error deleting license {fields["licenseID"]}: {err}")
             self.conn.rollback()
             return False
         except Exception as e:

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import AssignLicenseForm from '../forms/AssignLicenseForm.vue';
+import UnassignLicenseForm from '../forms/UnassignLicenseForm.vue';
 
 const showFormFlag = ref(false);
 
@@ -10,8 +10,8 @@ function toggleBool() {
 </script>
 
 <template>
-    <button @click="toggleBool">Assign to Employee</button>
+    <button @click="toggleBool">Unassign from Employee</button>
     <div v-show="showFormFlag">
-        <AssignLicenseForm @close='toggleBool' />
+        <UnassignLicenseForm @close='toggleBool'/>
     </div>
 </template>

@@ -3,13 +3,13 @@ import { ref, onMounted } from 'vue'
 import axios from 'axios'
 
 export default {
-  name: 'SeeLicenseWidget',
+  name: 'SeeAssignmentsWidget',
   setup () {
-    const licenses = ref<any[]>([])
+    const assignments = ref<any[]>([])
     const error = ref<string | null>(null)
     const loading = ref(false)
 
-    async function fetchLicenses() {
+    async function fetchAssignments() {
       loading.value = true
       error.value = null
       
@@ -18,7 +18,7 @@ export default {
 
       try {
         console.log('Fetching licenses with token:', token)
-        const res = await axios.get('http://localhost:5000/seeLicenses/', {
+        const res = await axios.get('http://localhost:5000/seeAllAssignments/', {
           method: 'GET',
           headers: {
             Bearer: token,
@@ -27,12 +27,12 @@ export default {
         })
         const data = res.data
         if (Array.isArray(data)) {
-          licenses.value = data
+          assignments.value = data
         } else if (data && typeof data === 'object') {
           // convert { "<id>": { ... } } -> [ { id: "<id>", ...fields }, ... ]
-          licenses.value = Object.entries(data).map(([id, val]) => ({ id, ...(val as Record<string, any>) }))
+          assignments.value = Object.entries(data).map(([id, val]) => ({ id, ...(val as Record<string, any>) }))
         } else {
-          licenses.value = []
+          assignments.value = []
         }
       } catch (e: any) {
         error.value =
@@ -45,32 +45,27 @@ export default {
     }
 
     onMounted(() => {
-      fetchLicenses()
+      fetchAssignments()
     })
 
-    return { licenses, error, loading, fetchLicenses }
+    return { assignments, error, loading, fetchAssignments }
   }
 }
 </script>
 
 <template>
   <div>
-    <button @click="fetchLicenses">Refresh</button>
+    <button @click="fetchAssignments">Refresh</button>
 
     <p v-if="loading">Loading…</p>
     <p v-if="error" style="color: red">{{ error }}</p>
 
     <ul v-else>
-        <li v-for="(license, i) in licenses" :key="license.id ?? i">
-          <div> {{ license.name }} </div>
-          <div>License ID: {{ license.id }}</div>
-          <div>License Type: {{ license.type }}</div>
-          <div>Version: {{ license.ver }}</div>
-          <div>License Cost: {{ license.cost }}</div>
-          <div>Currency: {{ license.curr }}</div>
-          <div>Renewal Date: {{ license.date_of_renewal }}</div>
-          <div>Expiration Date: {{ license.expiration_date }}</div>
-          <div>Restrictions: {{ license.restrictions }}</div>
+        <li v-for="(assignment, i) in assignments" :key="assignment.id ?? i">
+          <div> {{ assignment.id }} </div>
+          <div>Employee ID: {{ assignment.employeeID }}</div>
+          <div>License ID: {{ assignment.licenseID }}</div>
+          <div>Assigner ID: {{ assignment.assignerID }}</div>
         </li>
     </ul>
   </div>

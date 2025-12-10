@@ -1,26 +1,25 @@
-<!-- Spencer will work on this component -->
 
 <script setup lang="ts">
 import BackgroundWidgetDiv from './widgets/BackgroundWidgetDiv.vue'
-import SeeLicenseWidget from './widgets/SeeLicenseWidget.vue'
-import AddLicenseBtn from './buttons/AddLicenseBtn.vue'
+import SeeAssignmentsWidget from './widgets/SeeAssignmentsWidget.vue'
+import AssignLicenseBtn from './buttons/AssignLicenseBtn.vue'
 import SortByComponent from './inputs/SortByComponent.vue'
 import SideWidgetDiv from './widgets/SideWidgetDiv.vue'
-import DeleteLicenseBtn from './buttons/DeleteLicenseBtn.vue'
+import UnassignLicenseBtn from './buttons/UnassignLicenseBtn.vue'
 </script>
 
 <template>
   <div>
     <!-- Side widget with manager buttons-->
     <SideWidgetDiv>
-      <AddLicenseBtn />
-      <DeleteLicenseBtn />
+      <AssignLicenseBtn />
+      <UnassignLicenseBtn />
     </SideWidgetDiv>  
 
     <!-- Main widget to see licenses -->
     <BackgroundWidgetDiv>
       <!-- <SortByComponent /> -->
-      <SeeLicenseWidget />
+      <SeeAssignmentsWidget />
     </BackgroundWidgetDiv>
   </div>
 

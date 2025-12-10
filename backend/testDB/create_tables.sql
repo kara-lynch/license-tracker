@@ -1,8 +1,17 @@
 /*
+	This query creates a user that can only view the DB, not edit it.
+	This user will be used by the backend when it receives a request to 
+	view one or more tables.
+	You may want to edit the password first.
+*/
+
+create user 'employee'@'%' identified by 'notsosecretpw';
+
+
+/*
 	The following query performs an action of removing any of the following
     tables within the database if they exist
 */
-
 
 drop table if exists Departments, Computer, Employee, 
 License, Locations, Cost, EmployeeAssign, ExpirationDate, 

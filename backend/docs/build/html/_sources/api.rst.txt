@@ -149,8 +149,8 @@ The request must include a ``Bearer`` field in the header with a valid authentic
 	
 Definitions of each of these fields are as follows:
 	
-:licenseID: The ID number for the license to be assigned. This ID can be obtained with a request to see all licenses, as described above.
-:employeeID: The ID number for the employee the license is being assigned to.
+:licenseID: The ID number for the license to be unassigned. This ID can be obtained with a request to see all licenses, as described above.
+:employeeID: The ID number for the employee the license assignment is being removed from.
 
 If the request is successful, the API will return an HTML page that says "License assignment removed".
 

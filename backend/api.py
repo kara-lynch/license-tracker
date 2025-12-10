@@ -34,6 +34,31 @@ When sending get request to this URI, API will respond with instructions for how
 #     return "<p>HELP SCREEN TBA<p>"
 
 """
+Returns a JSON object displaying information about the developers of this project.
+The data is pulled from config/about_us.json
+"""
+@app.get("/aboutUs/")
+def about_us():
+    try:
+        log.log("INFO", "Request to view the about us page received.")
+        about_path = "./src/config/about_us.json"
+
+        log.log("DEBUG", "Loading about_us.json...")
+        with open(about_path, "r") as file:
+            about_json = json.load(file)
+        
+        log.log("DEBUG", "about_us.json loaded successfully")        
+        return json.loads(about_json)
+    
+    except OSError:
+        log.log("WARNING", f"Error loading about_us.json")
+        abort(500)
+        
+    except Exception as e:
+        log.log("WARNING", f"Error occurred while handling about us request: {e.args[0]}")
+        abort(500)
+
+"""
 User expected to provide a JSON object in the body includin the fields of the license being added.
 
 If user fails to include the JSON object in the request body, a 415 error is returned.
@@ -55,34 +80,47 @@ def addLicense():
     # Extract info from request, create request object 
     try:
         log.log("INFO", "Request to add license received.")
+        log.log("DEBUG", "Getting user request...")
         license_request = request.json
+        log.log("DEBUG", "Loading and validating user request...")
         user_req = AddLicReq(json.dumps(license_request))
-    except:
+        log.log("DEBUG", "Add license request validated successfully")
+    except Exception as e:
         # If the code ends up here, it was probably the user's fault
+        log.log("WARNING", f"Error occurred while processing add license request: {e.args[0]}")
         abort(400)
 
     # Verify credentials received from authentication server.
     try:
+        log.log("DEBUG", "Sending user authentication token to auth server...")
         success, auth_response = authentication.authorize(request.headers)
         if not success:
-            raise Exception
+            raise Exception("User authentication token invalid.")
+        log.log("DEBUG", "User credentials received successfully. Validating...")
         credentials = UserCredentials(json.loads(auth_response))
         credentials.validate()
+        log.log("DEBUG", "User credentials validated successfully.")
 
         # check user is a manager and IT/Legal
         if not credentials.has_license_auth():
-            raise Exception
-    except:
+            raise Exception("User not authorized to make this request.")
+        log.log("DEBUG", "User authorization confirmed.")
+    except Exception as e:
+        log.log("WARNING", f"Error occurred while processing user credentials for add license request: {e.args[0]}")
         abort(401)
 
     # DB Call. If method returns false, user couldn't be authorizaed.
     try:
+        log.log("DEBUG", "Initiating DB call for add license request.")
         added_record = db.AddLicense(user_req, credentials)
-    except:
+        log.log("DEBUG", "License add request succeeded.")
+    except Exception as e:
+        log.log("WARNING", f"Error occurred with database during add license request: {e.args[0]}")
         abort(400)
     if not added_record:
+        #This has no logging because the DAO already logs any problem that would cause it to return false.
         abort(401)
-    
+    log.log("DEBUG", "Add license request processed successfully. Terminating process.")
     return f'<p>License added<p>'
 
 """
@@ -96,34 +134,49 @@ def deleteLicense():
     # Extract info from request, create request object 
     try:
         log.log("INFO", "Request to delete license received.")
+        log.log("DEBUG", "Getting user request...")
         license_request = request.json
+        log.log("DEBUG", "Loading and validating user request...")
         user_req = DelLicReq(json.dumps(license_request))
-    except:
+        log.log("DEBUG", "Delete license request validated successfully")
+    except Exception as e:
         # If the code ends up here, it was probably the user's fault
+        log.log("WARNING", f"Error occurred while processing delete license request: {e.args[0]}")
         abort(400)
 
     # Verify credentials received from authentication server.
     try:
+        log.log("DEBUG", "Sending user authentication token to auth server...")
         success, auth_response = authentication.authorize(request.headers)
+        log.log("DEBUG", "Authentication token received successfully.")
         if not success:
-            raise Exception
+            raise Exception("User authentication token invalid.")
+        log.log("DEBUG", "Authentication token received successfully. Validating...")
         credentials = UserCredentials(json.loads(auth_response))
         credentials.validate()
+        log.log("DEBUG", "User credentials validated successfully.")
 
         # check user is a manager and IT/Legal
         if not credentials.has_license_auth():
-            raise Exception
-    except:
+            raise Exception("User not authorized to make this request")
+        log.log("DEBUG", "User authorization confirmed.")
+    except Exception as e:
+        log.log("WARNING", f"Error occurred while processing user credentials for add license request: {e.args[0]}")
         abort(401)
 
     # DB Call. If method returns false, user couldn't be authorizaed.
     try:
+        log.log("DEBUG", "Initiating DB call for add license request.")
         deleted_record = db.DeleteLicense(user_req, credentials)
+        log.log("DEBUG", "License add request succeeded.")
     except:
+        log.log("WARNING", f"Error occurred with database during add license request: {e.args[0]}")
         abort(400)
     if not deleted_record:
+        #This has no logging because the DAO already logs any problem that would cause it to return false.
         abort(401)
     
+    log.log("DEBUG", "Add license request processed successfully. Terminating process.")
     return f'<p>License L{license_request["licenseID"]} removed.<p>'
 
 """
@@ -147,7 +200,7 @@ def editLicense():
     try:
         success, auth_response = authentication.authorize(request.headers)
         if not success:
-            raise Exception
+            raise Exception("User authentication token invalid.")
         credentials = UserCredentials(json.loads(auth_response))
         credentials.validate()
 
@@ -172,13 +225,19 @@ def editLicense():
 @app.get("/seeLicenses/")
 def seeLicenses():
     # Extract token from request.
+    # This method has no logging because the authenticate module already logs everything.
     try:
         log.log("INFO", "Request to see all licenses received.")
+        log.log("DEBUG", "Sending user authentication token to auth server...")
         success, auth_response = authentication.authorize(request.headers)
         if success:
+            log.log("DEBUG", "Authentication token received successfully. Validating...")
             credentials = UserCredentials(json.loads(auth_response))
             credentials.validate()
+            log.log("DEBUG", "User credentials validated successfully")
+            log.log("DEBUG", "Initiating DB call for see licenses request.")
             records = db.seeLicenses()
+            log.log("DEBUG", "See licenses request processed successfully. Terminating process.")
             return records
         else:
             raise Exception
@@ -219,18 +278,40 @@ def seeLicenseRange():
     # Extract token from request.
     try:
         log.log("INFO", "Request to see a range of licenses received.")
-        success, auth_response = authentication.authorize(request.headers)
+        log.log("DEBUG", "Getting user request...")
         license_request = request.json
+        log.log("DEBUG", "Loading and validating user request...")
         user_req = QueryRangeLicReq(json.dumps(license_request))
-        if success:
-            credentials = UserCredentials(json.loads(auth_response))
-            credentials.validate()
-            records = db.seeLicenseRange(user_req)
-            return records
-        else:
-            raise Exception
-    except:
+        log.log("DEBUG", "Add license request validated successfully")
+    except Exception as e:
         # If the code ends up here, it was probably the user's fault
+        log.log("WARNING", f"Error occurred while processing see license range request: {e.args[0]}")
+        abort(400)
+
+    # Verify credentials received from auth server
+    try:
+        log.log("DEBUG", "Sending user authentication token to auth server...")
+        success, auth_response = authentication.authorize(request.headers)
+        if not success:
+            raise Exception("User authentication token invalid.")
+        log.log("DEBUG", "User credentials received successfully. Validating...")
+        credentials = UserCredentials(json.loads(auth_response))
+        credentials.validate()
+        log.log("DEBUG", "User credentials validated successfully.")
+    except Exception as e:
+        log.log("WARNING", f"Error occurred while processing user credentials for see license range request: {e.args[0]}")
+        abort(401)
+
+    # DB Call
+    try:
+        log.log("DEBUG", "Initiating DB call for see license range request.")
+        records = db.seeLicenseRange(user_req)
+        log.log("DEBUG", "See license range request processed successfully. Terminating process.")
+        return records
+    
+    except Exception as e:
+        # If the code ends up here, it was probably the user's fault
+        log.log("WARNING", f"Error occurred with database during see license range request: {e.args[0]}")
         abort(401)
 
 """
@@ -247,34 +328,47 @@ def employeeAssign():
     # Extract info from request, create request object 
     try:
         log.log("INFO", "Request to assign license to employee received.")
+        log.log("DEBUG", "Getting user request...")
         license_request = request.json
+        log.log("DEBUG", "Loading and validating user request...")
         user_req = EmpAssignLicReq(json.dumps(license_request))
-    except:
+        log.log("DEBUG", "Employee assign request validated successfully")
+    except Exception as e:
         # If the code ends up here, it was probably the user's fault
+        log.log("WARNING", f"Error occurred while processing employee assign request: {e.args[0]}")
         abort(400)
 
     # Verify credentials received from authentication server.
     try:
+        log.log("DEBUG", "Sending user authentication token to auth server...")
         success, auth_response = authentication.authorize(request.headers)
         if not success:
-            raise Exception
+            raise Exception("User authentication token invalid.")
+        log.log("DEBUG", "User credentials received successfully. Validating...")
         credentials = UserCredentials(json.loads(auth_response))
         credentials.validate()
+        log.log("DEBUG", "User credentials validated successfully.")
 
         # check user is a manager and IT/Legal
         if not credentials.has_license_auth():
-            raise Exception
-    except:
+            raise Exception("User not authorized to make this request.")
+        log.log("DEBUG", "User authorization confirmed.")
+    except Exception as e:
+        log.log("WARNING", f"Error occurred while processing user credentials for employee assign request: {e.args[0]}")
         abort(401)
 
     # DB Call. If method returns false, user couldn't be authorizaed.
     try:
+        log.log("DEBUG", "Initiating DB call for employee assign request.")
         added_record = db.employeeAssign(user_req, credentials)
-    except:
+        log.log("DEBUG", "Employee assign request succeeded.")
+    except Exception as e:
+        log.log("WARNING", f"Error occurred with database during employee assign request: {e.args[0]}")
         abort(400)
     if not added_record:
+        #This has no logging because the DAO already logs any problem that would cause it to return false.
         abort(401)
-    
+    log.log("DEBUG", "Add license request processed successfully. Terminating process.")
     return f'<p>License assigned<p>'
 
 """
@@ -291,34 +385,49 @@ def employeeUnassign():
     # Extract info from request, create request object 
     try:
         log.log("INFO", "Request to unassign license from employee received.")
+        log.log("DEBUG", "Getting user request...")
         license_request = request.json
+        log.log("DEBUG", "Loading and validating user request...")
         user_req = EmpAssignLicReq(json.dumps(license_request))
-    except:
+        log.log("DEBUG", "Employee unassign request validated successfully")
+    except Exception as e:
         # If the code ends up here, it was probably the user's fault
+        log.log("WARNING", f"Error occurred while processing employee unassign request: {e.args[0]}")
         abort(400)
 
     # Verify credentials received from authentication server.
     try:
+        log.log("DEBUG", "Sending user authentication token to auth server...")
         success, auth_response = authentication.authorize(request.headers)
+        log.log("DEBUG", "Authentication token received successfully.")
         if not success:
-            raise Exception
+            raise Exception("User authentication token invalid.")
+        log.log("DEBUG", "Authentication token received successfully. Validating...")
         credentials = UserCredentials(json.loads(auth_response))
         credentials.validate()
+        log.log("DEBUG", "User credentials validated successfully.")
 
         # check user is a manager and IT/Legal
         if not credentials.has_license_auth():
-            raise Exception
+            raise Exception("User not authorized to make this request.")
+        log.log("DEBUG", "User authorization confirmed.")
     except:
+        log.log("WARNING", f"Error occurred while processing user credentials for employee unassign request: {e.args[0]}")
         abort(401)
 
     # DB Call. If method returns false, user couldn't be authorizaed.
     try:
+        log.log("DEBUG", "Initiating DB call for employee unassign request.")
         added_record = db.employeeUnassign(user_req, credentials)
+        log.log("DEBUG", "Employee unassign request succeeded.")
     except:
+        log.log("WARNING", f"Error occurred with database during employee unassign request: {e.args[0]}")
         abort(400)
     if not added_record:
+        #no logging here, the DAO already logs anything that would cause it to return false
         abort(401)
     
+    log.log("DEBUG", "Employee unassign request processed successfully. Terminating process.")
     return f'<p>License assignment removed<p>'
 
 """
@@ -339,19 +448,40 @@ employeeId is only checked if the user is a manager. A non-manager user can only
 def seeAssignment():
     # Extract token from request.
     try:
-        log.log("INFO", "Request to see a range of licenses received.")
-        success, auth_response = authentication.authorize(request.headers)
+        log.log("INFO", "Request to see a range of license assignments received.")
+        log.log("DEBUG", "Getting user request...")
         license_request = request.json
-        user_req = QueryRangeLicReq(json.dumps(license_request))
-        if success:
-            credentials = UserCredentials(json.loads(auth_response))
-            credentials.validate()
-            records = db.SeeAssignment(user_req, credentials)
-            return records
-        else:
-            raise Exception
+        log.log("DEBUG", "Loading and validating user request...")
+        user_req = AssignQueryLicReq(json.dumps(license_request))
+        log.log("DEBUG", "See user assignment request validated successfully")
+    except Exception as e:
+        # If the code ends up here, it was probably the user's fault
+        log.log("WARNING", f"Error occurred while processing see user assignment request: {e.args[0]}")
+        abort(400)
+
+    # Verify credentials received from auth server
+    try:
+        log.log("DEBUG", "Sending user authentication token to auth server...")
+        success, auth_response = authentication.authorize(request.headers)
+        if not success:
+            raise Exception("User authentication token invalid.")
+        log.log("DEBUG", "User credentials received successfully. Validating...")
+        credentials = UserCredentials(json.loads(auth_response))
+        credentials.validate()
+        log.log("DEBUG", "User credentials validated successfully.")
+    except Exception as e:
+        log.log("WARNING", f"Error occurred while processing user credentials for see license range request: {e.args[0]}")
+        abort(401)
+
+    # DB Call
+    try:
+        log.log("DEBUG", "Initiating DB call for see user assignment request.")
+        records = db.SeeAssignment(user_req, credentials)
+        log.log("DEBUG", "See user assignment request processed successfully. Terminating process.")
+        return records
     except:
         # If the code ends up here, it was probably the user's fault
+        log.log("WARNING", f"Error occurred with database during see license range request: {e.args[0]}")
         abort(401)
 
 # @app.get("/filteredView/")

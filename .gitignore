@@ -5,3 +5,4 @@ flask_test.py
 test_scripts/*
 src/config/db_credentials.json
 .venv/
+.env

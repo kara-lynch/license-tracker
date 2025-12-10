@@ -13,8 +13,8 @@
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Usage" href="usage.html" />
-    <link rel="prev" title="Welcome to SALTS’s documentation!" href="index.html" />
+    <link rel="next" title="User Requests" href="request.html" />
+    <link rel="prev" title="Installation" href="usage.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
@@ -34,9 +34,10 @@
   <section id="api-and-usage">
 <h1>API and Usage<a class="headerlink" href="#api-and-usage" title="Link to this heading">¶</a></h1>
 <p>SALTS uses a REST API to handle user requests. It has four URIs that can be contacted.</p>
-<section id="displaying-the-documentation">
-<h2>Displaying the Documentation<a class="headerlink" href="#displaying-the-documentation" title="Link to this heading">¶</a></h2>
-<p>To show this documentation page, an HTTP GET request can be sent to the following URI: <code class="docutils literal notranslate"><span class="pre">/</span></code></p>
+<section id="pinging-the-server">
+<h2>Pinging the Server<a class="headerlink" href="#pinging-the-server" title="Link to this heading">¶</a></h2>
+<p>To ensure the backend is online and working, an HTTP GET request can be sent to the following URI: <code class="docutils literal notranslate"><span class="pre">/helloWorld/</span></code></p>
+<p>If everything is functional, the API will return an HTML page that says “Hello!”</p>
 </section>
 <section id="getting-all-licenses">
 <h2>Getting All Licenses<a class="headerlink" href="#getting-all-licenses" title="Link to this heading">¶</a></h2>
@@ -91,6 +92,35 @@
 <dd class="field-even"><p>A list of regions the license can’t be used, e.g. “Croatia, Czech Republic” or “All countries except Japan”.</p>
 </dd>
 </dl>
+</section>
+<section id="getting-all-licenses-in-a-range">
+<h2>Getting All Licenses in a Range<a class="headerlink" href="#getting-all-licenses-in-a-range" title="Link to this heading">¶</a></h2>
+<p>To get a specific number of licenses in the system, an HTTP POST request must be sent to the following URI: <code class="docutils literal notranslate"><span class="pre">/seeLicenseRange/</span></code></p>
+<p>The request must include a <code class="docutils literal notranslate"><span class="pre">Bearer</span></code> field in the header with a valid authentication token, as well as a JSON object in the body in the following format:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+  <span class="s2">&quot;range&quot;</span><span class="p">:</span> <span class="o">&lt;</span><span class="nb">int</span><span class="o">&gt;</span><span class="p">,</span>
+  <span class="s2">&quot;offset&quot;</span><span class="p">:</span> <span class="o">&lt;</span><span class="nb">int</span><span class="o">&gt;</span><span class="p">,</span>
+  <span class="s2">&quot;sort_field&quot;</span><span class="p">:</span> <span class="o">&lt;</span><span class="nb">str</span><span class="o">&gt;</span><span class="p">,</span>
+  <span class="s2">&quot;ascending&quot;</span><span class="p">:</span> <span class="o">&lt;</span><span class="nb">bool</span><span class="o">&gt;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>All fields other than <code class="docutils literal notranslate"><span class="pre">range</span></code> are optional. Definitions of each of these fields are as follows:</p>
+<dl class="field-list simple">
+<dt class="field-odd">range<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The number of records to return.</p>
+</dd>
+<dt class="field-even">offset<span class="colon">:</span></dt>
+<dd class="field-even"><p>The position in the order to start from. Defaults to 0. If specified, must be at least 1.</p>
+</dd>
+<dt class="field-odd">sort_field<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The database field to sort the records by. If not specified, the records will be sorted by <code class="docutils literal notranslate"><span class="pre">licenseID</span></code>. If specified, must be one of the following: <code class="docutils literal notranslate"><span class="pre">licenseName</span></code>, <code class="docutils literal notranslate"><span class="pre">licenseType</span></code>, <code class="docutils literal notranslate"><span class="pre">price</span></code>, <code class="docutils literal notranslate"><span class="pre">period</span></code>, <code class="docutils literal notranslate"><span class="pre">renewalDate</span></code>, <code class="docutils literal notranslate"><span class="pre">endDate</span></code>, or <code class="docutils literal notranslate"><span class="pre">restriction</span></code>.</p>
+</dd>
+<dt class="field-even">ascending<span class="colon">:</span></dt>
+<dd class="field-even"><p>If <code class="docutils literal notranslate"><span class="pre">True</span></code>, records will be sorted in ascending order. Defaults to <code class="docutils literal notranslate"><span class="pre">False</span></code> and is only used if <code class="docutils literal notranslate"><span class="pre">sort_field</span></code> is specified.</p>
+</dd>
+</dl>
+<p>The records will be returned in the same format as seeing all of them. This is generally used for the infinite scrolling functionality built into the front end.</p>
 </section>
 <section id="adding-a-license">
 <h2>Adding a License<a class="headerlink" href="#adding-a-license" title="Link to this heading">¶</a></h2>
@@ -153,6 +183,81 @@
 <p>The <code class="docutils literal notranslate"><span class="pre">licenseID</span></code> field must include the ID number for the record you wish to remove. This ID can be obtained with a request to see all licenses, as described above.</p>
 <p>If the request is successful, the API will return an HTML page that says “Record removed.”</p>
 </section>
+<section id="assigning-a-license">
+<h2>Assigning a License<a class="headerlink" href="#assigning-a-license" title="Link to this heading">¶</a></h2>
+<p>To assign a software license to an employee, an HTTP POST request must be sent to the following URI: <code class="docutils literal notranslate"><span class="pre">/employeeAssign/</span></code></p>
+<p>The request must include a <code class="docutils literal notranslate"><span class="pre">Bearer</span></code> field in the header with a valid authentication token indicating that the current user is a manager of the IT or Legal departments, as well as a JSON object in the body in the following format:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+        <span class="s2">&quot;licenseID&quot;</span><span class="p">:</span> <span class="o">&lt;</span><span class="nb">int</span><span class="o">&gt;</span><span class="p">,</span>
+        <span class="s2">&quot;employeeID&quot;</span><span class="p">:</span> <span class="o">&lt;</span><span class="nb">int</span><span class="o">&gt;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Definitions of each of these fields are as follows:</p>
+<dl class="field-list simple">
+<dt class="field-odd">licenseID<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The ID number for the license to be assigned. This ID can be obtained with a request to see all licenses, as described above.</p>
+</dd>
+<dt class="field-even">employeeID<span class="colon">:</span></dt>
+<dd class="field-even"><p>The ID number for the employee the license is being assigned to.</p>
+</dd>
+</dl>
+<p>If the request is successful, the API will return an HTML page that says “License assigned”.</p>
+</section>
+<section id="unassigning-a-license">
+<h2>Unassigning a License<a class="headerlink" href="#unassigning-a-license" title="Link to this heading">¶</a></h2>
+<p>To remove a software assignment record, an HTTP DELETE request must be sent to the following URI: <code class="docutils literal notranslate"><span class="pre">/employeeUnassign/</span></code></p>
+<p>The request must include a <code class="docutils literal notranslate"><span class="pre">Bearer</span></code> field in the header with a valid authentication token indicating that the current user is a manager of the IT or Legal departments, as well as a JSON object in the body in the following format:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+        <span class="s2">&quot;licenseID&quot;</span><span class="p">:</span> <span class="o">&lt;</span><span class="nb">int</span><span class="o">&gt;</span><span class="p">,</span>
+        <span class="s2">&quot;employeeID&quot;</span><span class="p">:</span> <span class="o">&lt;</span><span class="nb">int</span><span class="o">&gt;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Definitions of each of these fields are as follows:</p>
+<dl class="field-list simple">
+<dt class="field-odd">licenseID<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The ID number for the license to be assigned. This ID can be obtained with a request to see all licenses, as described above.</p>
+</dd>
+<dt class="field-even">employeeID<span class="colon">:</span></dt>
+<dd class="field-even"><p>The ID number for the employee the license is being assigned to.</p>
+</dd>
+</dl>
+<p>If the request is successful, the API will return an HTML page that says “License assignment removed”.</p>
+</section>
+<section id="seeing-license-assignments">
+<h2>Seeing License Assignments<a class="headerlink" href="#seeing-license-assignments" title="Link to this heading">¶</a></h2>
+<p>To see all licenses that have been assigned to a user, an HTTP POST request must be sent to the following URI: <code class="docutils literal notranslate"><span class="pre">/seeAssignment/</span></code></p>
+<p>The request must include a <code class="docutils literal notranslate"><span class="pre">Bearer</span></code> field in the header with a valid authentication token, as well as a JSON object in the body in the following format:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+  <span class="s2">&quot;range&quot;</span><span class="p">:</span> <span class="o">&lt;</span><span class="nb">int</span><span class="o">&gt;</span><span class="p">,</span>
+  <span class="s2">&quot;offset&quot;</span><span class="p">:</span> <span class="o">&lt;</span><span class="nb">int</span><span class="o">&gt;</span><span class="p">,</span>
+  <span class="s2">&quot;sort_field&quot;</span><span class="p">:</span> <span class="o">&lt;</span><span class="nb">str</span><span class="o">&gt;</span><span class="p">,</span>
+  <span class="s2">&quot;ascending&quot;</span><span class="p">:</span> <span class="o">&lt;</span><span class="nb">bool</span><span class="o">&gt;</span><span class="p">,</span>
+  <span class="s2">&quot;employeeID&quot;</span><span class="p">:</span> <span class="o">&lt;</span><span class="nb">int</span><span class="o">&gt;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>All fields other than <code class="docutils literal notranslate"><span class="pre">range</span></code> are optional. Definitions of each of these fields are as follows:</p>
+<dl class="field-list simple">
+<dt class="field-odd">range<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The number of records to return.</p>
+</dd>
+<dt class="field-even">offset<span class="colon">:</span></dt>
+<dd class="field-even"><p>The position in the order to start from. Defaults to 0. If specified, must be at least 1.</p>
+</dd>
+<dt class="field-odd">sort_field<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The database field to sort the records by. If not specified, the records will be sorted by <code class="docutils literal notranslate"><span class="pre">licenseID</span></code>. If specified, must be one of the following: <code class="docutils literal notranslate"><span class="pre">licenseName</span></code>, <code class="docutils literal notranslate"><span class="pre">licenseType</span></code>, <code class="docutils literal notranslate"><span class="pre">price</span></code>, <code class="docutils literal notranslate"><span class="pre">period</span></code>, <code class="docutils literal notranslate"><span class="pre">renewalDate</span></code>, <code class="docutils literal notranslate"><span class="pre">endDate</span></code>, or <code class="docutils literal notranslate"><span class="pre">restriction</span></code>.</p>
+</dd>
+<dt class="field-even">ascending<span class="colon">:</span></dt>
+<dd class="field-even"><p>If <code class="docutils literal notranslate"><span class="pre">True</span></code>, records will be sorted in ascending order. Defaults to <code class="docutils literal notranslate"><span class="pre">False</span></code> and is only used if <code class="docutils literal notranslate"><span class="pre">sort_field</span></code> is specified.</p>
+</dd>
+<dt class="field-odd">employeeID<span class="colon">:</span></dt>
+<dd class="field-odd"><p>If the current user is a manager of the IT or Legal departments, this field can be specified to look up all licenses assigned to the user with the specified ID. If the user does not have this authorization, or if this field is not specified, it defaults to the current user’s ID.</p>
+</dd>
+</dl>
+<p>The records will be returned in the same format as seeing all of them. This is generally used for the infinite scrolling functionality built into the front end.</p>
+</section>
 </section>
 
 
@@ -173,18 +278,23 @@
 
 <h3>Navigation</h3>
 <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Installation</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">API and Usage</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#displaying-the-documentation">Displaying the Documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#pinging-the-server">Pinging the Server</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#getting-all-licenses">Getting All Licenses</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#getting-all-licenses-in-a-range">Getting All Licenses in a Range</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#adding-a-license">Adding a License</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#removing-a-license">Removing a License</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#assigning-a-license">Assigning a License</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#unassigning-a-license">Unassigning a License</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#seeing-license-assignments">Seeing License Assignments</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="request.html">User Requests</a></li>
 <li class="toctree-l1"><a class="reference internal" href="authentication.html">Authentication</a></li>
 <li class="toctree-l1"><a class="reference internal" href="credentials.html">User Credentials</a></li>
 <li class="toctree-l1"><a class="reference internal" href="validation.html">Validation Checks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="database.html">Database Calls</a></li>
 <li class="toctree-l1"><a class="reference internal" href="logger.html">Logging</a></li>
 </ul>
 
@@ -192,8 +302,8 @@
 <h3>Related Topics</h3>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="index.html" title="previous chapter">Welcome to SALTS’s documentation!</a></li>
-      <li>Next: <a href="usage.html" title="next chapter">Usage</a></li>
+      <li>Previous: <a href="usage.html" title="previous chapter">Installation</a></li>
+      <li>Next: <a href="request.html" title="next chapter">User Requests</a></li>
   </ul></li>
 </ul>
 </div>
@@ -220,7 +330,7 @@
       <div class="clearer"></div>
     </div>
     <div class="footer">
-      &copy;2025, Red Team.
+      &copy;2025 Red Team.
       
       |
       Powered by <a href="http://sphinx-doc.org/">Sphinx 7.2.6</a>

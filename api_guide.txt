@@ -1,0 +1,49 @@
+v1 of the API has four URIs that can be contacted:
+
+/
+Accepts a GET request.
+Returns this page, which includes information on how the user is expected to contact the API and what they info will get back.
+
+/seeLicenses/
+Accepts a GET request. Must include an authentication token in the "Bearer" header.
+The license records will be returned in the form of a JSON object with the following format.
+{
+   "<license id>":    {
+      "cost": <float>,
+      "curr": <str, 3 chars>,
+      "date_of_renewal": <str, yyyy-mm-dd>,
+      "expiration_date": <str, yyyy-mm-dd>,
+      "name": <str>,
+      "period": <str>,
+      "restrictions": <str>,
+      "type": <str>,
+      "ver": <str>
+   },
+   ...
+}
+
+
+/addLicenses/
+Accepts a POST request. Must include an authentication token in the "Bearer" header, and the user must be a manager in the IT or Legal Departments.
+The request must include a JSON object in the body with the following fields.
+{
+	"name": <str>,
+	"ver": <str>,
+	"type": <str>,
+	"cost": <float>,
+	"curr": <str, 3 chars>,
+	"period": <str>,
+	"date_of_renewal": <str, yyyy-mm-dd>,
+	"expiration_date": <str, yyyy-mm-dd>,
+	"restrictions": <str>
+}
+If successful, the API will return an HTML page displaying "License added."
+
+
+/deleteLicense/
+Accepts a POST request. Must include an authentication token in the "Bearer" header, and the user must be a manager in the IT or Legal Departments.
+The request must include a JSON object in the body with the following fields.
+{
+    "licenseID": <int>
+}
+If successful, the API will return an HTML page displaying "Record deleted."

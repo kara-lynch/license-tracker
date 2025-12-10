@@ -1,4 +1,3 @@
-
 <script lang="ts">
 import { ref, onMounted } from 'vue'
 import axios from 'axios'
@@ -6,16 +5,16 @@ import axios from 'axios'
 export default {
   name: 'SeeLicenseWidget',
   setup () {
-    const licenses = ref<any[]>(['No licenses found'])
+    const licenses = ref<any[]>([])
     const error = ref<string | null>(null)
     const loading = ref(false)
-
-    // load token from env 
-    const token = import.meta.env.VITE_JWT_TOKEN ?? ''
 
     async function fetchLicenses() {
       loading.value = true
       error.value = null
+      
+      // load token from env 
+      const token = import.meta.env.VITE_JWT_TOKEN ?? ''
 
       try {
         console.log('Fetching licenses with token:', token)
@@ -26,7 +25,15 @@ export default {
             'Content-Type': 'application/json',
           },
         })
-        licenses.value = res.data
+        const data = res.data
+        if (Array.isArray(data)) {
+          licenses.value = data
+        } else if (data && typeof data === 'object') {
+          // convert { "<id>": { ... } } -> [ { id: "<id>", ...fields }, ... ]
+          licenses.value = Object.entries(data).map(([id, val]) => ({ id, ...(val as Record<string, any>) }))
+        } else {
+          licenses.value = []
+        }
       } catch (e: any) {
         error.value =
           e?.response?.status === 401
@@ -54,11 +61,9 @@ export default {
     <p v-if="error" style="color: red">{{ error }}</p>
 
     <ul v-else>
-        <li v-for="(license, i) in licenses" :key="license.id">
-            <ul>{{ license }}</ul>
-        
-          <div>License Name: {{ license.name }}</div>
-          <!-- <div>License ID: {{ license.id }}</div> -->
+        <li v-for="(license, i) in licenses" :key="license.id ?? i">
+          <div> {{ license.name }} </div>
+          <div>License ID: {{ license.id }}</div>
           <div>License Type: {{ license.type }}</div>
           <div>Version: {{ license.ver }}</div>
           <div>License Cost: {{ license.cost }}</div>

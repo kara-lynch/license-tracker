@@ -11,14 +11,15 @@ import DeleteLicenseBtn from './buttons/DeleteLicenseBtn.vue'
 
 <template>
   <div>
-    <!-- Side widget with manager buttons-->>
+    <!-- Side widget with manager buttons-->
     <SideWidgetDiv>
       <AddLicenseBtn />
       <DeleteLicenseBtn />
     </SideWidgetDiv>  
 
+    <!-- Main widget to see licenses -->
     <BackgroundWidgetDiv>
-      <SortByComponent />
+      <!-- <SortByComponent /> -->
       <SeeLicenseWidget />
     </BackgroundWidgetDiv>
   </div>

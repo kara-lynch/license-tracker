@@ -186,6 +186,23 @@ def seeLicenses():
         # If the code ends up here, it was probably the user's fault
         abort(401)
 
+@app.get("/seeAllAssignments/")
+def seeAllAssignments():
+    # Extract token from request.
+    try:
+        log.log("INFO", "Request to see all assignments received.")
+        success, auth_response = authentication.authorize(request.headers)
+        if success:
+            credentials = UserCredentials(json.loads(auth_response))
+            credentials.validate()
+            records = db.seeAllAssignments()
+            return records
+        else:
+            raise Exception
+    except:
+        # If the code ends up here, it was probably the user's fault
+        abort(401)
+
 """
 To see a specific range of licenses, the following fields can be provided by the frontend:
 
@@ -252,7 +269,7 @@ def employeeAssign():
 
     # DB Call. If method returns false, user couldn't be authorizaed.
     try:
-        added_record = db.EmployeeAssign(user_req, credentials)
+        added_record = db.employeeAssign(user_req, credentials)
     except:
         abort(400)
     if not added_record:
@@ -273,7 +290,7 @@ Required:
 def employeeUnassign():
     # Extract info from request, create request object 
     try:
-        log.log("INFO", "Request to assign license to employee received.")
+        log.log("INFO", "Request to unassign license from employee received.")
         license_request = request.json
         user_req = EmpAssignLicReq(json.dumps(license_request))
     except:
@@ -296,7 +313,7 @@ def employeeUnassign():
 
     # DB Call. If method returns false, user couldn't be authorizaed.
     try:
-        added_record = db.EmployeeUnassign(user_req, credentials)
+        added_record = db.employeeUnassign(user_req, credentials)
     except:
         abort(400)
     if not added_record:

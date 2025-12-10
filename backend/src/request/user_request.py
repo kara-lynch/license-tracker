@@ -275,13 +275,13 @@ class EmpAssignLicReq(Request):
         log.log("INFO", "assign license to employee request begin validation")
         if (len(self.lic_data.keys()) != 2):
             log.log("ERROR", "assigning a license must be given exactly 2 params; program terminated")
-            raise ValueError("Wrong number of params given")
-        if not self.field_exists(self.config_dict["employeeId"]["key"]) or not self.field_exists(self.config_dict["licenseId"]["key"]):
+            raise ValueError("Wrong number of params given")      
+        if not self.field_exists(self.config_dict["employeeID"]["key"]) or not self.field_exists(self.config_dict["licenseID"]["key"]):
             log.log("ERROR", "one or more components required for assigning to an employee are missing; terminating program")
             raise ValueError("Missing one or more required fields")
         else:
-            self.validate_field(self.config_dict["employeeId"]["key"])
-            self.validate_field(self.config_dict["licenseId"]["key"])
+            self.validate_field(self.config_dict["employeeID"]["key"])
+            self.validate_field(self.config_dict["licenseID"]["key"])
 
 class AssignQueryLicReq(Request):
     def validate_data(self):
@@ -303,5 +303,6 @@ class AssignQueryLicReq(Request):
                 self.validate_db_field(self.config_dict["sort_field"]["key"])
             if self.field_exists(self.config_dict["ascending"]["key"]):
                 self.validate_field(self.config_dict["ascending"]["key"])
-            if self.field_exists(self.config_dict["employeeId"]["key"]):
-                self.validate_field(self.config_dict["employeeId"]["key"])
+            if self.field_exists(self.config_dict["employeeID"]["key"]):
+                self.validate_field(self.config_dict["employeeID"]["key"])
+            

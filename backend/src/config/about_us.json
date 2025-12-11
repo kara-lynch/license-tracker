@@ -7,7 +7,7 @@
     "developer2": {
         "name": "Noelle Stark",
         "title": "Principal Noelle Engineer",
-        "bio": "Noelle is a hard worker who's very skilled at collaboration. She sometimes attends our meetings and might occasionally respond to Teams messages. She wrote the user request data handler and test cases for Pytest in phase 1 before switching to the frontend team."
+        "bio": "Noelle is a hard worker who's very skilled at collaboration. She sometimes attends our meetings and might occasionally respond to Teams messages. She wrote the user request data handler and test cases for Pytest in phase 1 before switching to the frontend team primarily, but revising backend work as needed."
     },
     "developer3": {
         "name": "Kara Lynch",

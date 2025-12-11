@@ -11,7 +11,7 @@ import About from '@/components/About.vue';
   <img :src="logo" alt="S.A.L.T.S logo" 
   style="
   position:absolute; 
-  top:80px; 
+  top:220px; 
   right:20px; 
   width:200px; 
   height:auto;

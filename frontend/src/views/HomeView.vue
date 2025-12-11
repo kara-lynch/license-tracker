@@ -66,7 +66,7 @@ import logo from '@/assets/salts_light.jpg'
   <img :src="logo" alt="S.A.L.T.S logo" 
   style="
   position:absolute; 
-  top:80px; 
+  top:220px; 
   right:20px; 
   width:200px; 
   height:auto;
@@ -80,57 +80,177 @@ import logo from '@/assets/salts_light.jpg'
 
 <style scoped>
 .home {
-  max-width: 980px;
-  margin: 0 auto;
   padding: 1.25rem;
 }
 
 h1 {
-  font-size: 2rem;
+  font-size: 3rem;
   margin: 0 0 0.5rem 0;
+  margin-left: calc(-50vw + 50%);
+  margin-right: calc(-50vw + 50%);
+  padding-left: calc(50vw - 50%);
+  padding-right: calc(50vw - 50%);
   text-align: center;
+  font-weight: 800;
+  letter-spacing: 0.3em;
+  font-family: 'Train One', 'Tahoma', 'Verdana', 'Geneva', sans-serif;
+  text-transform: uppercase;
+  color: #020202;
+  position: relative;
+  border-top: 3px solid rgba(0, 0, 0, 0.6);
+  border-bottom: 3px solid rgba(0, 0, 0, 0.6);
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  background: linear-gradient(90deg, 
+    transparent 0%, 
+    rgba(139, 92, 246, 0.03) 10%, 
+    rgba(139, 92, 246, 0.05) 50%, 
+    rgba(139, 92, 246, 0.03) 90%, 
+    transparent 100%);
+}
+
+h1::before,
+h1::after {
+  content: '';
+  position: absolute;
+  width: 40px;
+  height: 3px;
+  background: linear-gradient(90deg, #8b5cf6, #a855f7);
+}
+
+h1::before {
+  top: -3px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+h1::after {
+  bottom: -3px;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 .lead {
-  text-align: center;
-  color: rgba(28, 15, 42, 0.75);
-  margin-bottom: 1rem;
+  text-align: left;
+  color: #1a1a1a;
+  margin-bottom: 2rem;
+  margin-right: 240px;
+  font-size: 1.35rem;
+  font-weight: 500;
+  letter-spacing: 0.3px;
 }
 
 h2 {
-  margin-top: 1rem;
+  margin-top: 2rem;
+  font-size: 2rem;
+  font-weight: 600;
+  color: #000;
+  border-left: 4px solid rgba(139, 92, 246, 0.6);
+  padding-left: 1rem;
+  letter-spacing: -0.3px;
+}
+
+h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #000;
+  margin-top: 1.5rem;
+  position: relative;
+  padding-left: 1rem;
+  letter-spacing: -0.2px;
+}
+
+h3::before {
+  content: '▸';
+  position: absolute;
+  left: 0;
+  color: rgba(139, 92, 246, 0.7);
+  font-size: 1.2rem;
 }
 
 ol {
   margin-left: 1.1rem;
+  color: #000;
+  line-height: 1.8;
+  font-weight: 400;
+  font-size: 1.1rem;
+}
+
+ol li {
+  margin-bottom: 0.5rem;
+  padding-left: 0.5rem;
 }
 
 .actions {
   display: flex;
   gap: 0.75rem;
-  margin: 0.5rem 0 1rem 0;
+  margin: 1.5rem 0 2rem 0;
 }
 
 .btn {
   display: inline-block;
-  padding: 0.5rem 0.9rem;
-  background: #b803efc7;
+  padding: 0.7rem 1.2rem;
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.9), rgba(168, 85, 247, 0.9));
   color: #fff;
-  border-radius: 6px;
+  border-radius: 8px;
   text-decoration: none;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+  transition: all 0.3s ease;
+  border: 1px solid rgba(139, 92, 246, 0.4);
 }
 
 .btn:hover {
-  background: #b803efc7;
+  background: linear-gradient(135deg, rgba(168, 85, 247, 1), rgba(139, 92, 246, 1));
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(139, 92, 246, 0.4);
 }
 
 ul {
   margin-left: 1.1rem;
+  color: #000;
+  line-height: 1.8;
+  font-weight: 400;
+  font-size: 1.1rem;
+}
+
+ul li {
+  margin-bottom: 0.5rem;
+  padding-left: 0.5rem;
+  position: relative;
+}
+
+ul li::marker {
+  color: rgba(139, 92, 246, 0.7);
+}
+
+p {
+  color: #000;
+  line-height: 1.7;
+  font-weight: 400;
+  font-size: 1.1rem;
+}
+
+strong {
+  font-weight: 700;
+  color: #000;
+}
+
+em {
+  font-style: italic;
+  color: rgba(139, 92, 246, 0.9);
+  font-weight: 500;
 }
 
 .help {
-  margin-top: 1.25rem;
-  color: rgba(15,23,42,0.7);
+  margin-top: 2rem;
+  padding: 1rem;
+  background: rgba(139, 92, 246, 0.05);
+  border-left: 3px solid rgba(139, 92, 246, 0.6);
+  border-radius: 4px;
+  color: #000;
+  font-weight: 500;
 }
 </style>
 

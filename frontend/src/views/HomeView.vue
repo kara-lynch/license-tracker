@@ -66,7 +66,7 @@ import logo from '@/assets/salts_light.jpg'
   <img :src="logo" alt="S.A.L.T.S logo" 
   style="
   position:absolute; 
-  top:80px; 
+  top:220px; 
   right:20px; 
   width:200px; 
   height:auto;
@@ -88,6 +88,10 @@ import logo from '@/assets/salts_light.jpg'
 h1 {
   font-size: 3rem;
   margin: 0 0 0.5rem 0;
+  margin-left: calc(-50vw + 50%);
+  margin-right: calc(-50vw + 50%);
+  padding-left: calc(50vw - 50%);
+  padding-right: calc(50vw - 50%);
   text-align: center;
   font-weight: 800;
   letter-spacing: 0.3em;
@@ -97,7 +101,8 @@ h1 {
   position: relative;
   border-top: 3px solid rgba(0, 0, 0, 0.6);
   border-bottom: 3px solid rgba(0, 0, 0, 0.6);
-  padding: 1rem 0;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
   background: linear-gradient(90deg, 
     transparent 0%, 
     rgba(139, 92, 246, 0.03) 10%, 

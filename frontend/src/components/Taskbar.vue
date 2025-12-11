@@ -12,50 +12,57 @@ import { RouterLink } from 'vue-router'
 </template>
 
 <style scoped>
-/* Sticky, full-width horizontal navigation */
+/* full-width horizontal navigation with gradient and glass effect */
 .taskbar {
     display: flex;
-    gap: 0.5rem;
+    gap: 1.0rem;
     justify-content: center;
     align-items: center;
-    padding: 0.5rem 1rem;
-    background: var(--color-background-soft, #f8fafc);
-    border-bottom: 1px solid var(--color-border, rgba(15,23,42,0.06));
+    padding: 0.75rem 1.5rem;
+    
+    /* lilac gradient background with glass effect */
+    background: linear-gradient(135deg, rgba(216, 180, 254, 0.85) 0%, rgba(192, 132, 252, 0.85) 50%, rgba(167, 139, 250, 0.85) 100%);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    
+    border-bottom: 1px solid rgba(216, 180, 254, 0.3);
+    box-shadow: 0 4px 24px rgba(139, 92, 246, 0.12);
 
-    /* No positioning here — App.vue provides the sticky full-viewport header.
-         Keep the nav at 100% of the header so it is fully visible and centered. */
-    width: 100%;
-    position: static;
+    /* make the nav span the full viewport width (full-bleed) while
+       keeping its content centered. This avoids changing App.vue structure. */
+    box-sizing: border-box;
+    width: 100vw;
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
 }
 
 .taskbar a {
     text-decoration: none;
-    padding: 0.45rem 0.9rem;
-    border-radius: 6px;
-    color: var(--color-heading, #0f172a);
-    background: transparent;
-    border: 1px solid transparent;
-    transition: background-color 0.15s ease, color 0.15s ease;
+    padding: 0.55rem 1.1rem;
+    border-radius: 10px;
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 8px rgba(139, 92, 246, 0.08);
 }
 
 .taskbar a.router-link-active {
-    background: #0ea5a0; /* active teal */
-    color: white;
+    background: linear-gradient(135deg, #9333ea, #a855f7);
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    box-shadow: 0 6px 20px rgba(147, 51, 234, 0.25);
+    transform: translateY(-2px);
 }
 
 .taskbar a:hover {
-    background: rgba(14,165,160,0.08);
+    background: rgba(255, 255, 255, 0.28);
+    border-color: rgba(255, 255, 255, 0.4);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(139, 92, 246, 0.15);
 }
 
-/* Make sure the sticky nav doesn't overlap content on small screens */
-@media (max-width: 640px) {
-    .taskbar {
-        padding: 0.5rem;
-        gap: 0.25rem;
-    }
-    .taskbar a {
-        padding: 0.35rem 0.6rem;
-        font-size: 0.95rem;
-    }
-}
 </style>

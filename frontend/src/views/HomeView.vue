@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { RouterLink } from 'vue-router'
+import logo from '@/assets/salts_light.jpg'
+
 </script>
 
 <template>
@@ -60,6 +62,20 @@ import { RouterLink } from 'vue-router'
     </ul>
     <p class="help">Questions or need help? Reach out to your project team via the About page or the repository maintainers.</p>
   </section>
+  <!-- simple, easy-to-edit inline logo placed top-right below header -->
+  <img :src="logo" alt="S.A.L.T.S logo" 
+  style="
+  position:absolute; 
+  top:80px; 
+  right:20px; 
+  width:200px; 
+  height:auto;
+  border: 4px solid rgba(139, 92, 246, 0.3);
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(139, 92, 246, 0.15), 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;" 
+  />
+
 </template>
 
 <style scoped>
@@ -77,7 +93,7 @@ h1 {
 
 .lead {
   text-align: center;
-  color: rgba(15,23,42,0.75);
+  color: rgba(28, 15, 42, 0.75);
   margin-bottom: 1rem;
 }
 
@@ -98,14 +114,14 @@ ol {
 .btn {
   display: inline-block;
   padding: 0.5rem 0.9rem;
-  background: #0ea5a0;
+  background: #b803efc7;
   color: #fff;
   border-radius: 6px;
   text-decoration: none;
 }
 
 .btn:hover {
-  background: #08a299;
+  background: #b803efc7;
 }
 
 ul {

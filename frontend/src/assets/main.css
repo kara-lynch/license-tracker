@@ -1,9 +1,9 @@
 @import './base.css';
 
+/* Remove the max-width and centered margin so background spans full width */
 #app {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
+  width: 100%;
+  padding: 0;
   font-weight: normal;
 }
 

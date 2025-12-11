@@ -19,6 +19,11 @@ const router = createRouter({
       name: 'assigned-to-me',
       component: () => import('../views/AssignedToMeView.vue'),
     },
+     {
+      path: '/about',
+      name: 'about',
+      component: () => import('../views/AboutView.vue'),
+    },
   ],
 })
 

@@ -2,7 +2,7 @@
 </script>
 
 <template>
-    <div class="background-widget-div">
+    <div class="side-widget-div">
         <slot></slot>
     </div>
 </template>

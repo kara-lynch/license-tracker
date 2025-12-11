@@ -86,51 +86,135 @@ import logo from '@/assets/salts_light.jpg'
 }
 
 h1 {
-  font-size: 2rem;
+  font-size: 2.5rem;
   margin: 0 0 0.5rem 0;
   text-align: center;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 50%, #1a1a1a 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-shadow: 0 2px 10px rgba(139, 92, 246, 0.1);
 }
 
 .lead {
   text-align: center;
-  color: rgba(28, 15, 42, 0.75);
-  margin-bottom: 1rem;
+  color: #1a1a1a;
+  margin-bottom: 2rem;
+  font-size: 1.1rem;
+  font-weight: 500;
+  letter-spacing: 0.3px;
 }
 
 h2 {
-  margin-top: 1rem;
+  margin-top: 2rem;
+  font-size: 1.75rem;
+  font-weight: 600;
+  color: #000;
+  border-left: 4px solid rgba(139, 92, 246, 0.6);
+  padding-left: 1rem;
+  letter-spacing: -0.3px;
+}
+
+h3 {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #000;
+  margin-top: 1.5rem;
+  position: relative;
+  padding-left: 1rem;
+  letter-spacing: -0.2px;
+}
+
+h3::before {
+  content: '▸';
+  position: absolute;
+  left: 0;
+  color: rgba(139, 92, 246, 0.7);
+  font-size: 1.2rem;
 }
 
 ol {
   margin-left: 1.1rem;
+  color: #000;
+  line-height: 1.8;
+  font-weight: 400;
+}
+
+ol li {
+  margin-bottom: 0.5rem;
+  padding-left: 0.5rem;
 }
 
 .actions {
   display: flex;
   gap: 0.75rem;
-  margin: 0.5rem 0 1rem 0;
+  margin: 1.5rem 0 2rem 0;
 }
 
 .btn {
   display: inline-block;
-  padding: 0.5rem 0.9rem;
-  background: #b803efc7;
+  padding: 0.7rem 1.2rem;
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.9), rgba(168, 85, 247, 0.9));
   color: #fff;
-  border-radius: 6px;
+  border-radius: 8px;
   text-decoration: none;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+  transition: all 0.3s ease;
+  border: 1px solid rgba(139, 92, 246, 0.4);
 }
 
 .btn:hover {
-  background: #b803efc7;
+  background: linear-gradient(135deg, rgba(168, 85, 247, 1), rgba(139, 92, 246, 1));
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(139, 92, 246, 0.4);
 }
 
 ul {
   margin-left: 1.1rem;
+  color: #000;
+  line-height: 1.8;
+  font-weight: 400;
+}
+
+ul li {
+  margin-bottom: 0.5rem;
+  padding-left: 0.5rem;
+  position: relative;
+}
+
+ul li::marker {
+  color: rgba(139, 92, 246, 0.7);
+}
+
+p {
+  color: #000;
+  line-height: 1.7;
+  font-weight: 400;
+}
+
+strong {
+  font-weight: 700;
+  color: #000;
+}
+
+em {
+  font-style: italic;
+  color: rgba(139, 92, 246, 0.9);
+  font-weight: 500;
 }
 
 .help {
-  margin-top: 1.25rem;
-  color: rgba(15,23,42,0.7);
+  margin-top: 2rem;
+  padding: 1rem;
+  background: rgba(139, 92, 246, 0.05);
+  border-left: 3px solid rgba(139, 92, 246, 0.6);
+  border-radius: 4px;
+  color: #000;
+  font-weight: 500;
 }
 </style>
 

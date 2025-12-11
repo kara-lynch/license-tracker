@@ -13,7 +13,7 @@ const emit = defineEmits<{
 }>()
 
 const formRef = ref<HTMLFormElement | null>(null)
-const token = import.meta.env.VITE_JWT_TOKEN ?? ''
+const token = document.cookie
 
 function handleCancel() {
   if (formRef.value) formRef.value.reset()

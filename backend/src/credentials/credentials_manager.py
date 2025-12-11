@@ -66,12 +66,12 @@ class UserCredentials:
             is_positive(self._user_dict[_field_name])
 
             _field_name = "loc"
-            check_data_type(self._user_dict[_field_name], str)
-            list_check(self._user_dict[_field_name], config_dict["LOCATIONS_LIST"])
+            check_data_type(int(self._user_dict[_field_name]), int)
+            is_positive(int(self._user_dict[_field_name]))
 
             _field_name = "dept"
-            check_data_type(self._user_dict[_field_name], str)
-            list_check(self._user_dict[_field_name], config_dict["DEPARTMENTS_LIST"])
+            check_data_type(int(self._user_dict[_field_name]), int)
+            is_positive(int(self._user_dict[_field_name]))
 
             _field_name = "title"
             check_data_type(self._user_dict[_field_name], str)
@@ -82,6 +82,7 @@ class UserCredentials:
 
         except Exception as e:
             error_msg = _field_name + " " + e.args[0]
+            log.log("WARNING", self._user_dict)
             #print(f"Credentials validation failed for {self.name()}: {error_msg}")
             log.log("WARNING", f"Credentials validation failed")
             raise Exception(error_msg)
@@ -147,5 +148,5 @@ class UserCredentials:
         :return: True if the user is a manager of IT or Legal (i.e. the user has the authority to edit license records), False otherwise.
         :rtype: bool
         """
-        return (self._user_dict["title"] == "Manager" and self._user_dict["dept"] in ["Legal", "Information Technology"])
+        return (self._user_dict["title"] == "Manager" and self._user_dict["dept"] in ["2", "3"])
     

@@ -14,7 +14,7 @@ export default {
       error.value = null
       
       // load token from env 
-      const token = import.meta.env.VITE_JWT_TOKEN ?? ''
+      const token = document.cookie
 
       try {
         console.log('Fetching licenses with token:', token)

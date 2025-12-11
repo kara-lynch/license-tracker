@@ -87,21 +87,153 @@ export default {
 
 <style scoped>
 .see-licenses { display:block }
-.toolbar { display:flex; gap:12px; align-items:center; margin-bottom:12px }
-.refresh { background:transparent; border:1px solid rgba(15,23,42,0.08); padding:6px 10px; border-radius:8px }
-.status { color: rgba(15,23,42,0.6) }
-.error { color:#ef4444 }
 
-.license-list { list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:12px }
-.license-card { background: var(--color-background-soft, #fff); border-radius:10px; padding:14px; box-shadow: 0 8px 18px rgba(15,23,42,0.04); border:1px solid rgba(15,23,42,0.04) }
-.card-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:8px }
-.title { font-weight:600; font-size:1rem }
-.meta { font-size:0.85rem; color:rgba(15,23,42,0.55) }
-.card-body { display:grid; grid-template-columns:repeat(2, 1fr); gap:8px; font-size:0.95rem }
-.row { display:flex; gap:6px }
-.label { color:rgba(15,23,42,0.6); min-width:70px }
-.restrictions { grid-column: 1 / -1 }
-.empty { color: rgba(15,23,42,0.6); padding:12px }
+.toolbar { 
+  display:flex; 
+  gap:12px; 
+  align-items:center; 
+  margin-bottom:20px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid rgba(139, 92, 246, 0.15);
+}
 
+.refresh { 
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.9), rgba(168, 85, 247, 0.9));
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+  transition: all 0.3s ease;
+  letter-spacing: 0.3px;
+  margin-top: 6px;
+  margin-left: 20px;
+}
 
+.refresh:hover {
+  background: linear-gradient(135deg, rgba(168, 85, 247, 1), rgba(139, 92, 246, 1));
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(139, 92, 246, 0.4);
+}
+
+.status { 
+  color: #000;
+  font-weight: 500;
+  font-size: 0.95rem;
+}
+
+.error { 
+  color: #ef4444;
+  font-weight: 500;
+}
+
+.license-list { 
+  list-style: none; 
+  padding: 0; 
+  margin: 0; 
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+  gap: 20px;
+}
+
+.license-card { 
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.18), rgba(168, 85, 247, 0.12));
+  border-radius: 12px;
+  padding: 18px;
+  box-shadow: 0 8px 24px rgba(139, 92, 246, 0.15), 0 2px 8px rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(139, 92, 246, 0.2);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.license-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: linear-gradient(90deg, rgba(139, 92, 246, 0.8), rgba(168, 85, 247, 0.8));
+}
+
+.license-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(139, 92, 246, 0.25), 0 4px 12px rgba(0, 0, 0, 0.08);
+  border-color: rgba(139, 92, 246, 0.4);
+}
+
+.card-header { 
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(139, 92, 246, 0.15);
+}
+
+.title { 
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: #000;
+  letter-spacing: -0.2px;
+}
+
+.meta { 
+  font-size: 0.85rem;
+  color: rgba(139, 92, 246, 0.8);
+  font-weight: 600;
+  background: rgba(139, 92, 246, 0.1);
+  padding: 4px 10px;
+  border-radius: 6px;
+  letter-spacing: 0.3px;
+}
+
+.card-body { 
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  font-size: 0.95rem;
+}
+
+.row { 
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+}
+
+.label { 
+  color: rgba(139, 92, 246, 0.9);
+  min-width: 85px;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+}
+
+.row span:not(.label) {
+  color: #000;
+  font-weight: 400;
+}
+
+.restrictions { 
+  grid-column: 1 / -1;
+  padding-top: 8px;
+  border-top: 1px solid rgba(139, 92, 246, 0.1);
+}
+
+.empty { 
+  color: #000;
+  padding: 20px;
+  text-align: center;
+  font-weight: 500;
+  grid-column: 1 / -1;
+}
+
+.loading {
+  text-align: center;
+  color: #000;
+  font-weight: 500;
+  padding: 20px;
+}
 </style>

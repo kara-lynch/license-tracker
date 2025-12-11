@@ -86,16 +86,45 @@ import logo from '@/assets/salts_light.jpg'
 }
 
 h1 {
-  font-size: 2.5rem;
+  font-size: 3rem;
   margin: 0 0 0.5rem 0;
   text-align: center;
-  font-weight: 700;
-  letter-spacing: -0.5px;
-  background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 50%, #1a1a1a 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  text-shadow: 0 2px 10px rgba(139, 92, 246, 0.1);
+  font-weight: 800;
+  letter-spacing: 0.3em;
+  font-family: 'Train One', 'Tahoma', 'Verdana', 'Geneva', sans-serif;
+  text-transform: uppercase;
+  color: #020202;
+  position: relative;
+  border-top: 3px solid rgba(0, 0, 0, 0.6);
+  border-bottom: 3px solid rgba(0, 0, 0, 0.6);
+  padding: 1rem 0;
+  background: linear-gradient(90deg, 
+    transparent 0%, 
+    rgba(139, 92, 246, 0.03) 10%, 
+    rgba(139, 92, 246, 0.05) 50%, 
+    rgba(139, 92, 246, 0.03) 90%, 
+    transparent 100%);
+}
+
+h1::before,
+h1::after {
+  content: '';
+  position: absolute;
+  width: 40px;
+  height: 3px;
+  background: linear-gradient(90deg, #8b5cf6, #a855f7);
+}
+
+h1::before {
+  top: -3px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+h1::after {
+  bottom: -3px;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 .lead {

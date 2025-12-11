@@ -93,20 +93,83 @@ async function sendDelete(e: Event){
 
 <style scoped>
 .form-wrapper {
-    display: flex;
-    flex-direction: column;
-    width: 400px;
-    margin: 0 auto;
-    border-color: black;
-    border-width: 1px;
-    border-style: solid;
-    padding: 20px;
+    position: fixed;
+    top: 5vh;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 450px;
+    max-width: 90vw;
+    max-height: 90vh;
+    overflow-y: auto;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(248, 249, 250, 0.95));
+    backdrop-filter: blur(12px);
+    border: 2px solid rgba(139, 92, 246, 0.3);
+    border-radius: 16px;
+    padding: 32px;
+    box-shadow: 0 20px 60px rgba(139, 92, 246, 0.3), 0 8px 24px rgba(0, 0, 0, 0.15);
+    z-index: 100;
 }
+
+.form-wrapper::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: linear-gradient(90deg, rgba(139, 92, 246, 0.9), rgba(168, 85, 247, 0.9));
+  border-radius: 16px 16px 0 0;
+}
+
+.form-content {
+  position: relative;
+}
+
+#required-fields {
+  display: block;
+  font-size: 0.9rem;
+  color: rgba(139, 92, 246, 0.9);
+  font-weight: 600;
+  margin-bottom: 24px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid rgba(139, 92, 246, 0.15);
+  letter-spacing: 0.3px;
+}
+
+.field-block {
+  margin-bottom: 20px;
+}
+
+.field-block label {
+  display: block;
+  font-weight: 600;
+  color: #000;
+  margin-bottom: 8px;
+  font-size: 0.95rem;
+  letter-spacing: 0.2px;
+}
+
 .input-box {
     width: 100%;
-    padding: 8px;
+    padding: 12px 16px;
     box-sizing: border-box;
-    margin-top: 5px;
-    margin-bottom: 15px;
+    border: 2px solid rgba(139, 92, 246, 0.2);
+    border-radius: 8px;
+    font-size: 0.95rem;
+    background: rgba(255, 255, 255, 0.8);
+    transition: all 0.3s ease;
+    color: #000;
+    font-weight: 400;
+}
+
+.input-box:focus {
+  outline: none;
+  border-color: rgba(139, 92, 246, 0.6);
+  background: rgba(255, 255, 255, 1);
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+}
+
+.input-box::placeholder {
+  color: rgba(0, 0, 0, 0.4);
 }
 </style>

@@ -80,8 +80,6 @@ import logo from '@/assets/salts_light.jpg'
 
 <style scoped>
 .home {
-  max-width: 980px;
-  margin: 0 auto;
   padding: 1.25rem;
 }
 
@@ -133,17 +131,18 @@ h1::after {
 }
 
 .lead {
-  text-align: center;
+  text-align: left;
   color: #1a1a1a;
   margin-bottom: 2rem;
-  font-size: 1.1rem;
+  margin-right: 240px;
+  font-size: 1.35rem;
   font-weight: 500;
   letter-spacing: 0.3px;
 }
 
 h2 {
   margin-top: 2rem;
-  font-size: 1.75rem;
+  font-size: 2rem;
   font-weight: 600;
   color: #000;
   border-left: 4px solid rgba(139, 92, 246, 0.6);
@@ -152,7 +151,7 @@ h2 {
 }
 
 h3 {
-  font-size: 1.3rem;
+  font-size: 1.5rem;
   font-weight: 600;
   color: #000;
   margin-top: 1.5rem;
@@ -174,6 +173,7 @@ ol {
   color: #000;
   line-height: 1.8;
   font-weight: 400;
+  font-size: 1.1rem;
 }
 
 ol li {
@@ -212,6 +212,7 @@ ul {
   color: #000;
   line-height: 1.8;
   font-weight: 400;
+  font-size: 1.1rem;
 }
 
 ul li {
@@ -228,6 +229,7 @@ p {
   color: #000;
   line-height: 1.7;
   font-weight: 400;
+  font-size: 1.1rem;
 }
 
 strong {

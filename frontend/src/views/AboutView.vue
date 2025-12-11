@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import logo from '@/assets/salts_light.jpg'
+import About from '@/components/About.vue';
 </script>
 
 <template>
   <div class="about">
-    <h1>This is an about page</h1>
+    <About />
   </div>
   <!-- simple, easy-to-edit inline logo placed top-right below header -->
   <img :src="logo" alt="S.A.L.T.S logo" 

@@ -48,7 +48,7 @@ def about_us():
             about_json = json.load(file)
         
         log.log("DEBUG", "about_us.json loaded successfully")        
-        return json.loads(about_json)
+        return json.dumps(about_json)
     
     except OSError:
         log.log("WARNING", f"Error loading about_us.json")

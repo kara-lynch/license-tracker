@@ -87,6 +87,7 @@ class _Authenticate(object):
         
         body = {"token": token}
         log.log("INFO", "Calling authentication server.")
+        print(body)
         auth_response = requests.post(self._auth_url, json=body)
         if auth_response.status_code == 201:
             log.log("INFO", "Token authenticatd successfully.")

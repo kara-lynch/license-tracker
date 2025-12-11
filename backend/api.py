@@ -1,4 +1,4 @@
-from flask import Flask, request, abort
+from flask import Flask, request, abort, jsonify
 from src.logger import log
 from src.database import db
 from src.util import authentication 
@@ -6,20 +6,22 @@ from src.request.user_request import *
 from src.validation import *
 # from src.database.record_entities_licenseID import *
 from src.credentials.credentials_manager import *
-from flask_cors import CORS
+from flask_cors import CORS, cross_origin
 
 import json
+import requests
 
-log.log("INFO", "REST API started.")
+log.log("INFO", "REST API started.")\
 # db = LicenseDAO()
 
 app = Flask(__name__)
 
 CORS(
     app,
-    resources={r"/*": {"origins": "http://localhost:5173"}},
-    allow_headers=["Content-Type", "Bearer", "Authorization"],
+    resources={r"/*": {"origins": "*"}},
+    allow_headers=["Content-Type", "Bearer", "Authorization", "Access-Control-Allow-Origin"],
     supports_credentials=True,
+    # origins=["http://localhost:5173", "http://localhost:42068", "http://172.16.0.203:5000"]
 ) 
 
 @app.get("/hello_world/")
@@ -484,6 +486,27 @@ def seeAssignment():
         log.log("WARNING", f"Error occurred with database during see license range request: {e.args[0]}")
         abort(401)
 
+
+@app.post("/sso_login/")
+# @cross_origin()
+def sso_login():
+    log.log("INFO", "sso login request")
+    license_request = request.json
+    log.log("INFO", request.json)
+    header = {"Content-Type": "application/json"}
+    log.log("INFO", "SENDING REQUEST")
+    sso_res = requests.post("http://localhost:42068/login", json=license_request, headers=header)
+    log.log("INFO", "REQ REVEIVED")
+    print(request.headers)
+    
+    print("RES: " + sso_res.text)
+    response = jsonify(sso_res.text)
+    print(sso_res.text)
+    # new_res = del response.headers["Access-Control-Allow-Origin"]
+    # response.headers.remove("Access-Control-Allow-Origin")
+    # response.headers.add("Access-Control-Allow-Origin", "*")
+    print("SEND BACK: " + response.json )
+    return sso_res.text
 # @app.get("/filteredView/")
 # def filteredView():
 #     return f'NOT YET IMPLEMENTED'

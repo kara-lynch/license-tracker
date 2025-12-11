@@ -11,7 +11,7 @@ const emit = defineEmits<{
 
 const formRef = ref<HTMLFormElement | null>(null)
 const lID = ref<number | null>(null)
-const token = import.meta.env.VITE_JWT_TOKEN ?? ''
+const token = document.cookie
 const responseText = ref<any | null>(null)
 
 function handleCancel() {

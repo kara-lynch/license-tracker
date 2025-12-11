@@ -62,8 +62,9 @@ export default {
 
     <ul v-else>
         <li v-for="(assignment, i) in assignments" :key="assignment.id ?? i">
-          <div> {{ assignment.id }} </div>
+          <div>Employee Name: {{ assignment.first_name }} </div>
           <div>Employee ID: {{ assignment.employeeID }}</div>
+          <div>License Name: {{ assignment.licenseName }} </div>
           <div>License ID: {{ assignment.licenseID }}</div>
           <div>Assigner ID: {{ assignment.assignerID }}</div>
         </li>

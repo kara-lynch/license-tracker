@@ -57,12 +57,12 @@ async function handleLogin(e: Event) {
             // Store cookie
             // document.cookie = sdfjlsdf
             // Redirect
-            // router.push({ path: 'home' }) // Send to 
             var token = ""
             await res.json().then(data => {token = data.token})
-            console.log(token)
+            // console.log(token)
             document.cookie = token
-            console.log(document.cookie)
+            // console.log(document.cookie)
+            router.push({ path: 'home' }) // Send to 
             // console.log("BODY -> " + await res.json().then(data => {console.log(data)}))
         }
         else {

@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import AssignLicense from '@/components/AssignLicense.vue'
+import Taskbar from '@/components/Taskbar.vue';
 </script> 
 
 <template>
+  <Taskbar />
   <AssignLicense />
 </template>
 

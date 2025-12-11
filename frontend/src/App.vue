@@ -30,7 +30,7 @@ onUnmounted(() => {
   >
     <header>
       <div class="wrapper">
-        <Taskbar />
+        <!-- <Taskbar /> -->
       </div>
     </header>
 

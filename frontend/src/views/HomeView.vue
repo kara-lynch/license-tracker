@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import { RouterLink } from 'vue-router'
 import logo from '@/assets/salts_light.jpg'
+import Taskbar from '@/components/Taskbar.vue';
 
 </script>
 
 <template>
+  <Taskbar />
   <section class="home">
     <h1>Welcome to S.A.L.T.S</h1>
 

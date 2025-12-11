@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import logo from '@/assets/salts_light.jpg'
 import About from '@/components/About.vue';
+import Taskbar from '@/components/Taskbar.vue';
 </script>
 
 <template>
+  <Taskbar />
   <div class="about">
     <About />
   </div>

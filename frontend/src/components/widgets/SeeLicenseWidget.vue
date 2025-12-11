@@ -13,9 +13,9 @@ export default {
       loading.value = true
       error.value = null
       
-      // load token from env 
+      // load token from cookie
       const token = document.cookie
-
+      
       try {
         console.log('Fetching licenses with token:', token)
         const res = await axios.get('http://localhost:5000/seeLicenses/', {

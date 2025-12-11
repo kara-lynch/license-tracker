@@ -1,13 +1,15 @@
 <script setup lang="ts">
 import { RouterLink } from 'vue-router'
+import LogoutBtn from '@/components/buttons/LogoutBtn.vue';
 </script>
 
 <template>
     <nav class="taskbar">
-        <RouterLink to="/">Home</RouterLink>
+        <RouterLink to="/home">Home</RouterLink>
         <RouterLink to="/view-licenses">View Licenses</RouterLink>
         <RouterLink to="/assigned-to-me">Assigned to me</RouterLink>
         <RouterLink to="/about">About</RouterLink>
+        <LogoutBtn/>
     </nav>
 </template>
 

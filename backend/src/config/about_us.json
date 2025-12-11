@@ -1,4 +1,5 @@
 {
+    "about": {
     "developer1": {
         "name": "Frederick Bumgarner",
         "title": "Database Exterminator",
@@ -7,7 +8,7 @@
     "developer2": {
         "name": "Noelle Stark",
         "title": "Principal Noelle Engineer",
-        "bio": "Noelle is a hard worker who's very skilled at collaboration. She sometimes attends our meetings and might occasionally respond to Teams messages. She wrote the user request data handler and test cases for Pytest in phase 1 before switching to the frontend team."
+        "bio": "Noelle is a hard worker who's very skilled at collaboration. She sometimes attends our meetings and might occasionally respond to Teams messages. She wrote the user request data handler and test cases for Pytest in phase 1 before switching to the frontend team primarily, but revising backend work as needed."
     },
     "developer3": {
         "name": "Kara Lynch",
@@ -21,8 +22,8 @@
     },
     "developer5": {
         "name": "Spencer Anderson",
-        "title": "UI/UX Architect",
-        "bio": "Spencer is a fresh-faced recruit we stole from the White Team in phase 2. He's a professional at stapling frontend UI components to existing websites, a skill he leveraged extensively in his time with us."
+        "title": "UI/UXpert",
+        "bio": "Spencer is a seasoned veteran we stole from the White Team in phase 2. He's a professional at stapling frontend UI components to existing websites, a skill he leveraged extensively in his time with us."
     },
     "developer6": {
         "name": "Oluwasegun \"Duro\" Durosinmi",
@@ -31,4 +32,5 @@
     },
     "copyright": "© Red Team 2025. All rights reserved",
     "vision_statement": "At Buzzword Software Solutions, the Red Team is driven by a shared commitment to simplifying and securing the way employees manage licensed external software. In a rapidly evolving digital landscape, our team envisions a future where software installation and license management are seamless, intelligent, and fully integrated into our enterprise ecosystem. Guided by innovation and collaboration, we are building a system that empowers users, reduces complexity, and ensures compliance, while also striving for scalable and sustainable software operations."
+    }
 }

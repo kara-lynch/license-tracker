@@ -48,7 +48,7 @@ def about_us():
             about_json = json.load(file)
         
         log.log("DEBUG", "about_us.json loaded successfully")        
-        return json.loads(about_json)
+        return json.dumps(about_json)
     
     except OSError:
         log.log("WARNING", f"Error loading about_us.json")
@@ -282,7 +282,7 @@ def seeLicenseRange():
         license_request = request.json
         log.log("DEBUG", "Loading and validating user request...")
         user_req = QueryRangeLicReq(json.dumps(license_request))
-        log.log("DEBUG", "Add license request validated successfully")
+        log.log("DEBUG", "See license range request validated successfully")
     except Exception as e:
         # If the code ends up here, it was probably the user's fault
         log.log("WARNING", f"Error occurred while processing see license range request: {e.args[0]}")

@@ -38,7 +38,6 @@
 <li><p>Python 3.12+</p></li>
 <li><p>Flask 3.1.2</p></li>
 <li><p>Docker 29.1.1</p></li>
-<li><p>MySQL Workbench 8.0.36</p></li>
 </ul>
 <p>Python modules required:</p>
 <ul class="simple">
@@ -48,23 +47,23 @@
 </ul>
 <p>To initialize the database:</p>
 <ul>
-<li><p>Run the Docker script located at <code class="docutils literal notranslate"><span class="pre">docker/start_docker_db.sh</span></code>. This will create a Docker container running MySQL v8.0.43. You may want to edit the script to change the default root password first.</p></li>
-<li><p>Connect to the database using MySQL Workbench and run the SQL script located in <code class="docutils literal notranslate"><span class="pre">backend/testDB/create_tables.sql</span></code> in the database to initialize all of the tables. You may want to edit the script and change the default user credentials first.</p></li>
-<li><p>On the backend server, edit <code class="docutils literal notranslate"><span class="pre">backend/src/config/db_credentials.json</span></code> and add the credentials for both user accounts, as well as the IP for the database server. It should be in the following format:</p>
+<li><p>Run the Docker script located at <code class="docutils literal notranslate"><span class="pre">docker/create_docker_db.sh</span></code>. This will create a Docker container running MySQL v8.0.43. You may want to edit the script to change the default root password first.</p></li>
+<li><p>Connect to the database and run the SQL script located in <code class="docutils literal notranslate"><span class="pre">docker/create_tables.sql</span></code> in the database to initialize all of the tables. You may want to edit the script and change the default user credentials at the end first.</p></li>
+<li><p>On the backend server, create a file in <code class="docutils literal notranslate"><span class="pre">backend/src/config</span></code> named <code class="docutils literal notranslate"><span class="pre">db_credentials.json</span></code> and add the credentials for both user accounts, as well as the IP for the database server. It should be in the following format:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
   <span class="s2">&quot;manager-level&quot;</span><span class="p">:</span> <span class="p">{</span>
     <span class="s2">&quot;host&quot;</span><span class="p">:</span> <span class="s2">&quot;127.0.0.1&quot;</span><span class="p">,</span> <span class="o">//</span><span class="n">IP</span> <span class="k">for</span> <span class="n">the</span> <span class="n">DB</span> <span class="n">server</span> <span class="n">goes</span> <span class="n">here</span>
         <span class="s2">&quot;port&quot;</span><span class="p">:</span> <span class="s2">&quot;3306&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;username&quot;</span><span class="p">:</span> <span class="s2">&quot;root&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;password&quot;</span><span class="p">:</span> <span class="s2">&quot;secretredteampw&quot;</span><span class="p">,</span> <span class="o">//</span><span class="k">if</span> <span class="n">you</span> <span class="n">changed</span> <span class="n">it</span><span class="p">,</span> <span class="n">the</span> <span class="n">root</span> <span class="n">password</span> <span class="n">goes</span> <span class="n">here</span>
-        <span class="s2">&quot;database&quot;</span><span class="p">:</span> <span class="s2">&quot;sys&quot;</span>
+        <span class="s2">&quot;username&quot;</span><span class="p">:</span> <span class="s2">&quot;manager&quot;</span><span class="p">,</span> <span class="o">//</span><span class="n">If</span> <span class="n">you</span> <span class="n">changed</span> <span class="n">the</span> <span class="n">credentials</span><span class="p">,</span> <span class="n">make</span> <span class="n">sure</span> <span class="n">to</span> <span class="n">change</span> <span class="n">them</span> <span class="n">here</span> <span class="n">too</span>
+        <span class="s2">&quot;password&quot;</span><span class="p">:</span> <span class="s2">&quot;secretredteampw&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;database&quot;</span><span class="p">:</span> <span class="s2">&quot;LicenseDB&quot;</span>
   <span class="p">},</span>
   <span class="s2">&quot;employee-level&quot;</span><span class="p">:</span> <span class="p">{</span>
     <span class="s2">&quot;host&quot;</span><span class="p">:</span> <span class="s2">&quot;127.0.0.1&quot;</span><span class="p">,</span> <span class="o">//</span><span class="n">IP</span> <span class="k">for</span> <span class="n">the</span> <span class="n">DB</span> <span class="n">server</span> <span class="n">goes</span> <span class="n">here</span>
         <span class="s2">&quot;port&quot;</span><span class="p">:</span> <span class="s2">&quot;3306&quot;</span><span class="p">,</span>
         <span class="s2">&quot;username&quot;</span><span class="p">:</span> <span class="s2">&quot;employee&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;password&quot;</span><span class="p">:</span> <span class="s2">&quot;notsosecretpw&quot;</span><span class="p">,</span> <span class="o">//</span><span class="k">if</span> <span class="n">you</span> <span class="n">changed</span> <span class="n">it</span><span class="p">,</span> <span class="n">the</span> <span class="n">employee</span> <span class="n">password</span> <span class="n">goes</span> <span class="n">here</span>
-        <span class="s2">&quot;database&quot;</span><span class="p">:</span> <span class="s2">&quot;sys&quot;</span>
+        <span class="s2">&quot;password&quot;</span><span class="p">:</span> <span class="s2">&quot;notsosecretpw&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;database&quot;</span><span class="p">:</span> <span class="s2">&quot;LicenseDB&quot;</span>
   <span class="p">}</span>
 <span class="p">}</span>
 </pre></div>
@@ -182,7 +181,6 @@
 <ul class="simple">
 <li><p>Make sure <code class="docutils literal notranslate"><span class="pre">logger.json</span></code> is in <code class="docutils literal notranslate"><span class="pre">/src/config/logger.json</span></code>.</p></li>
 <li><p>The URL for the authentication server is stored in <code class="docutils literal notranslate"><span class="pre">/src/config/settings.json</span></code>.</p></li>
-<li><p>Database credentials are stored in <code class="docutils literal notranslate"><span class="pre">/src/config/db_credentials.json</span></code>.</p></li>
 </ul>
 </section>
 

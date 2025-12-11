@@ -1,16 +1,7 @@
 <script setup lang="ts">
+import SeeAssignments from '@/components/SeeAssignments.vue'
 </script> 
 
 <template>
-  <h1>Licenses assigned to me</h1>
+  <SeeAssignments />
 </template>
-
-<style>
-@media (min-width: 1024px) {
-  .about {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-  }
-}
-</style>

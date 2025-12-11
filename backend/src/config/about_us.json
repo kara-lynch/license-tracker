@@ -1,0 +1,34 @@
+{
+    "developer1": {
+        "name": "Frederick Bumgarner",
+        "title": "Database Exterminator",
+        "bio": "Frederick is a primordial force of chaos skilled at public relations and accidentally creating malware, as well as the Red Team's self-proclaimed overlord. He wrote the API endpoints during phase 1 and worked on the Rocket Pop SSO server during phase 2."
+    },
+    "developer2": {
+        "name": "Noelle Stark",
+        "title": "Principal Noelle Engineer",
+        "bio": "Noelle is a hard worker who's very skilled at collaboration. She sometimes attends our meetings and might occasionally respond to Teams messages. She wrote the user request data handler and test cases for Pytest in phase 1 before switching to the frontend team."
+    },
+    "developer3": {
+        "name": "Kara Lynch",
+        "title": "Professional Github Moderator",
+        "bio": "Kara is a rogue android we found on the street one day. She's taken to her new job pretty well, even though she needs assistance solving Captcha challenges. She handled user credentials validation in the backend and expanded the backend functionality during phase 2 in addition to writing the project documentation. She's normally pretty nice, but don't push directly to main in the Git repository if you want to avoid her wrath."
+    },
+    "developer4": {
+        "name": "Tyson Lucas",
+        "title": "Chief Acronym Officer",
+        "bio": "Tyson is a normal software engineer confused by the antics of all the weirdos he has to work with. He claims to have \"handled the DAO used by the API to access the DB\" during phase 1 and \"wrote JS test cases and CSS for the FE\" during phase 2, although what that means is anyone's guess."
+    },
+    "developer5": {
+        "name": "Spencer Anderson",
+        "title": "UI/UX Architect",
+        "bio": "Spencer is a fresh-faced recruit we stole from the White Team in phase 2. He's a professional at stapling frontend UI components to existing websites, a skill he leveraged extensively in his time with us."
+    },
+    "developer6": {
+        "name": "Oluwasegun \"Duro\" Durosinmi",
+        "title": "Retired DBA (Like a normal DBA, but cooler)",
+        "bio": "Duro is a man of great SQL knowledge and even greater stature. He managed the database during phase 1 before he was tragically taken by the Blue Team for phase 2."
+    },
+    "copyright": "© Red Team 2025. All rights reserved",
+    "vision_statement": "At Buzzword Software Solutions, the Red Team is driven by a shared commitment to simplifying and securing the way employees manage licensed external software. In a rapidly evolving digital landscape, our team envisions a future where software installation and license management are seamless, intelligent, and fully integrated into our enterprise ecosystem. Guided by innovation and collaboration, we are building a system that empowers users, reduces complexity, and ensures compliance, while also striving for scalable and sustainable software operations."
+}

@@ -162,37 +162,14 @@ class _LicenseDAO:
         return records
     
     def seeAllAssignments(self):
-        '''
-        Retrieves and compiles detailed license information from the database.
-
-        This method performs a multi-table SQL query using LEFT JOINs to gather data from the
-        ``License``, ``Cost``, ``ExpirationDate``, and ``GeogRestriction`` tables. It returns a dictionary
-        of license records, keyed by license ID, with each record containing:
-
-        - ``name``: License name
-        - ``ver``: License version
-        - ``type``: License type
-        - ``cost``: License cost (float or None)
-        - ``curr``: Currency of the cost
-        - ``period``: Billing period
-        - ``date_of_renewal``: Renewal date (formatted as YYYY-MM-DD or None)
-        - ``expiration_date``: Expiration date (formatted as YYYY-MM-DD or None)
-        - ``restrictions``: Geographic restrictions
-
-        More information on these fields can be found on the :doc:`api` page.
-
-        Note: If certain fields (e.g., cost, renewal date, expiration date) are missing, their values will be set to ``None``.
-        
-        :return: A dictionary of license records with structured metadata.
-        :rtype: dict
-
-        '''
 
         self.open()
 
         query = ''' 
-            SELECT id, licenseID, employeeID, assignerID
+            SELECT EmployeeAssign.id, EmployeeAssign.licenseID, EmployeeAssign.employeeID, EmployeeAssign.assignerID, Employee.first_name, License.licenseName
             FROM EmployeeAssign
+            LEFT JOIN Employee ON EmployeeAssign.employeeID = Employee.id
+            LEFT JOIN License ON EmployeeAssign.licenseID = License.id
             '''
         try:
             self.cursor_emp.execute(query) 
@@ -203,7 +180,9 @@ class _LicenseDAO:
         records = {}
         for col in results:
             records[f"{col[0]}"] = {}
+            records[f"{col[0]}"]["licenseName"] = col[5]
             records[f"{col[0]}"]["licenseID"] = col[1]
+            records[f"{col[0]}"]["first_name"] = col[4]
             records[f"{col[0]}"]["employeeID"] = col[2]
             records[f"{col[0]}"]["assignerID"] = col[3]
 
@@ -571,11 +550,7 @@ class _LicenseDAO:
             return True
 
         except mysql.connector.Error as err:
-<<<<<<< HEAD
-            print(f"Error deleting license ")
-=======
             print(f"Error deleting license {fields["licenseID"]}: {err}")
->>>>>>> ee90e0b2fd308d526b0129debf8e7242dc5351ea
             self.conn.rollback()
             return False
         except Exception as e:

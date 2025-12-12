@@ -8,6 +8,7 @@ export default {
     const aboutInput = ref<any[]>([])
     const error = ref<string | null>(null)
     const loading = ref(false)
+    const expandedDevelopers = ref<Set<string>>(new Set())
 
     async function fetchAboutInput() {
       loading.value = true
@@ -44,11 +45,25 @@ export default {
       }
     }
 
+    function toggleDeveloper(devKey: string) {
+      if (expandedDevelopers.value.has(devKey)) {
+        expandedDevelopers.value.delete(devKey)
+      } else {
+        expandedDevelopers.value.add(devKey)
+      }
+      // Force reactivity update
+      expandedDevelopers.value = new Set(expandedDevelopers.value)
+    }
+
+    function isDeveloperExpanded(devKey: string) {
+      return expandedDevelopers.value.has(devKey)
+    }
+
     onMounted(() => {
       fetchAboutInput()
     })
 
-    return { aboutInput, error, loading, fetchAboutInput }
+    return { aboutInput, error, loading, fetchAboutInput, toggleDeveloper, isDeveloperExpanded }
   }
 }
 </script>
@@ -65,41 +80,65 @@ export default {
 
       <h2>Meet the Team</h2>
 
-      <h4>{{ about.developer1.name || 'error' }}</h4>
-      <p class="title">{{ about.developer1.title || 'error' }}</p>
-      <ul>
-        <li>{{ about.developer1.bio || 'error' }}</li>
-      </ul>
+      <h4 @click="toggleDeveloper('dev1')" class="clickable">{{ about.developer1.name || 'error' }}</h4>
+      <transition name="slide-fade">
+        <div v-if="isDeveloperExpanded('dev1')" class="developer-info">
+          <p class="title">{{ about.developer1.title || 'error' }}</p>
+          <ul>
+            <li>{{ about.developer1.bio || 'error' }}</li>
+          </ul>
+        </div>
+      </transition>
 
-      <h4>{{ about.developer2.name || 'error' }}</h4>
-      <p class="title">{{ about.developer2.title || 'error' }}</p>
-      <ul>
-        <li>{{ about.developer2.bio || 'error' }}</li>
-      </ul>
+      <h4 @click="toggleDeveloper('dev2')" class="clickable">{{ about.developer2.name || 'error' }}</h4>
+      <transition name="slide-fade">
+        <div v-if="isDeveloperExpanded('dev2')" class="developer-info">
+          <p class="title">{{ about.developer2.title || 'error' }}</p>
+          <ul>
+            <li>{{ about.developer2.bio || 'error' }}</li>
+          </ul>
+        </div>
+      </transition>
 
-      <h4>{{ about.developer3.name || 'error' }}</h4>
-      <p class="title">{{ about.developer3.title || 'error' }}</p>
-      <ul>
-        <li>{{ about.developer3.bio || 'error' }}</li>
-      </ul>
+      <h4 @click="toggleDeveloper('dev3')" class="clickable">{{ about.developer3.name || 'error' }}</h4>
+      <transition name="slide-fade">
+        <div v-if="isDeveloperExpanded('dev3')" class="developer-info">
+          <p class="title">{{ about.developer3.title || 'error' }}</p>
+          <ul>
+            <li>{{ about.developer3.bio || 'error' }}</li>
+          </ul>
+        </div>
+      </transition>
 
-      <h4>{{ about.developer4.name || 'error' }}</h4>
-      <p class="title">{{ about.developer4.title || 'error' }}</p>
-      <ul>
-        <li>{{ about.developer4.bio || 'error' }}</li>
-      </ul>
+      <h4 @click="toggleDeveloper('dev4')" class="clickable">{{ about.developer4.name || 'error' }}</h4>
+      <transition name="slide-fade">
+        <div v-if="isDeveloperExpanded('dev4')" class="developer-info">
+          <p class="title">{{ about.developer4.title || 'error' }}</p>
+          <ul>
+            <li>{{ about.developer4.bio || 'error' }}</li>
+          </ul>
+        </div>
+      </transition>
 
-      <h4>{{ about.developer5.name || 'error' }}</h4>
-      <p class="title">{{ about.developer5.title || 'error' }}</p>
-      <ul>
-        <li>{{ about.developer5.bio || 'error' }}</li>
-      </ul>
+      <h4 @click="toggleDeveloper('dev5')" class="clickable">{{ about.developer5.name || 'error' }}</h4>
+      <transition name="slide-fade">
+        <div v-if="isDeveloperExpanded('dev5')" class="developer-info">
+          <p class="title">{{ about.developer5.title || 'error' }}</p>
+          <ul>
+            <li>{{ about.developer5.bio || 'error' }}</li>
+          </ul>
+        </div>
+      </transition>
 
-      <h4>{{ about.developer6.name || 'error' }}</h4>
-      <p class="title">{{ about.developer6.title || 'error' }}</p>
-      <ul>
-        <li>{{ about.developer6.bio || 'error' }}</li>
-      </ul>
+      <h4 @click="toggleDeveloper('dev6')" class="clickable">{{ about.developer6.name || 'error' }}</h4>
+      <transition name="slide-fade">
+        <div v-if="isDeveloperExpanded('dev6')" class="developer-info">
+          <p class="title">{{ about.developer6.title || 'error' }}</p>
+          <ul>
+            <li>{{ about.developer6.bio || 'error' }}</li>
+          </ul>
+        </div>
+      </transition>
 
       <p class="copyright">{{ about.copyright || 'error' }}</p>
     </div>
@@ -111,6 +150,37 @@ export default {
 <style scoped>
 .about {
   padding: 1.25rem;
+}
+
+.about > * {
+  animation: fadeInDown 0.6s ease-out backwards;
+}
+
+.about > *:nth-child(1) { animation-delay: 0.1s; }
+.about > *:nth-child(2) { animation-delay: 0.2s; }
+.about > *:nth-child(3) { animation-delay: 0.3s; }
+.about > *:nth-child(4) { animation-delay: 0.4s; }
+.about > *:nth-child(5) { animation-delay: 0.5s; }
+.about > *:nth-child(6) { animation-delay: 0.6s; }
+.about > *:nth-child(7) { animation-delay: 0.7s; }
+.about > *:nth-child(8) { animation-delay: 0.8s; }
+.about > *:nth-child(9) { animation-delay: 0.9s; }
+.about > *:nth-child(10) { animation-delay: 1s; }
+.about > *:nth-child(11) { animation-delay: 1.1s; }
+.about > *:nth-child(12) { animation-delay: 1.2s; }
+.about > *:nth-child(13) { animation-delay: 1.3s; }
+.about > *:nth-child(14) { animation-delay: 1.4s; }
+.about > *:nth-child(15) { animation-delay: 1.5s; }
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 h1 {
@@ -209,6 +279,15 @@ h4 {
   letter-spacing: -0.2px;
 }
 
+h4.clickable {
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+h4.clickable:hover {
+  color: rgba(139, 92, 246, 0.9);
+}
+
 h4::before {
   content: '▸';
   position: absolute;
@@ -286,5 +365,32 @@ p {
   color: #000;
   font-weight: 500;
   text-align: left;
+}
+
+.developer-info {
+  overflow: hidden;
+}
+
+/* Slide-fade transition */
+.slide-fade-enter-active {
+  transition: all 0.5s ease-out;
+  max-height: 500px;
+}
+
+.slide-fade-leave-active {
+  transition: all 0.4s ease-in;
+  max-height: 500px;
+}
+
+.slide-fade-enter-from {
+  transform: translateY(-20px);
+  opacity: 0;
+  max-height: 0;
+}
+
+.slide-fade-leave-to {
+  transform: translateY(-20px);
+  opacity: 0;
+  max-height: 0;
 }
 </style>

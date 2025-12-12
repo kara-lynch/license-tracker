@@ -63,7 +63,10 @@ export default {
 
     <ul class="license-list" v-if="!loading && !error">
       <li v-if="licenses.length === 0" class="empty">No licenses found.</li>
-      <li v-for="(license, i) in licenses" :key="license.id ?? i" class="license-card">
+      <li v-for="(license, i) in licenses" 
+          :key="license.id ?? i" 
+          class="license-card"
+          :style="{ animationDelay: `${i * 0.1}s` }">
         <div class="card-header">
           <div class="title">{{ license.name || 'Untitled License' }}</div>
           <div class="meta">ID: {{ license.id ?? '—' }}</div>
@@ -110,6 +113,18 @@ export default {
   letter-spacing: 0.3px;
   margin-top: 6px;
   margin-left: 20px;
+  animation: fadeInDown 0.6s ease-out;
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .refresh:hover {
@@ -147,6 +162,18 @@ export default {
   transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
+  animation: slideInUp 0.6s ease-out backwards;
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .license-card::before {

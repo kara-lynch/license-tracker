@@ -20,6 +20,18 @@
   top: var(--header-height, 60px);
   z-index: 10;
   backdrop-filter: blur(8px);
+  animation: slideDown 0.5s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* Style buttons inside the widget */
@@ -35,6 +47,45 @@
   transition: all 0.3s ease;
   letter-spacing: 0.3px;
   font-size: 0.95rem;
+  animation: buttonSlide 0.5s ease-out backwards;
+}
+
+.side-widget-div :deep(button:nth-child(1)) {
+  animation-delay: 0.1s;
+}
+
+.side-widget-div :deep(button:nth-child(2)) {
+  animation-delay: 0.2s;
+}
+
+.side-widget-div :deep(button:nth-child(3)) {
+  animation-delay: 0.3s;
+}
+
+.side-widget-div :deep(button:nth-child(4)) {
+  animation-delay: 0.4s;
+}
+
+.side-widget-div :deep(button:nth-child(5)) {
+  animation-delay: 0.5s;
+}
+
+.side-widget-div :deep(button:nth-child(6)) {
+  animation-delay: 0.6s;
+}
+
+@keyframes buttonSlide {
+  0% {
+    opacity: 0;
+    transform: translateY(-50px);
+  }
+  60% {
+    transform: translateY(5px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .side-widget-div :deep(button:hover) {

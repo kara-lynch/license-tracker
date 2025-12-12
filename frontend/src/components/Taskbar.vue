@@ -1,13 +1,15 @@
 <script setup lang="ts">
 import { RouterLink } from 'vue-router'
+import logo from '@/assets/salts_light.jpg'
 </script>
 
 <template>
     <nav class="taskbar">
         <RouterLink to="/">Home</RouterLink>
         <RouterLink to="/view-licenses">View Licenses</RouterLink>
-        <RouterLink to="/assigned-to-me">Assigned to me</RouterLink>
+        <RouterLink to="/assigned-to-me">Assigned Licenses</RouterLink>
         <RouterLink to="/about">About</RouterLink>
+        <img :src="logo" alt="S.A.L.T.S" class="taskbar-logo" />
     </nav>
 </template>
 
@@ -63,6 +65,23 @@ import { RouterLink } from 'vue-router'
     border-color: rgba(255, 255, 255, 0.4);
     transform: translateY(-2px);
     box-shadow: 0 6px 20px rgba(139, 92, 246, 0.15);
+}
+
+.taskbar-logo {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 40px;
+    width: auto;
+    border-radius: 6px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    transition: all 0.3s ease;
+}
+
+.taskbar-logo:hover {
+    transform: translateY(-50%) scale(1.1);
+    box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
 }
 
 </style>

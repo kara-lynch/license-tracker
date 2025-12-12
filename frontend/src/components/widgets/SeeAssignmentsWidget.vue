@@ -63,7 +63,10 @@ export default {
 
     <ul class="assignment-list" v-if="!loading && !error">
       <li v-if="assignments.length === 0" class="empty">No assignments found.</li>
-      <li v-for="(assignment, i) in assignments" :key="assignment.id ?? i" class="assignment-card">
+      <li v-for="(assignment, i) in assignments" 
+          :key="assignment.id ?? i" 
+          class="assignment-card"
+          :style="{ animationDelay: `${i * 0.1}s` }">
         <div class="card-header">
           <div class="title">{{ assignment.first_name || 'Unknown Employee' }}</div>
           <div class="meta">EID: {{ assignment.employeeID ?? '—' }}</div>
@@ -107,6 +110,18 @@ export default {
   letter-spacing: 0.3px;
   margin-top: 6px;
   margin-left: 20px;
+  animation: fadeInDown 0.6s ease-out;
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .refresh:hover {
@@ -144,6 +159,18 @@ export default {
   transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
+  animation: slideInUp 0.6s ease-out backwards;
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .assignment-card::before {

@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Installation &#8212; SALTS 0.5 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=4f649999" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=cb25574f" />
+    <script src="_static/documentation_options.js?v=db78e746"></script>
+    <script src="_static/doctools.js?v=888ff710"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="API and Usage" href="api.html" />
+    <link rel="prev" title="Welcome to SALTS’s documentation!" href="index.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="installation">
+<h1>Installation<a class="headerlink" href="#installation" title="Link to this heading">¶</a></h1>
+<p>Software required:</p>
+<ul class="simple">
+<li><p>Python 3.12+</p></li>
+<li><p>Flask 3.1.2</p></li>
+<li><p>Docker 29.1.1</p></li>
+</ul>
+<p>Python modules required:</p>
+<ul class="simple">
+<li><p>Requests</p></li>
+<li><p>Flask</p></li>
+<li><p>MySQL and MySQL Connector</p></li>
+</ul>
+<p>To initialize the database:</p>
+<ul>
+<li><p>Run the Docker script located at <code class="docutils literal notranslate"><span class="pre">docker/create_docker_db.sh</span></code>. This will create a Docker container running MySQL v8.0.43. You may want to edit the script to change the default root password first.</p></li>
+<li><p>Connect to the database and run the SQL script located in <code class="docutils literal notranslate"><span class="pre">docker/create_tables.sql</span></code> in the database to initialize all of the tables. You may want to edit the script and change the default user credentials at the end first.</p></li>
+<li><p>On the backend server, create a file in <code class="docutils literal notranslate"><span class="pre">backend/src/config</span></code> named <code class="docutils literal notranslate"><span class="pre">db_credentials.json</span></code> and add the credentials for both user accounts, as well as the IP for the database server. It should be in the following format:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+  <span class="s2">&quot;manager-level&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">&quot;host&quot;</span><span class="p">:</span> <span class="s2">&quot;127.0.0.1&quot;</span><span class="p">,</span> <span class="o">//</span><span class="n">IP</span> <span class="k">for</span> <span class="n">the</span> <span class="n">DB</span> <span class="n">server</span> <span class="n">goes</span> <span class="n">here</span>
+        <span class="s2">&quot;port&quot;</span><span class="p">:</span> <span class="s2">&quot;3306&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;username&quot;</span><span class="p">:</span> <span class="s2">&quot;manager&quot;</span><span class="p">,</span> <span class="o">//</span><span class="n">If</span> <span class="n">you</span> <span class="n">changed</span> <span class="n">the</span> <span class="n">credentials</span><span class="p">,</span> <span class="n">make</span> <span class="n">sure</span> <span class="n">to</span> <span class="n">change</span> <span class="n">them</span> <span class="n">here</span> <span class="n">too</span>
+        <span class="s2">&quot;password&quot;</span><span class="p">:</span> <span class="s2">&quot;secretredteampw&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;database&quot;</span><span class="p">:</span> <span class="s2">&quot;LicenseDB&quot;</span>
+  <span class="p">},</span>
+  <span class="s2">&quot;employee-level&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">&quot;host&quot;</span><span class="p">:</span> <span class="s2">&quot;127.0.0.1&quot;</span><span class="p">,</span> <span class="o">//</span><span class="n">IP</span> <span class="k">for</span> <span class="n">the</span> <span class="n">DB</span> <span class="n">server</span> <span class="n">goes</span> <span class="n">here</span>
+        <span class="s2">&quot;port&quot;</span><span class="p">:</span> <span class="s2">&quot;3306&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;username&quot;</span><span class="p">:</span> <span class="s2">&quot;employee&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;password&quot;</span><span class="p">:</span> <span class="s2">&quot;notsosecretpw&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;database&quot;</span><span class="p">:</span> <span class="s2">&quot;LicenseDB&quot;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</li>
+</ul>
+<p>SQL database structure:</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">Employees</span></code></dt><dd><ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">id</span></code>: <code class="docutils literal notranslate"><span class="pre">INT</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">first_name</span></code>: <code class="docutils literal notranslate"><span class="pre">VARCHAR(50)</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">last_name</span></code>: <code class="docutils literal notranslate"><span class="pre">VARCHAR(50)</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">title</span></code>: <code class="docutils literal notranslate"><span class="pre">VARCHAR(11)</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">department</span></code>: <code class="docutils literal notranslate"><span class="pre">INT</span></code>, foreign key (<code class="docutils literal notranslate"><span class="pre">Departments</span></code>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">email</span></code>: <code class="docutils literal notranslate"><span class="pre">VARCHAR(50)</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">country</span></code>: <code class="docutils literal notranslate"><span class="pre">VARCHAR(50)</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">city</span></code>: <code class="docutils literal notranslate"><span class="pre">VARCHAR(50)</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">location</span></code>: <code class="docutils literal notranslate"><span class="pre">INT</span></code>, foreign key (<code class="docutils literal notranslate"><span class="pre">Locations</span></code>)</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">Departments</span></code></dt><dd><ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">id</span></code>: <code class="docutils literal notranslate"><span class="pre">INT</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">name</span></code>: <code class="docutils literal notranslate"><span class="pre">VARCHAR(50)</span></code></p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">Locations</span></code></dt><dd><ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">id</span></code>: <code class="docutils literal notranslate"><span class="pre">INT</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">phone</span></code>: <code class="docutils literal notranslate"><span class="pre">VARCHAR(50)</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">street</span></code>: <code class="docutils literal notranslate"><span class="pre">VARCHAR(250)</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">country</span></code>: <code class="docutils literal notranslate"><span class="pre">VARCHAR(50)</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">city</span></code>: <code class="docutils literal notranslate"><span class="pre">VARCHAR(50)</span></code></p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">Computers</span></code></dt><dd><ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">id</span></code>: <code class="docutils literal notranslate"><span class="pre">INT</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">location</span></code>: <code class="docutils literal notranslate"><span class="pre">INT</span></code>, foreign key (<code class="docutils literal notranslate"><span class="pre">Locations</span></code>)</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">Licenses</span></code></dt><dd><ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">id</span></code>: <code class="docutils literal notranslate"><span class="pre">INT</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">licenseName</span></code>: <code class="docutils literal notranslate"><span class="pre">VARCHAR(40)</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">version</span></code>: <code class="docutils literal notranslate"><span class="pre">VARCHAR(8)</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">dateAdded</span></code>: <code class="docutils literal notranslate"><span class="pre">DATE</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">licenseType</span></code>: <code class="docutils literal notranslate"><span class="pre">VARCHAR(20)</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">uploaderID</span></code>: <code class="docutils literal notranslate"><span class="pre">INT</span></code>, foreign key (<code class="docutils literal notranslate"><span class="pre">Employees</span></code>)</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">Cost</span></code></dt><dd><ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">id</span></code>: <code class="docutils literal notranslate"><span class="pre">INT</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">licenseID</span></code>: <code class="docutils literal notranslate"><span class="pre">INT</span></code>, foreign key (<code class="docutils literal notranslate"><span class="pre">Licenses</span></code>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">price</span></code>: <code class="docutils literal notranslate"><span class="pre">FLOAT</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">currency</span></code>: <code class="docutils literal notranslate"><span class="pre">VARCHAR(3)</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">period</span></code>: <code class="docutils literal notranslate"><span class="pre">VARCHAR(12)</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">renewalDate</span></code>: <code class="docutils literal notranslate"><span class="pre">DATE</span></code></p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">ExpirationDate</span></code></dt><dd><ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">id</span></code>: <code class="docutils literal notranslate"><span class="pre">INT</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">licenseID</span></code>: <code class="docutils literal notranslate"><span class="pre">INT</span></code>, foreign key (<code class="docutils literal notranslate"><span class="pre">Licenses</span></code>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">endDate</span></code>: <code class="docutils literal notranslate"><span class="pre">DATE</span></code></p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">GeogRestrictions</span></code></dt><dd><ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">id</span></code>: <code class="docutils literal notranslate"><span class="pre">INT</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">licenseID</span></code>: <code class="docutils literal notranslate"><span class="pre">INT</span></code>, foreign key (<code class="docutils literal notranslate"><span class="pre">Licenses</span></code>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">restrictions</span></code>: <code class="docutils literal notranslate"><span class="pre">VARCHAR(100)</span></code></p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">EmployeeAssign</span></code></dt><dd><ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">id</span></code>: <code class="docutils literal notranslate"><span class="pre">INT</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">licenseID</span></code>: <code class="docutils literal notranslate"><span class="pre">INT</span></code>, foreign key (<code class="docutils literal notranslate"><span class="pre">Licenses</span></code>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">employeeID</span></code>: <code class="docutils literal notranslate"><span class="pre">INT</span></code>, foreign key (<code class="docutils literal notranslate"><span class="pre">Employees</span></code>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">assignerID</span></code>: <code class="docutils literal notranslate"><span class="pre">INT</span></code>, foreign key (<code class="docutils literal notranslate"><span class="pre">Employees</span></code>)</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">ComputerAssign</span></code></dt><dd><ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">id</span></code>: <code class="docutils literal notranslate"><span class="pre">INT</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">licenseID</span></code>: <code class="docutils literal notranslate"><span class="pre">INT</span></code>, foreign key (<code class="docutils literal notranslate"><span class="pre">Licenses</span></code>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">computerID</span></code>: <code class="docutils literal notranslate"><span class="pre">INT</span></code>, foreign key (<code class="docutils literal notranslate"><span class="pre">Computers</span></code>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">assignerID</span></code>: <code class="docutils literal notranslate"><span class="pre">INT</span></code>, foreign key (<code class="docutils literal notranslate"><span class="pre">Employees</span></code>)</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+<p>Additional notes:</p>
+<ul class="simple">
+<li><p>Make sure <code class="docutils literal notranslate"><span class="pre">logger.json</span></code> is in <code class="docutils literal notranslate"><span class="pre">/src/config/logger.json</span></code>.</p></li>
+<li><p>The URL for the authentication server is stored in <code class="docutils literal notranslate"><span class="pre">/src/config/settings.json</span></code>.</p></li>
+</ul>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">SALTS</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API and Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="request.html">User Requests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="authentication.html">Authentication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="credentials.html">User Credentials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="validation.html">Validation Checks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="database.html">Database Calls</a></li>
+<li class="toctree-l1"><a class="reference internal" href="logger.html">Logging</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="index.html" title="previous chapter">Welcome to SALTS’s documentation!</a></li>
+      <li>Next: <a href="api.html" title="next chapter">API and Usage</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2025 Red Team.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 7.2.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/usage.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
